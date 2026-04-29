@@ -1,0 +1,304 @@
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #031b57;
+  font-family: var(--inter);
+}
+
+.topHeader {
+  background: #0032a0;
+  color: #fff;
+  height: 106px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  position: relative;
+}
+
+.logo {
+  width: 190px;
+  height: 60px;
+}
+
+.topLinks {
+  position: absolute;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 14px;
+}
+
+.mainNav {
+  min-height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eff0f3;
+  padding: 0 32px;
+  background: #fff;
+}
+
+.mainNav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font-size: 14px;
+}
+
+.mainNav li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #111;
+  white-space: nowrap;
+}
+
+.mainNav li span {
+  color: #f4780b;
+}
+
+.navCta {
+  color: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.contactMeta {
+  font-size: 12px;
+  line-height: 1.3;
+  color: #111;
+}
+
+.contactMeta p {
+  margin: 0;
+}
+
+.hero {
+  position: relative;
+  height: min(420px, 52vw);
+  min-height: 280px;
+  overflow: hidden;
+  background: #0f2c66;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(2, 21, 61, 0.58), rgba(2, 21, 61, 0.18));
+}
+
+.hero h1 {
+  position: absolute;
+  left: clamp(16px, 5vw, 74px);
+  bottom: clamp(44px, 8vw, 104px);
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.9rem, 4.2vw, 3.22rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.carouselArrow {
+  position: absolute;
+  top: 50%;
+  left: 6px;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 34px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.carouselArrowRight {
+  left: auto;
+  right: 6px;
+}
+
+.carouselDots {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.carouselDots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.carouselDots .activeDot {
+  background: #f4780b;
+}
+
+.partnerSection {
+  padding: 46px clamp(20px, 8vw, 184px) 56px;
+}
+
+.partnerSection h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.6rem, 2.5vw, 2.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.partnerSection p {
+  margin: 0;
+  max-width: 1220px;
+  color: #0d2b66;
+  font-size: 24px;
+  line-height: 1.38;
+}
+
+.contactSection {
+  position: relative;
+  padding: 84px clamp(20px, 8vw, 125px) 90px;
+  color: #fff;
+  overflow: hidden;
+}
+
+.contactBgImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contactOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.contactSection h3,
+.form {
+  position: relative;
+  z-index: 1;
+}
+
+.contactSection h3 {
+  margin: 0 0 36px;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  font-weight: 400;
+}
+
+.form {
+  max-width: 930px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.form input,
+.form textarea {
+  width: 100%;
+  border: 0;
+  border-radius: 0;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.form textarea {
+  resize: vertical;
+  min-height: 120px;
+  margin-bottom: 14px;
+}
+
+.form button {
+  height: 50px;
+  min-width: 272px;
+  border: 0;
+  background: #146dff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+@media (max-width: 1160px) {
+  .mainNav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 20px;
+  }
+
+  .mainNav ul {
+    flex-wrap: wrap;
+  }
+
+  .partnerSection p {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 800px) {
+  .topHeader {
+    justify-content: flex-start;
+    padding-right: 12px;
+  }
+
+  .topLinks {
+    position: static;
+    margin-left: auto;
+    gap: 12px;
+    font-size: 12px;
+  }
+
+  .hero {
+    height: 280px;
+  }
+
+  .hero h1 {
+    bottom: 62px;
+  }
+
+  .partnerSection {
+    padding-top: 34px;
+    padding-bottom: 40px;
+  }
+
+  .partnerSection p {
+    font-size: 17px;
+  }
+
+  .contactSection {
+    padding-top: 52px;
+    padding-bottom: 56px;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .form button {
+    width: 100%;
+    min-width: 0;
+  }
+}

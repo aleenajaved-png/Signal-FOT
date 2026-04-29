@@ -1,0 +1,529 @@
+"use client";
+
+import AddOutlined from "@mui/icons-material/AddOutlined";
+import AppsOutlined from "@mui/icons-material/AppsOutlined";
+import EditOutlined from "@mui/icons-material/EditOutlined";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import LinkOffOutlined from "@mui/icons-material/LinkOffOutlined";
+import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import StarBorderOutlined from "@mui/icons-material/StarBorderOutlined";
+import Image from "next/image";
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from "react";
+import { oIcon } from "@/lib/muiIconSx";
+import { FRANCHISES_DETAIL, getDetailIndexForRow, LOTS_FOR_MODAL } from "@/lib/data";
+import { FRANCHISE_MAP_BASE_SRC, FRANCHISE_MAP_LOT_CALLOUT_POS, FRANCHISE_MAP_POLYGON_LAYERS } from "@/lib/lotMapData";
+import { AssignLotsModal } from "./AssignLotsModal";
+import { LotInsightsAppNav } from "./LotInsightsAppNav";
+import { DetailStatusPill } from "./DetailStatusPill";
+import { TableStatusBadge } from "./TableStatusBadge";
+
+type Assigned = { no: string; state: string; effectiveDate: string; isNewFromTransfer?: boolean };
+type PreviousAssigned = { no: string; state: string; transitionedAt: string };
+
+const DEFAULT_EFFECTIVE_AT = new Date(2026, 3, 1, 12, 0, 0);
+
+/** Set to true to show the left “Effective Date” cell in the franchise infobar. */
+const SHOW_INFOBAR_LEFT_EFFECTIVE_DATE = false;
+
+function formatFranchiseEffectiveDateLabel(d: Date): string {
+  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "2-digit" });
+}
+
+/**
+ * Input may be a prior short format ("Jan 5, 2026"), m/d/yy, ISO, or the current label style ("April 1, 26").
+ * Output is always: "Month D, yy" (e.g. "April 1, 26").
+ */
+function formatFranchiseEffectiveFromDisplayString(input: string): string {
+  const parsed = parseFranchiseEffectiveString(input);
+  if (!parsed) return input;
+  return formatFranchiseEffectiveDateLabel(parsed);
+}
+
+const MONTH_NAME_TO_I: Record<string, number> = {
+  january: 0, february: 1, march: 2, april: 3, may: 4, june: 5,
+  july: 6, august: 7, september: 8, october: 9, november: 10, december: 11,
+  jan: 0, feb: 1, mar: 2, apr: 3, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11,
+};
+
+function parseFranchiseEffectiveString(s: string): Date | null {
+  const t = s.trim();
+  if (!t) return null;
+  if (/^\d{4}-\d{2}-\d{2}/.test(t)) {
+    const d = new Date(`${t.slice(0, 10)}T12:00:00`);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  const mdy = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (mdy) {
+    const mon = parseInt(mdy[1], 10) - 1;
+    const day = parseInt(mdy[2], 10);
+    let y = parseInt(mdy[3], 10);
+    if (y < 100) y += 2000;
+    const d = new Date(y, mon, day, 12, 0, 0, 0);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  const longForm = t.match(/^([A-Za-z]+)\s+(\d{1,2}),\s*(\d{2,4})$/i);
+  if (longForm) {
+    const mKey = longForm[1].toLowerCase();
+    const mon = MONTH_NAME_TO_I[mKey];
+    if (mon === undefined) return null;
+    const day = parseInt(longForm[2], 10);
+    let y = parseInt(longForm[3], 10);
+    if (y < 100) y += 2000;
+    const d = new Date(y, mon, day, 12, 0, 0, 0);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  const direct = new Date(t);
+  if (!Number.isNaN(direct.getTime())) return direct;
+  return null;
+}
+
+const effectiveDateBadgeStyle: CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  padding: "4px 10px",
+  borderRadius: 100,
+  background: "rgba(20, 109, 255, 0.1)",
+  border: "1px solid rgba(20, 109, 255, 0.25)",
+  fontFamily: "var(--fk), sans-serif",
+  fontSize: 13,
+  lineHeight: "18px",
+  color: "#0032a0",
+  fontWeight: 500,
+  whiteSpace: "nowrap",
+};
+
+function OwnerInfobarCell({
+  cellId,
+  ownerInit,
+  owner,
+  assigned = [],
+  label = "Owner",
+  showAvatar = true,
+  variant = "owner",
+  /** Shown in the effective-date badge when no lot has an effective date yet. */
+  defaultEffectiveDate = formatFranchiseEffectiveDateLabel(DEFAULT_EFFECTIVE_AT),
+  "aria-label": ariaLabel,
+}: {
+  cellId: string;
+  ownerInit: string;
+  owner: string;
+  assigned?: Assigned[];
+  label?: string;
+  showAvatar?: boolean;
+  variant?: "owner" | "effectiveDate";
+  defaultEffectiveDate?: string;
+  "aria-label"?: string;
+}) {
+  const latestEffective = assigned.length > 0 ? assigned[assigned.length - 1].effectiveDate : null;
+  const badgeDate = formatFranchiseEffectiveFromDisplayString(latestEffective ?? defaultEffectiveDate);
+  const titleLong = (() => {
+    const p = parseFranchiseEffectiveString(latestEffective ?? defaultEffectiveDate);
+    return p ? p.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }) : badgeDate;
+  })();
+
+  if (variant === "effectiveDate") {
+    return (
+      <div className="d-infobar-cell" id={cellId} aria-label={ariaLabel}>
+        <span className="d-cell-label">{label}</span>
+        <div className="d-owner-row" style={{ marginTop: 2 }}>
+          <span
+            className="d-owner-name"
+            style={{ display: "inline-flex" }}
+            title={titleLong}
+          >
+            <span style={effectiveDateBadgeStyle}>{badgeDate}</span>
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="d-infobar-cell" id={cellId} aria-label={ariaLabel}>
+      <span className="d-cell-label">{label}</span>
+      <div className="d-owner-row">
+        {showAvatar && (
+          <div
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: "50%",
+              background: "#c7b9da",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 8,
+              fontWeight: 700,
+              color: "#fff",
+              fontFamily: "var(--inter), sans-serif",
+            }}
+          >
+            {ownerInit}
+          </div>
+        )}
+        <span className="d-owner-name">{owner}</span>
+      </div>
+    </div>
+  );
+}
+
+type Props = { listRowId: number };
+
+export function FranchiseDetailView({ listRowId }: Props) {
+  const [selected, setSelected] = useState(() => getDetailIndexForRow(listRowId));
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [assigned, setAssigned] = useState<Assigned[]>([{ no: "NB-001", state: "Nebraska", effectiveDate: "Apr 1, 26" }]);
+  const [previousAssigned] = useState<PreviousAssigned[]>([
+    { no: "NB-007", state: "Nebraska", transitionedAt: "Mar 12, 26" },
+    { no: "NB-004", state: "Nebraska", transitionedAt: "Apr 02, 26" },
+  ]);
+  const f = FRANCHISES_DETAIL[selected];
+
+  const openAssign = useCallback(() => setAssignOpen(true), []);
+
+  useEffect(() => {
+    document.body.style.overflow = assignOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [assignOpen]);
+
+  /** Active + previous lots, deduped (active wins) — same set drives Associated Lots and the map. */
+  const mapLots = useMemo(() => {
+    const m = new Map<string, { no: string; state: string; kind: "active" | "previous" }>();
+    for (const a of assigned) m.set(a.no, { no: a.no, state: a.state, kind: "active" });
+    for (const p of previousAssigned) {
+      if (!m.has(p.no)) m.set(p.no, { no: p.no, state: p.state, kind: "previous" });
+    }
+    return Array.from(m.values());
+  }, [assigned, previousAssigned]);
+
+  const lotNosOnMap = useMemo(() => new Set(mapLots.map((l) => l.no)), [mapLots]);
+
+  return (
+    <div className="d-page">
+      <LotInsightsAppNav active="franchises" brandLabel="Franchise" />
+
+      <div className="d-sidebar">
+        <div className="d-search-wrap">
+          <div className="d-search-box">
+            <SearchOutlined sx={oIcon(20, { color: "#7d899b" })} aria-hidden />
+            <input type="search" placeholder="Search" autoComplete="off" />
+          </div>
+        </div>
+        <div>
+          {FRANCHISES_DETAIL.map((fr, i) => (
+            <div
+              key={fr.id + i}
+              className={"d-fitem" + (i === selected ? " sel" : "")}
+              onClick={() => setSelected(i)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && setSelected(i)}
+            >
+              <div className="fi-title">{fr.name}</div>
+              <div className="fi-sub">{fr.owner}</div>
+              <div className="fi-tags">
+                <span className="fi-id">{fr.id}</span>
+                {fr.status === "nonfunc" && <TableStatusBadge status="nonfunc" />}
+                {fr.status === "attention" && <TableStatusBadge status="attention" />}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="d-main">
+        <div className="d-infobar">
+          <div className="d-infobar-franchise">
+            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#e8eaf0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <AppsOutlined sx={oIcon(22, { color: "#3B5BDB" })} aria-hidden />
+            </div>
+            <div className="d-franchise-meta">
+              <div style={{ display: "inline-flex", background: "rgba(159,159,159,0.1)", borderRadius: 2, padding: "1px 4px", width: "fit-content" }}>
+                <span style={{ fontSize: 12, color: "#262527" }}>{f.id}</span>
+              </div>
+              <div className="d-franchise-namerow">
+                <span className="d-franchise-name">{f.name}</span>
+              </div>
+            </div>
+          </div>
+
+          {SHOW_INFOBAR_LEFT_EFFECTIVE_DATE && (
+            <OwnerInfobarCell
+              cellId="owner-infobar-cell-left"
+              label="Effective Date"
+              variant="effectiveDate"
+              ownerInit={f.ownerInit}
+              owner={f.owner}
+              assigned={assigned}
+              aria-label="Effective Date (left)"
+            />
+          )}
+          <OwnerInfobarCell cellId="owner-infobar-cell" ownerInit={f.ownerInit} owner={f.owner} />
+
+          <div className="d-infobar-cell" style={{ borderRight: "none" }}>
+            <span className="d-cell-label">Status</span>
+            <DetailStatusPill status={f.status} />
+          </div>
+        </div>
+
+        <div className="d-tabs-bar">
+          <button type="button" className="d-tab active">
+            General Information
+          </button>
+          <button type="button" className="d-tab">
+            Settings
+          </button>
+          <div className="d-tabs-action">
+            <button type="button" className="d-make-btn">
+              <InfoOutlined sx={oIcon(16, { color: "currentColor" })} aria-hidden />
+              Make it Functional
+            </button>
+          </div>
+        </div>
+
+        <div className="d-content">
+          <div className="d-top-grid">
+            <div className="d-section">
+              <div className="d-section-head">
+                <span className="d-section-title">Franchise Information</span>
+                <EditOutlined className="d-edit-icon" sx={oIcon(16, { color: "currentColor" })} aria-hidden />
+              </div>
+              <div className="d-fields-row">
+                <div className="d-col">
+                  <div className="d-field">
+                    <span className="d-flabel">Franchise Name</span>
+                    <span className="d-fvalue">Wichita, KS</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Owner&apos;s Name</span>
+                    <span className="d-fvalue">Traci Withrow and Kris Withrow</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Email</span>
+                    <span className="d-fvalue">traci@teamsignal.com</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Phone</span>
+                    <span className="d-fvalue">123 456 7899</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Work Cell Number</span>
+                    <span className="d-fvalue">123 456 7899</span>
+                  </div>
+                </div>
+                <div className="d-col">
+                  <div className="d-field">
+                    <span className="d-flabel">Country</span>
+                    <span className="d-fvalue">United State</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Region/State</span>
+                    <span className="d-fvalue">Nebraska</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">City</span>
+                    <span className="d-fvalue">Omaha</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Address</span>
+                    <span className="d-fvalue">
+                      344, Orchard
+                      <br />
+                      Apartments, 3808 S.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="d-section">
+              <div className="d-section-head">
+                <span className="d-section-title">Stats</span>
+              </div>
+              <div className="d-stats-grid">
+                <div className="d-stats-col">
+                  <div className="d-field">
+                    <span className="d-flabel">Franchise ID</span>
+                    <span className="d-fvalue">1234</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Functional Date</span>
+                    <span className="d-fvalue">May 2009</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">No. of Customers</span>
+                    <span className="d-fvalue">400</span>
+                  </div>
+                </div>
+                <div className="d-stats-col">
+                  <div className="d-field">
+                    <span className="d-flabel">No. of Employees</span>
+                    <span className="d-fvalue">200</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Service Zips</span>
+                    <span className="d-fvalue">40</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="d-section">
+              <div className="d-section-head">
+                <span className="d-section-title">Additional Contacts</span>
+                <EditOutlined className="d-edit-icon" sx={oIcon(16, { color: "currentColor" })} aria-hidden />
+              </div>
+              <div className="d-contact">
+                <span className="d-clabel">Person 1</span>
+                <div className="d-cname-row">
+                  <span className="d-cname">Augustus Waters</span>
+                </div>
+                <div className="d-cdetails">
+                  <span className="d-cemail">augustus@teamsignal.com</span>
+                  <span className="d-cphone">+1-843-225-7754</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="d-bottom-grid">
+            <div className="d-bottom-section">
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "flex-start", gap: 20 }}>
+                <div className="d-bottom-title">Associated Lots</div>
+                <button
+                  type="button"
+                  onClick={openAssign}
+                  style={{
+                    border: "none",
+                    background: "transparent",
+                    padding: 0,
+                    cursor: "pointer",
+                    color: "#146dff",
+                    fontFamily: "var(--fk), sans-serif",
+                    fontSize: 14,
+                    fontWeight: 500,
+                    lineHeight: "20px",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <AddOutlined sx={oIcon(16, { color: "currentColor" })} aria-hidden />
+                  Add Lot
+                </button>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "#262527" }}>Active lots</div>
+                  {assigned.length === 0 ? (
+                    <div style={{ fontSize: 13, color: "#86868b" }}>No active lots.</div>
+                  ) : (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {assigned.map((a, i) => {
+                        const isNew = a.isNewFromTransfer === true;
+                        return (
+                          <div
+                            key={a.no + i}
+                            className={isNew ? "lot-assigned-badge lot-assigned-badge--new" : "lot-assigned-badge"}
+                          >
+                            <span className="lab-no">{a.no}</span>
+                            {isNew && (
+                              <span className="lab-edd">
+                                Effective from {formatFranchiseEffectiveFromDisplayString(a.effectiveDate)}
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(102, 102, 102, 1)" }}>Previous lots</div>
+                  {previousAssigned.length === 0 ? (
+                    <div style={{ fontSize: 13, color: "#86868b" }}>No previous lots.</div>
+                  ) : (
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                      {previousAssigned.map((a, i) => (
+                        <div key={a.no + i} className="lot-assigned-badge is-disabled" aria-disabled="true">
+                          <span className="lab-no">{a.no}</span>
+                          <span className="lab-edd">
+                            Transitioned {formatFranchiseEffectiveFromDisplayString(a.transitionedAt)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            </div>
+
+            <div className="d-bottom-section">
+              <div className="d-bottom-title">Franchise Lots Map</div>
+              <div className="d-map" style={{ position: "relative" }}>
+                <Image
+                  className="d-map-base"
+                  src={FRANCHISE_MAP_BASE_SRC}
+                  alt="Franchise lots map"
+                  width={800}
+                  height={360}
+                  unoptimized
+                />
+
+                <div className="d-map-overlay" aria-hidden>
+                  {FRANCHISE_MAP_POLYGON_LAYERS.filter((layer) => lotNosOnMap.has(layer.lotNo)).map((layer) => (
+                    <img
+                      key={layer.lotNo}
+                      src={layer.src}
+                      alt=""
+                      className="d-map-polygon"
+                      style={{ top: layer.top, left: layer.left, width: layer.width, height: layer.height }}
+                    />
+                  ))}
+                </div>
+                <div className="d-map-overlay" aria-label="Associated lots on map">
+                  {mapLots.map((lot) => {
+                    const pos = FRANCHISE_MAP_LOT_CALLOUT_POS[lot.no];
+                    if (!pos) return null;
+                    return (
+                      <div
+                        key={`${lot.kind}-${lot.no}`}
+                        className={lot.kind === "previous" ? "d-map-lot-callout d-map-lot-callout--previous" : "d-map-lot-callout"}
+                        style={{ top: pos.top, left: pos.left }}
+                      >
+                        {lot.no}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {assignOpen && (
+        <AssignLotsModal
+          onClose={() => setAssignOpen(false)}
+          newFranchiseName={f.name}
+          onAssignLots={() => {}}
+          onConfirmTransfer={(lotIndex, effectiveValue) => {
+            const d = new Date(`${effectiveValue}T12:00:00`);
+            const formatted = formatFranchiseEffectiveDateLabel(d);
+            const lot = LOTS_FOR_MODAL[lotIndex];
+            if (lot) {
+              setAssigned((prev) => [
+                ...prev,
+                { no: lot.no, state: lot.state, effectiveDate: formatted, isNewFromTransfer: true },
+              ]);
+            }
+          }}
+        />
+      )}
+    </div>
+  );
+}

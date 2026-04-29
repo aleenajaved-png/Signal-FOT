@@ -1,0 +1,237 @@
+/* ─── Slider shell ─────────────────────────────────────────── */
+
+.sliderWrap {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+
+.slideTrack {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s ease;
+}
+
+.slidePane {
+  flex: 0 0 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ─── Slide 01 ──────────────────────────────────────────────── */
+
+.slide01 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    -58deg,
+    #00295a 0%,
+    #00040b 100%
+  );
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  font-family: var(--inter, "Inter", sans-serif);
+}
+
+/* Header */
+.slideHeader {
+  display: flex;
+  align-items: center;
+  padding: 36px 90px 28px;
+  flex-shrink: 0;
+}
+
+.logoWrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.powerBiIcon {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+}
+
+.powerBiLabel {
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  color: #fff;
+}
+
+/* Body */
+.slideBody {
+  flex: 1;
+  padding: 20px 90px 0;
+  overflow: auto;
+}
+
+.slideTitle {
+  margin: 0 0 44px;
+  font-size: clamp(2.2rem, 3.8vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: #fff;
+}
+
+/* Steps */
+.stepList {
+  display: flex;
+  flex-direction: column;
+  gap: 42px;
+}
+
+.stepRow {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 18px 28px;
+  align-items: start;
+  padding-bottom: 42px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stepRow:last-child {
+  border-bottom: none;
+}
+
+.stepMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stepLabel {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.35;
+}
+
+.stepName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.35;
+}
+
+.stepBody {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Workflow CTA (bottom-right) */
+.workflowCta {
+  position: absolute;
+  right: 32px;
+  bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #173b65;
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 40px -2px rgba(16, 24, 40, 0.28);
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.workflowCta:hover {
+  background: #1e4f88;
+}
+
+.ctaArrow {
+  font-size: 20px;
+  letter-spacing: -0.04em;
+  opacity: 0.8;
+}
+
+/* ─── Slider controls ───────────────────────────────────────── */
+
+.sliderControls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  z-index: 10;
+}
+
+.navBtn {
+  border: 0;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 22px;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.2s;
+}
+
+.navBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.dotActive {
+  background: #fff;
+  transform: scale(1.25);
+}
+
+/* ─── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .slideHeader,
+  .slideBody {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .stepRow {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding-bottom: 28px;
+  }
+
+  .stepList {
+    gap: 28px;
+  }
+
+  .workflowCta {
+    right: 16px;
+    bottom: 64px;
+    font-size: 14px;
+  }
+}

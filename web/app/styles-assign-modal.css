@@ -1,0 +1,24 @@
+/* status badge variants inside modal */
+.lot-badge-available {
+  display:inline-flex;align-items:center;gap:4px;
+  background:#e5f6ff;border-radius:2px;padding:2px 6px 2px 8px;
+}
+.lot-badge-available span { font-family:'FK Display',sans-serif;font-size:12px;color:#146dff;line-height:14px; }
+.lot-badge-sold {
+  display:inline-flex;align-items:center;gap:4px;
+  background:#eff0f3;border-radius:2px;padding:2px 6px 2px 8px;
+}
+.lot-badge-sold span { font-family:'FK Display',sans-serif;font-size:12px;color:#546176;line-height:14px; }
+.lot-badge-pending {
+  display:inline-flex;align-items:center;gap:4px;
+  background:#fff7ed;border-radius:2px;padding:2px 6px 2px 8px;
+}
+.lot-badge-pending span { font-family:'FK Display',sans-serif;font-size:12px;color:#ff9332;line-height:14px; }
+
+/* chevron-down small */
+.lot-badge-chevron { width:12px;height:12px;flex-shrink:0; }
+
+/* row hover */
+.assign-lots-tbody tr:hover { background:#f9f9f9; }
+.assign-lots-tbody tr { border-bottom:1px solid #e6e6e7; }
+.assign-lots-tbody td { padding:16px 12px;font-family:'FK Display',sans-serif;font-size:14px;line-height:16px; }

@@ -1,0 +1,965 @@
+.page {
+  min-height: 100vh;
+  background: #fff;
+  color: #031b57;
+  font-family: var(--inter);
+}
+
+.topHeader {
+  background: #0032a0;
+  color: #fff;
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  position: relative;
+}
+
+.logo {
+  width: 190px;
+  height: auto;
+}
+
+.topLinks {
+  position: absolute;
+  right: 28px;
+  display: flex;
+  gap: 22px;
+  font-size: 14px;
+}
+
+.mainNav {
+  min-height: 74px;
+  border-bottom: 1px solid #eff0f3;
+  padding: 0 32px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mainNav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.mainNav li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #111;
+}
+
+.mainNav li span {
+  color: #f4780b;
+}
+
+.activeLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+.contactMeta {
+  font-size: 12px;
+  color: #111;
+  line-height: 1.3;
+}
+
+.contactMeta p {
+  margin: 0;
+}
+
+.marketWrap {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  min-height: calc(100vh - 150px);
+}
+
+.sidebar {
+  border-right: 1px solid #e6e6e7;
+  background: #fff;
+}
+
+.sidebarHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px 6px;
+}
+
+.sidebarHead h1 {
+  margin: 0;
+  color: #414c5c;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.sidebarHead button {
+  border: 0;
+  background: transparent;
+  color: #146dff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.subhead {
+  margin: 0;
+  padding: 0 18px 12px;
+  color: #7d899b;
+  font-size: 14px;
+}
+
+.filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px;
+  gap: 10px;
+  padding: 0 18px 14px;
+}
+
+.filters input,
+.filters button {
+  height: 40px;
+  border: 1px solid #ccd1d8;
+  background: #fff;
+  font-size: 14px;
+}
+
+.filters input {
+  padding: 0 10px;
+}
+
+.filters button {
+  cursor: pointer;
+}
+
+.stats {
+  display: flex;
+  gap: 14px;
+  padding: 0 18px 10px;
+  border-bottom: 1px solid #e6e6e7;
+  color: #7d899b;
+  font-size: 13px;
+  flex-wrap: wrap;
+}
+
+.statActive {
+  color: #262527;
+  border-bottom: 2px solid #146dff;
+  padding-bottom: 6px;
+}
+
+.cardList {
+  max-height: calc(100vh - 340px);
+  overflow: auto;
+}
+
+.lotCard {
+  padding: 18px;
+  border-bottom: 1px solid #e6e6e7;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.lotCard:hover {
+  background: #f9f9fa;
+}
+
+.lotCard:focus-visible {
+  outline: 2px solid #146dff;
+  outline-offset: -2px;
+}
+
+.lotCard h2 {
+  margin: 0 0 6px;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1;
+  color: #272d37;
+}
+
+.priceLine {
+  margin: 0 0 10px;
+  color: #7d899b;
+  font-size: 14px;
+}
+
+.priceLine strong {
+  color: #146dff;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.badgeBlue,
+.badgeOrange {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  padding: 2px 8px;
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.badgeBlue {
+  color: #146dff;
+  background: #e5f6ff;
+}
+
+.badgeOrange {
+  color: #ff9332;
+  background: #fff7ed;
+}
+
+.lotCard ul {
+  margin: 0;
+  padding-left: 18px;
+  color: #414c5c;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.mapArea {
+  position: relative;
+  overflow: hidden;
+  min-height: 620px;
+  background: #d9e6f7;
+}
+
+.mapImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mapTopBar {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mapTopBar button {
+  height: 40px;
+  min-width: 98px;
+  border: 0;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 40px;
+  padding: 8px;
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.1);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 8px;
+  font-size: 12px;
+  color: #272d37;
+}
+
+.dotAvailable,
+.dotPending,
+.dotSold {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.dotAvailable {
+  background: #19867f;
+}
+
+.dotPending {
+  background: #ff9332;
+}
+
+.dotSold {
+  background: #8c95a6;
+}
+
+.marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-width: 36px;
+  height: 36px;
+  border-radius: 100px;
+  border: 1px solid #fff;
+  background: #19867f;
+  color: #fff;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.interestCard {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 218px;
+  border-radius: 4px;
+  background: #f9f9fa;
+  padding: 12px 24px;
+  box-sizing: border-box;
+}
+
+.closeBtn {
+  display: block;
+  margin-left: auto;
+  border: 0;
+  background: transparent;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.interestCard img {
+  width: 100%;
+  height: 85px;
+  object-fit: cover;
+}
+
+.interestCard h3 {
+  margin: 12px 0 6px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+  color: #272d37;
+}
+
+.interestCard p {
+  margin: 0 0 12px;
+  color: #272d37;
+  font-size: 14px;
+}
+
+.fillBtn {
+  width: 100%;
+  height: 44px;
+  border: 0;
+  border-radius: 4px;
+  background: #0032a0;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 17, 43, 0.6);
+  padding: 20px;
+}
+
+.lotModal {
+  width: min(1240px, 100%);
+  height: min(760px, calc(100vh - 40px));
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modalHeader {
+  height: 58px;
+  border-bottom: 1px solid #e6e6e7;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+}
+
+.backLink,
+.modalClose {
+  border: 0;
+  background: transparent;
+  color: #7d899b;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.modalClose {
+  font-size: 32px;
+  line-height: 1;
+  color: #111;
+}
+
+.modalHeaderLinks {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.modalHeaderLinks a {
+  color: #0032a0;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.modalBody {
+  display: grid;
+  grid-template-columns: 272px minmax(0, 1fr);
+  min-height: 0;
+  flex: 1;
+}
+
+.modalSidebar {
+  border-right: 1px solid #e6e6e7;
+  padding: 24px 20px;
+  overflow: auto;
+}
+
+.modalTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.modalTitleRow h2 {
+  margin: 0;
+  font-size: 40px;
+  color: #272d37;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.modalPrice {
+  margin: 10px 0 18px;
+  color: #0032a0;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.modalQuestion {
+  margin: 0 0 12px;
+  color: #0032a0;
+  font-size: 32px;
+  line-height: 1.05;
+}
+
+.submitInterestBtn {
+  width: 100%;
+  height: 52px;
+  border: 0;
+  border-radius: 4px;
+  background: #0032a0;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.modalInfoSection {
+  border-top: 1px solid #e6e6e7;
+  margin-top: 20px;
+  padding-top: 20px;
+}
+
+.modalInfoSection h3 {
+  margin: 0 0 12px;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 1;
+  color: #272d37;
+}
+
+.modalInfoSection p,
+.modalInfoSection li {
+  margin: 0;
+  color: #414c5c;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.modalInfoSection ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.modalMain {
+  padding: 14px 22px 18px;
+  overflow: auto;
+}
+
+.heatMapWrap {
+  border: 1px solid #e6e6e7;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.heatMapTop {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.showLeads {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #262527;
+  font-size: 14px;
+}
+
+.modalLegend {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  color: #262527;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.modalLegend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.dotHousing {
+  background: #ff0101;
+}
+
+.dotDistribution {
+  background: #ff7900;
+}
+
+.dotIndustrial {
+  background: #146dff;
+}
+
+.dotCommercial {
+  background: #00c220;
+}
+
+.modalHeatMapImage {
+  width: 100%;
+  height: 218px;
+  object-fit: cover;
+  display: block;
+}
+
+.detailSection {
+  margin-top: 14px;
+}
+
+.detailSection h3 {
+  margin: 0 0 10px;
+  font-size: 36px;
+  font-weight: 400;
+  color: #272d37;
+  line-height: 1;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 18px;
+}
+
+.detailGrid div {
+  border: 1px solid #f2f2f2;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detailGrid span {
+  color: #7d899b;
+  font-size: 14px;
+}
+
+.detailGrid strong {
+  color: #262527;
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.opportunityCard {
+  border: 1px solid #f2f2f2;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.opportunityHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #272d37;
+  font-size: 14px;
+}
+
+.opportunityHead div {
+  display: flex;
+  gap: 66px;
+}
+
+.opportunityBar {
+  height: 40px;
+  display: grid;
+  grid-template-columns: 15fr 36fr 20fr 3fr;
+  gap: 2px;
+}
+
+.opportunityBar span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+}
+
+.housingBand {
+  background: #ef4732;
+}
+
+.distributionBand {
+  background: #ff9f39;
+}
+
+.industrialBand {
+  background: #146dff;
+}
+
+.commercialBand {
+  background: #31b44b;
+}
+
+.similarGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.similarCard {
+  border: 1px solid #e6e6e7;
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.similarCard h4 {
+  margin: 0 0 6px;
+  color: #272d37;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.similarCard p {
+  margin: 0;
+  color: #414c5c;
+  font-size: 14px;
+}
+
+.formModalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 20, 40, 0.5);
+  padding: 14px;
+}
+
+.interestFormModal {
+  width: min(840px, 100%);
+  max-height: calc(100vh - 28px);
+  background: #fff;
+  border-radius: 8px;
+  overflow: auto;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.2);
+  padding: 18px 22px 22px;
+}
+
+.interestFormHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.interestFormHeader h2 {
+  margin: 0;
+  color: #272d37;
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.interestFormHeader p {
+  margin: 4px 0 0;
+  color: #8d9cbc;
+  font-size: 34px;
+  line-height: 1.05;
+}
+
+.interestFormClose {
+  border: 0;
+  background: transparent;
+  color: #111;
+  font-size: 48px;
+  line-height: 0.9;
+  cursor: pointer;
+}
+
+.interestFormBody {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 14px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formField label {
+  color: #262527;
+  font-size: 24px;
+  line-height: 1.1;
+}
+
+.formField label span {
+  color: #d73131;
+}
+
+.formField input {
+  height: 38px;
+  border: 1px solid #d0cfd2;
+  border-radius: 4px;
+  padding: 0 12px;
+  font-size: 32px;
+  color: #272d37;
+  font-family: inherit;
+}
+
+.formField input::placeholder {
+  color: #8d9cbc;
+}
+
+.fullWidthField {
+  grid-column: 1 / -1;
+}
+
+.choiceList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.choiceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #414c5c;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+.choiceRow input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: #146dff;
+}
+
+.submitFormBtn {
+  grid-column: 1 / -1;
+  border: 0;
+  border-radius: 4px;
+  background: #0032a0;
+  color: #fff;
+  height: 40px;
+  font-size: 36px;
+  cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+  .marketWrap {
+    grid-template-columns: 330px minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .mainNav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+
+  .topHeader {
+    justify-content: flex-start;
+  }
+
+  .topLinks {
+    position: static;
+    margin-left: auto;
+    font-size: 12px;
+    gap: 12px;
+  }
+
+  .marketWrap {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: 0;
+    border-bottom: 1px solid #e6e6e7;
+  }
+
+  .lotCard h2 {
+    font-size: 28px;
+  }
+
+  .priceLine strong {
+    font-size: 24px;
+  }
+
+  .mapArea {
+    min-height: 540px;
+  }
+
+  .mapTopBar {
+    left: 12px;
+    right: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .legend {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .lotModal {
+    height: calc(100vh - 24px);
+  }
+
+  .modalHeader {
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .modalHeaderLinks {
+    display: none;
+  }
+
+  .modalBody {
+    grid-template-columns: 1fr;
+  }
+
+  .modalSidebar {
+    border-right: 0;
+    border-bottom: 1px solid #e6e6e7;
+  }
+
+  .modalMain {
+    padding: 12px;
+  }
+
+  .detailGrid,
+  .similarGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .detailGrid strong {
+    font-size: 24px;
+  }
+
+  .modalTitleRow h2,
+  .modalPrice,
+  .modalQuestion,
+  .detailSection h3,
+  .modalInfoSection h3 {
+    font-size: 26px;
+  }
+
+  .opportunityHead div {
+    gap: 14px;
+  }
+
+  .opportunityBar span {
+    font-size: 14px;
+  }
+
+  .interestFormModal {
+    padding: 14px;
+  }
+
+  .interestFormHeader h2 {
+    font-size: 30px;
+  }
+
+  .interestFormHeader p {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  .interestFormClose {
+    font-size: 34px;
+  }
+
+  .interestFormBody {
+    grid-template-columns: 1fr;
+  }
+
+  .formField label {
+    font-size: 16px;
+  }
+
+  .formField input {
+    font-size: 18px;
+    height: 42px;
+  }
+
+  .choiceRow {
+    font-size: 16px;
+  }
+
+  .submitFormBtn {
+    font-size: 28px;
+    height: 46px;
+  }
+}

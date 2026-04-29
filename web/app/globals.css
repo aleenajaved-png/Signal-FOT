@@ -1,0 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
+@import "./styles-list.css";
+@import "./styles-detail.css";
+@import "./styles-assign-modal.css";
+@import "./styles-lots.css";
+@import "./styles-lot-details-modal.css";
+@import "./styles-transfer-extra.css";
+
+:root {
+  --inter: var(--inter-font, "Inter"), "Inter", sans-serif;
+}

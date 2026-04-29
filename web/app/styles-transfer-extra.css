@@ -1,0 +1,62 @@
+/* Lot badge in Associated Lots */
+.lot-assigned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f6ff;
+  border: 1px solid #c2d9ff;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-family: "FK Display", sans-serif;
+}
+
+/* Disabled badge for lots that transitioned away */
+.lot-assigned-badge.is-disabled {
+  background: #f5f5f6;
+  border-color: #e6e6e7;
+}
+.lot-assigned-badge.is-disabled .lab-no {
+  color: #86868b;
+}
+.lot-assigned-badge .lab-no {
+  font-size: 13px;
+  color: #0032a0;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.lot-assigned-badge.is-disabled .lab-edd {
+  font-size: 12px;
+  line-height: 18px;
+  color: #86868b;
+  white-space: nowrap;
+}
+
+/* Newly assigned via transfer (effective date from modal) */
+.lot-assigned-badge--new {
+  background: #fffbeb;
+  border: 1px dashed #d4a00a;
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+.lot-assigned-badge--new .lab-no {
+  color: #92400e;
+}
+.lot-assigned-badge--new .lab-edd {
+  font-size: 12px;
+  line-height: 18px;
+  color: #57534e;
+  white-space: nowrap;
+}
+
+.transfer-date-input:focus {
+  border-color: #146dff;
+  box-shadow: 0 0 0 3px rgba(20, 109, 255, 0.1);
+}
+.transfer-date-input.input-error {
+  border-color: #df372b !important;
+  box-shadow: 0 0 0 3px rgba(223, 55, 43, 0.08) !important;
+}
+.transfer-date-input.input-ok {
+  border-color: #2e964b !important;
+}
