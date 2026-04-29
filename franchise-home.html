@@ -1,0 +1,2329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Franchise – Home</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --white:#fff;
+  --blue:#146dff;
+  --blue-900:#0032a0;
+  --blue-bg:rgba(0,50,160,0.1);
+  --gray-50:#eff0f3;
+  --gray-100:#ccd1d8;
+  --gray-400:#7d899b;
+  --gray-700:#414c5c;
+  --gray-900:#272d37;
+  --border-sub:#e6e6e7;
+  --border-str:#aeaeb2;
+  --text-1:#444446;
+  --text-2:#5b5b5f;
+  --text-3:#86868b;
+  --fk:'FK Display',sans-serif;
+  --inter:'Inter',sans-serif;
+}
+
+body{font-family:var(--fk);background:#fff;min-width:1200px;color:var(--text-1);}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:#fff;border-bottom:1px solid var(--gray-50);
+  height:76px;padding:0 40px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:20px;}
+.brand-sep{width:1px;height:34px;background:var(--gray-100);}
+.brand-text{font-size:16px;color:var(--gray-700);line-height:18px;}
+
+.nav-center{display:flex;align-items:center;gap:16px;}
+.nav-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:6px 10px;border:none;background:none;cursor:pointer;
+  font-family:var(--fk);font-size:16px;color:var(--gray-400);
+  line-height:18px;border-radius:2px;text-decoration:none;
+}
+.nav-btn.active{background:var(--blue-bg);color:var(--blue-900);}
+.nav-btn svg{width:16px;height:16px;flex-shrink:0;}
+
+.profile{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.profile-pic{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#6b7fad,#9bb0d4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;overflow:hidden;flex-shrink:0;
+  font-family:var(--inter);
+}
+.profile-pic img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.profile-info{display:flex;flex-direction:column;}
+.profile-name-text{font-size:14px;color:var(--gray-900);line-height:16px;}
+.profile-role{font-size:12px;color:var(--gray-400);line-height:14px;}
+
+/* MAIN */
+.main{padding:24px 24px 0;display:flex;flex-direction:column;gap:15px;}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;justify-content:space-between;}
+.toolbar-left{display:flex;align-items:center;gap:12px;}
+
+.search{
+  width:283px;height:40px;
+  border:1px solid var(--border-sub);border-radius:2px;background:#fff;
+  padding:0 8px 0 12px;display:flex;align-items:center;gap:6px;
+}
+.search svg{width:16px;height:16px;color:var(--gray-400);flex-shrink:0;}
+.search-text{flex:1;font-size:14px;color:var(--gray-400);white-space:nowrap;}
+.search-arrow{width:24px;height:24px;flex-shrink:0;color:var(--gray-400);}
+
+.dropdown{
+  height:40px;min-width:130px;
+  border:1px solid var(--gray-100);background:#fff;
+  padding:0 12px;display:flex;align-items:center;justify-content:space-between;gap:6px;cursor:pointer;
+}
+.dropdown span{font-size:14px;color:#000;white-space:nowrap;}
+.dropdown svg{width:24px;height:24px;color:#000;flex-shrink:0;}
+
+.toolbar-right{display:flex;align-items:center;gap:16px;}
+.refresh-btn{background:none;border:none;cursor:pointer;padding:2px;display:flex;color:var(--text-1);}
+.refresh-btn svg{width:16px;height:16px;}
+.export-btn{
+  height:36px;border:1px solid var(--border-str);background:#fff;border-radius:2px;
+  padding:0 14px;display:flex;align-items:center;gap:4px;cursor:pointer;
+  font-family:var(--inter);font-size:14px;font-weight:500;color:#444446;
+}
+.export-btn svg{width:16px;height:16px;}
+
+/* TABLE */
+.table-wrap{background:#fff;display:flex;flex-direction:column;}
+.table-area{display:flex;height:633px;overflow:hidden;}
+
+.sticky-cols{display:flex;flex-shrink:0;border-right:1px solid var(--border-sub);}
+.scroll-cols{display:flex;flex:1;overflow-x:auto;overflow-y:hidden;}
+.scroll-cols::-webkit-scrollbar{height:4px;}
+.scroll-cols::-webkit-scrollbar-thumb{background:var(--border-sub);border-radius:2px;}
+
+.col{display:flex;flex-direction:column;flex-shrink:0;}
+
+.th{
+  height:44px;padding:0 24px;background:#fff;
+  border-top:1px solid var(--border-sub);
+  display:flex;align-items:center;gap:4px;flex-shrink:0;
+}
+.th-text{font-size:14px;color:var(--text-2);line-height:20px;white-space:nowrap;}
+.scroll-cols .th-text{font-size:12px;line-height:18px;}
+.th svg{width:16px;height:16px;flex-shrink:0;color:var(--text-2);}
+
+.div{height:1px;background:var(--border-sub);flex-shrink:0;}
+
+.td{height:48px;padding:0 24px;display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.td-txt{font-size:14px;color:var(--text-1);line-height:20px;white-space:nowrap;}
+.scroll-cols .td-txt{font-size:12px;color:var(--text-3);line-height:18px;}
+
+/* New badge */
+.badge-new{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 8px 2px 6px;border-radius:16px;
+  background:#e5f6ff;mix-blend-mode:multiply;
+}
+.badge-new svg{width:12px;height:12px;flex-shrink:0;}
+.badge-new-txt{font-size:12px;line-height:18px;color:#146dff;font-family:var(--fk);}
+
+/* Status badges */
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 8px 2px 6px;border-radius:16px;mix-blend-mode:multiply;white-space:nowrap;
+}
+.badge svg{width:12px;height:12px;flex-shrink:0;}
+.badge-label{font-size:12px;line-height:18px;font-family:var(--fk);}
+
+.badge-nf{background:#fef0c7;}
+.badge-nf svg,.badge-nf .badge-label{color:#f4780b;}
+
+.badge-ra{background:#fbeeed;}
+.badge-ra svg,.badge-ra .badge-label{color:#b32318;}
+
+.badge-fn{background:#eff8ef;}
+.badge-fn svg,.badge-fn .badge-label{color:#2e964b;}
+
+/* Owner */
+.td-owner{gap:12px;}
+.avatar{
+  width:24px;height:24px;border-radius:50%;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:#fff;flex-shrink:0;
+  font-family:var(--inter);position:relative;
+}
+.avatar img{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;border-radius:50%;
+}
+
+/* Pagination */
+.pagination{
+  height:56px;display:flex;align-items:center;justify-content:flex-end;
+  padding:0 24px;gap:24px;background:#fff;
+}
+.page-count{font-family:var(--inter);font-size:14px;color:var(--text-1);}
+.page-actions{display:flex;gap:12px;}
+.page-btn{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--border-sub);background:#fff;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;
+}
+.page-btn svg{width:20px;height:20px;color:var(--text-1);}
+
+/* Column widths */
+.w-no{width:140px;}
+.w-franchise{width:246px;}
+.w-owner{width:210px;}
+.w-rev{width:175px;}
+.w-cust{width:165px;}
+.w-status{width:185px;}
+.w-state{width:130px;}
+.w-city{width:150px;}
+.w-emp{width:155px;}
+.w-addr{width:295px;}
+</style>
+</head>
+<body>
+
+<div id="list-screen">
+<nav>
+  <div class="brand">
+    <svg width="99" height="28" viewBox="0 0 99 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_410_15294)">
+        <path d="M27.9891 4.75635L24.42 11.0479C24.2755 11.299 23.6253 12.3249 23.4013 12.4899C22.8089 13.1857 21.9925 13.6449 21.0821 13.8027C20.8654 13.8745 20.0129 13.9175 19.7744 13.9175H7.89676L0 27.8493H11.8704C12.5568 27.8422 15.0566 27.7059 15.678 27.4619C18.1416 26.9669 20.3235 25.3385 21.5951 23.093L25.1642 16.8014C25.3087 16.5503 25.9589 15.5245 26.1829 15.3595C26.7753 14.6636 27.599 14.2044 28.5093 14.0395C28.7261 13.9677 29.5714 13.9247 29.8098 13.9247H41.6874L49.5842 0H37.721C37.0346 0.00717398 34.5348 0.143479 33.9135 0.387394C31.4426 0.875225 29.2607 2.51089 27.9891 4.75635Z" fill="#F4780B"/>
+        <path d="M27.9448 25.2742L28.017 25.2383C29.6932 25.8696 31.4705 26.1494 33.9269 26.1494C36.5568 26.1494 37.6766 25.7333 37.6766 25.1236C37.6766 23.3372 27.887 25.6903 27.887 21.472C27.887 19.6498 29.9099 18.6885 33.7824 18.6885C35.7187 18.6885 37.496 18.9252 39.1361 19.4059V21.2783L39.0638 21.2998C37.3515 20.7976 35.5959 20.5322 33.833 20.5322C31.3116 20.5322 30.2423 20.8407 30.2423 21.3931C30.2423 23.1794 40.0247 20.8981 40.0247 25.059C40.0247 27.0964 38.1969 27.9931 33.7752 27.9931C31.5139 27.9931 29.4548 27.7205 27.9231 27.2398V25.2742H27.9448Z" fill="#F4780B"/>
+        <path d="M44.0144 18.9551V27.858H41.6519V18.9551H44.0144Z" fill="#F4780B"/>
+        <path d="M47.8663 23.3666C47.8663 25.1026 49.4699 26.1501 52.5983 26.1501C53.5448 26.1501 54.4624 25.9994 55.344 25.7411V24.127H49.9905V22.5989H57.6994V26.7885C55.9362 27.6853 54.3686 27.9938 52.5045 27.9938C48.0975 27.9938 45.5037 26.2792 45.5037 23.3451C45.5037 20.4109 48.0903 18.6963 52.3743 18.6963C54.4119 18.6963 56.1025 19.0765 57.7138 19.9015V21.8959L57.6412 21.9103C56.0737 21.0566 54.3903 20.54 52.5983 20.54C49.5064 20.5543 47.8663 21.6018 47.8663 23.3666Z" fill="#F4780B"/>
+        <path d="M72.2555 18.9551V27.858H69.5246L62.0613 21.5305V27.858H59.6987V18.9551H62.1844L69.8933 25.469V18.9551H72.2555Z" fill="#F4780B"/>
+        <path d="M83.237 26.0638H76.9009L75.7809 27.8502H73.2448L78.9598 18.9473H81.3945L86.8206 27.8502H84.2844L83.237 26.0638ZM82.1675 24.256L80.1591 20.8412L78.0205 24.256H82.1675Z" fill="#F4780B"/>
+        <path d="M98.4243 26.043V27.858H87.9413V18.9551H90.3035V26.043H98.4243Z" fill="#F4780B"/>
+      </g>
+      <defs>
+        <clipPath id="clip0_410_15294">
+          <rect width="98.4242" height="28" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+    <div class="brand-sep"></div>
+    <span class="brand-text">Franchise</span>
+  </div>
+
+  <div class="nav-center">
+    <a href="#" class="nav-btn">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4">
+        <path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5c0-2.5-2-4.5-4.5-4.5z"/>
+        <circle cx="8" cy="6" r="1.5"/>
+      </svg>
+      Lots
+    </a>
+    <button class="nav-btn active">
+      <svg viewBox="0 0 16 16" fill="none" stroke="#0032a0" stroke-width="1.4">
+        <path d="M1.5 7h13M3 7V13.5h10V7"/>
+        <path d="M2 7l1.5-4.5h9L14 7"/>
+        <path d="M6 13.5V10h4v3.5"/>
+        <path d="M5.5 7a1.5 1.5 0 01-3 0M8 7a1.5 1.5 0 01-3 0M10.5 7a1.5 1.5 0 01-3 0M13.5 7a1.5 1.5 0 01-3 0"/>
+      </svg>
+      Franchises
+    </button>
+  </div>
+
+  <div class="profile">
+    <div class="profile-pic">PS</div>
+    <div class="profile-info">
+      <span class="profile-name-text">Paul Smith</span>
+      <span class="profile-role">Admin</span>
+    </div>
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#7d899b" stroke-width="1.5" style="margin-top:4px">
+      <path d="M3.5 5.25L7 8.75l3.5-3.5"/>
+    </svg>
+  </div>
+</nav>
+
+<div class="main">
+
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <div class="search">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/>
+        </svg>
+        <span class="search-text">Search by franchise id/name</span>
+        <svg class="search-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      </div>
+      <div class="dropdown">
+        <span>All Status</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <div class="dropdown">
+        <span>All Cities</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+    </div>
+    <div class="toolbar-right">
+      <button class="refresh-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M13.5 8A5.5 5.5 0 1 1 10 3.07"/>
+          <path d="M10.5 1.5v3h3"/>
+        </svg>
+      </button>
+      <button class="export-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polyline points="4,7 8,11 12,7"/><line x1="8" y1="1" x2="8" y2="11"/>
+          <path d="M2.5 12v2h11v-2"/>
+        </svg>
+        Export
+      </button>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="table-area">
+
+      <!-- STICKY -->
+      <div class="sticky-cols">
+        <div class="col w-no">
+          <div class="th"><span class="th-text">Franchise No.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#4500</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#0230</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#2456</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#8765</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#5556</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#5345</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#8765</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#8765</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#8765</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#8765</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#8765</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#8765</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#8765</span></div><div class="div"></div>
+        </div>
+        <div class="col w-franchise">
+          <div class="th"><span class="th-text">Franchise</span></div><div class="div"></div>
+          <div class="td">
+            <span class="td-txt">Northern Virginia, VA</span>
+            <span class="badge-new">
+              <svg viewBox="0 0 12 12" fill="#146dff"><path d="M6 .5l1.5 4H12L8.5 7l1.3 4L6 8.8 2.2 11 3.5 7 0 4.5h4.5z"/></svg>
+              <span class="badge-new-txt">New</span>
+            </span>
+          </div><div class="div"></div>
+          <div class="td"><span class="td-txt">Fremont, NE</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Oklahoma City, NE</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Boise, ID</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Anchorage, AK</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Denver, CO</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Wichita County, TX</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Wichita County, TX</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Wichita County, TX</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Wichita County, TX</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Wichita County, TX</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Wichita County, TX</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Wichita County, TX</span></div><div class="div"></div>
+        </div>
+      </div>
+
+      <!-- SCROLLABLE -->
+      <div class="scroll-cols">
+
+        <!-- Owner -->
+        <div class="col w-owner">
+          <div class="th"><span class="th-text">Owner</span></div><div class="div"></div>
+          <div class="td td-owner">
+            <div class="avatar" style="background:#7c6fa0">
+              <img src="https://www.figma.com/api/mcp/asset/63502b56-d649-4afe-a9bc-b64eb410eb14" alt="" onerror="this.remove()"/>MQ
+            </div><span class="td-txt">Matt Quinn</span>
+          </div><div class="div"></div>
+          <div class="td td-owner">
+            <div class="avatar" style="background:#5b7fad">
+              <img src="https://www.figma.com/api/mcp/asset/4476a46a-fef7-455a-bc6e-7b66305542f2" alt="" onerror="this.remove()"/>JW
+            </div><span class="td-txt">Jodi Wimer</span>
+          </div><div class="div"></div>
+          <div class="td td-owner">
+            <div class="avatar" style="background:#6a8294">
+              <img src="https://www.figma.com/api/mcp/asset/b7f98d05-5df1-4d8b-b5bf-811704684e51" alt="" onerror="this.remove()"/>DS
+            </div><span class="td-txt">Darin Smith</span>
+          </div><div class="div"></div>
+          <div class="td td-owner">
+            <div class="avatar" style="background:#3d6b42">
+              <img src="https://www.figma.com/api/mcp/asset/a3873765-1b52-4e92-b761-88e48c8210ba" alt="" onerror="this.remove()"/>DC
+            </div><span class="td-txt">Don Crowell</span>
+          </div><div class="div"></div>
+          <div class="td td-owner">
+            <div class="avatar" style="background:#7a9b6e">
+              <img src="https://www.figma.com/api/mcp/asset/84407932-d16e-4b51-83df-633b7f648be3" alt="" onerror="this.remove()"/>DD
+            </div><span class="td-txt">Derrick Dancy</span>
+          </div><div class="div"></div>
+          <div class="td td-owner">
+            <div class="avatar" style="background:#b07848">
+              <img src="https://www.figma.com/api/mcp/asset/d0d50e0f-9387-405a-892b-e2618b16eadc" alt="" onerror="this.remove()"/>RE
+            </div><span class="td-txt">Ralph Edwards</span>
+          </div><div class="div"></div>
+          <div class="td td-owner">
+            <div class="avatar" style="background:#a07040">
+              <img src="https://www.figma.com/api/mcp/asset/f43e63bd-1877-40d7-92ad-4ded23f181fe" alt="" onerror="this.remove()"/>JJ
+            </div><span class="td-txt">Jacob Jones</span>
+          </div><div class="div"></div>
+          <div class="td td-owner"><div class="avatar" style="background:#5b7fa0">CH</div><span class="td-txt">Courtney Henry</span></div><div class="div"></div>
+          <div class="td td-owner"><div class="avatar" style="background:#9e6b7a">DR</div><span class="td-txt">Darlene Robertson</span></div><div class="div"></div>
+          <div class="td td-owner"><div class="avatar" style="background:#6b8c5a">GH</div><span class="td-txt">Guy Hawkins</span></div><div class="div"></div>
+          <div class="td td-owner"><div class="avatar" style="background:#7a6b9e">DS</div><span class="td-txt">Darrell Steward</span></div><div class="div"></div>
+          <div class="td td-owner"><div class="avatar" style="background:#c07060">EP</div><span class="td-txt">Eleanor Pena</span></div><div class="div"></div>
+          <div class="td td-owner"><div class="avatar" style="background:#4a7aa0">AL</div><span class="td-txt">Alex Lee</span></div><div class="div"></div>
+        </div>
+
+        <!-- Monthly Revenue -->
+        <div class="col w-rev">
+          <div class="th"><span class="th-text">Monthly Revenue</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$166,763</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$222,114</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$177,604</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$87,533</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$49,676</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$312,217</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$166,016</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$166,016</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$166,016</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$166,016</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$166,016</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$166,016</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">$166,016</span></div><div class="div"></div>
+        </div>
+
+        <!-- No. of Customers -->
+        <div class="col w-cust">
+          <div class="th"><span class="th-text">No. of Customers</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">230</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">450</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">760</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">540</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">270</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">720</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">720</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">720</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">720</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">720</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">720</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">720</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">720</span></div><div class="div"></div>
+        </div>
+
+        <!-- Status -->
+        <div class="col w-status">
+          <div class="th">
+            <span class="th-text">Status</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.00004 3.33301V12.6663M8.00004 12.6663L12.6667 7.99967M8.00004 12.6663L3.33337 7.99967" stroke="#6A6A70" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-nf">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><circle cx="6" cy="6" r="2" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Non-Functional</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-ra">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Requires Attention</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-fn">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><path d="M3.8 6.1l1.7 1.7 2.7-2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="badge-label">Functional</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-ra">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Requires Attention</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-fn">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><path d="M3.8 6.1l1.7 1.7 2.7-2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="badge-label">Functional</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-fn">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><path d="M3.8 6.1l1.7 1.7 2.7-2.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="badge-label">Functional</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-ra">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Requires Attention</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-ra">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Requires Attention</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-ra">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Requires Attention</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-ra">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Requires Attention</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-ra">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Requires Attention</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-ra">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Requires Attention</span>
+          </span></div><div class="div"></div>
+
+          <div class="td"><span class="badge badge-ra">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg>
+            <span class="badge-label">Requires Attention</span>
+          </span></div><div class="div"></div>
+        </div>
+
+        <!-- State -->
+        <div class="col w-state">
+          <div class="th">
+            <span class="th-text">State</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.00004 3.33301V12.6663M8.00004 12.6663L12.6667 7.99967M8.00004 12.6663L3.33337 7.99967" stroke="#6A6A70" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div><div class="div"></div>
+          <div class="td"><span class="td-txt">Texas</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Florida</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Ohio</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Hawaii</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Alaska</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Virginia</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">New Jersey</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">New Jersey</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">New Jersey</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">New Jersey</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">New Jersey</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">New Jersey</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">New Jersey</span></div><div class="div"></div>
+        </div>
+
+        <!-- City -->
+        <div class="col w-city">
+          <div class="th">
+            <span class="th-text">City</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.00004 3.33301V12.6663M8.00004 12.6663L12.6667 7.99967M8.00004 12.6663L3.33337 7.99967" stroke="#6A6A70" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div><div class="div"></div>
+          <div class="td"><span class="td-txt">San Diego</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">San Jose</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Chicago</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Dallas</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Seattle</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">San Fransisco</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Houston</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Houston</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Houston</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Houston</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Houston</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Houston</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">Houston</span></div><div class="div"></div>
+        </div>
+
+        <!-- Employees -->
+        <div class="col w-emp">
+          <div class="th"><span class="th-text">No. of Employees</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">83</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">23</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">45</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">76</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">54</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">27</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">72</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">72</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">72</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">72</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">72</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">72</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">72</span></div><div class="div"></div>
+        </div>
+
+        <!-- Address -->
+        <div class="col w-addr">
+          <div class="th"><span class="th-text">Address</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">344, Orchard Apartments, 3808 S.</span></div><div class="div"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pagination">
+      <span class="page-count">1-15 of 12,345</span>
+      <div class="page-actions">
+        <button class="page-btn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12.5 5l-5 5 5 5"/></svg>
+        </button>
+        <button class="page-btn">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.5 5l5 5-5 5"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div><!-- /list-screen -->
+
+
+<!-- ══════════════════════════════════════ -->
+<!-- DETAIL SCREEN                          -->
+<!-- ══════════════════════════════════════ -->
+<div id="detail-screen" style="display:none;">
+<style>
+/* ─── DETAIL PAGE ─── */
+.d-page { min-height:100vh; background:#fff; }
+
+/* LEFT SIDEBAR */
+.d-sidebar {
+  position:fixed; top:76px; left:0; bottom:0; width:232px;
+  border-right:1px solid #e6e6e7; background:#fff;
+  overflow-y:auto; z-index:10; display:flex; flex-direction:column;
+}
+.d-search-wrap { padding:12px; }
+.d-search-box {
+  display:flex; align-items:center; gap:8px;
+  border:1px solid #e6e6e7; border-radius:2px; background:#fff;
+  padding:8px 14px; height:36px;
+}
+.d-search-box svg { width:20px; height:20px; color:#86868b; flex-shrink:0; }
+.d-search-box input {
+  border:none; outline:none; font-family:'FK Display',sans-serif;
+  font-size:14px; color:#86868b; background:transparent; width:100%;
+}
+
+/* Sidebar franchise items */
+.d-fitem {
+  padding:24px; border-bottom:1px solid #e6e6e7; cursor:pointer;
+  display:flex; flex-direction:column; gap:8px;
+}
+.d-fitem:hover { background:#f5f5f6; }
+.d-fitem.sel { background:#262527; }
+.d-fitem .fi-title { font-family:'FK Display',sans-serif; font-size:16px; line-height:24px; color:#262527; }
+.d-fitem.sel .fi-title { color:#fff; }
+.d-fitem .fi-sub   { font-family:'FK Display',sans-serif; font-size:12px; line-height:18px; color:#444446; }
+.d-fitem.sel .fi-sub { color:#fff; }
+.d-fitem .fi-tags  { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.d-fitem .fi-id {
+  background:#f5f5f6; border-radius:100px;
+  padding:2px 8px; font-family:'FK Display',sans-serif;
+  font-size:12px; color:#262527; line-height:18px;
+}
+.d-fitem.sel .fi-id { background:#6a6a70; color:#fff; }
+
+/* MAIN CONTENT (offset by sidebar) */
+.d-main { margin-left:232px; display:flex; flex-direction:column; }
+
+/* TOP INFO BAR (franchise name, owner, status) */
+.d-infobar {
+  position:sticky; top:76px; z-index:20;
+  display:flex; align-items:stretch;
+  height:84px;
+  border-bottom:1px solid #e6e6e7;
+  background:rgba(245,245,246,0.5);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+}
+.d-infobar-franchise {
+  flex:1; min-width:0;
+  display:flex; align-items:center;
+  padding:16px 32px; gap:8px;
+  border-right:1px solid #e6e6e7;
+}
+.d-franchise-meta { display:flex; flex-direction:column; gap:4px; }
+.d-franchise-namerow { display:flex; align-items:center; gap:8px; }
+.d-franchise-name { font-family:'FK Display',sans-serif; font-size:20px; color:#262527; line-height:32px; white-space:nowrap; }
+
+.d-infobar-cell {
+  width:171px; flex-shrink:0; padding:16px;
+  display:flex; flex-direction:column; gap:10px;
+  border-right:1px solid #e6e6e7;
+  justify-content:center;
+}
+.d-cell-label { font-family:'FK Display',sans-serif; font-size:14px; color:#262527; line-height:20px; }
+.d-owner-row { display:flex; align-items:center; gap:10px; }
+.d-owner-name { font-family:'FK Display',sans-serif; font-size:14px; color:#86868b; line-height:18px; white-space:nowrap; }
+
+/* TABS BAR */
+.d-tabs-bar {
+  position:sticky; top:160px; z-index:19;
+  display:flex; align-items:flex-end; padding:0 32px;
+  border-bottom:1px solid #e6e6e7;
+  background:#fff;
+  height:48px;
+}
+.d-tab {
+  display:flex; align-items:center; height:100%; padding:0 4px;
+  padding-bottom:12px; border:none; background:none; cursor:pointer;
+  font-family:'FK Display',sans-serif; font-size:14px; position:relative;
+  white-space:nowrap; color:#5c6b82; margin-right:16px;
+}
+.d-tab.active { color:#0032a0; }
+.d-tab.active::after {
+  content:''; position:absolute; bottom:0; left:0; right:0;
+  height:2px; background:#146dff;
+}
+.d-tabs-action {
+  position:absolute; right:32px; top:50%; transform:translateY(-50%);
+}
+.d-make-btn {
+  display:flex; align-items:center; gap:6px;
+  border:1px solid #df372b; border-radius:8px; background:#fff;
+  padding:8px 14px; cursor:pointer;
+  font-family:'FK Display',sans-serif; font-size:14px; color:#df372b; line-height:20px;
+}
+.d-make-btn svg { width:16px; height:16px; }
+
+/* CONTENT AREA */
+.d-content { padding:28px 32px; overflow-y:auto; }
+
+/* TOP INFO GRID: 3 columns separated by lines */
+.d-top-grid {
+  display:grid; grid-template-columns:1fr 1fr 1fr;
+  border-bottom:1px solid #e6e6e7; margin-bottom:0;
+}
+.d-section { padding:0 0 24px 0; }
+.d-section + .d-section { padding-left:24px; border-left:1px solid #e6e6e7; }
+.d-section-head {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:16px; padding-bottom:0;
+}
+.d-section-title { font-family:'FK Display',sans-serif; font-size:16px; color:#272d37; line-height:24px; }
+.d-edit-icon { width:16px; height:16px; color:#7d899b; cursor:pointer; flex-shrink:0; }
+.d-fields-row { display:flex; gap:32px; }
+.d-col { display:flex; flex-direction:column; gap:10px; }
+.d-field { display:flex; flex-direction:column; gap:1px; }
+.d-flabel { font-family:'FK Display',sans-serif; font-size:12px; color:#929cab; line-height:18px; }
+.d-fvalue { font-family:'FK Display',sans-serif; font-size:14px; color:#272d37; line-height:20px; }
+
+/* Stats two-column layout */
+.d-stats-grid { display:flex; gap:40px; }
+.d-stats-col { display:flex; flex-direction:column; gap:10px; }
+
+/* Contacts */
+.d-contact { display:flex; flex-direction:column; gap:3px; margin-bottom:16px; }
+.d-contact:last-child { margin-bottom:0; }
+.d-clabel { font-family:'FK Display',sans-serif; font-size:12px; color:#929cab; line-height:18px; }
+.d-cname-row { display:flex; align-items:center; gap:6px; }
+.d-cname { font-family:'FK Display',sans-serif; font-size:14px; color:#272d37; line-height:20px; }
+.d-cname svg { width:14px; height:14px; color:#7d899b; }
+.d-cdetails { display:flex; justify-content:space-between; gap:8px; }
+.d-cemail { font-family:'FK Display',sans-serif; font-size:14px; color:#5c6b82; line-height:20px; }
+.d-cphone { font-family:'FK Display',sans-serif; font-size:14px; color:#262527; line-height:20px; white-space:nowrap; }
+
+/* BOTTOM GRID: Lots + Map */
+.d-bottom-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  border-top:1px solid #e6e6e7; margin-top:0;
+}
+.d-bottom-section { padding:20px 0; }
+.d-bottom-section + .d-bottom-section { padding-left:32px; border-left:1px solid #e6e6e7; }
+.d-bottom-title { font-family:'FK Display',sans-serif; font-size:16px; color:#272d37; line-height:24px; margin-bottom:16px; }
+
+/* Empty lots state */
+.d-empty {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:10px; padding:32px 0;
+}
+.d-empty-icon { color:#aeaeb2; width:48px; height:48px; }
+.d-empty-title { font-family:'FK Display',sans-serif; font-size:14px; color:#262527; line-height:20px; }
+.d-empty-sub   { font-family:'FK Display',sans-serif; font-size:12px; color:#5b5b5f; line-height:18px; }
+.d-add-btn {
+  display:flex; align-items:center; gap:6px;
+  background:#0032a0; color:#fff; border:1px solid #0032a0;
+  border-radius:2px; padding:6px 14px; cursor:pointer;
+  font-family:'Inter',sans-serif; font-size:14px; font-weight:400; line-height:20px;
+  margin-top:4px;
+}
+.d-add-btn svg { width:16px; height:16px; }
+
+/* Map */
+.d-map {
+  width:100%; height:360px; border-radius:2px; overflow:hidden;
+  background:#d4e8f5; position:relative;
+}
+.d-map img { width:100%; height:100%; object-fit:cover; display:block; }
+</style>
+
+<div class="d-page">
+
+  <!-- NAV -->
+  <nav>
+    <div class="brand" id="d-back-btn" style="cursor:pointer;" title="Back to list">
+      <svg width="99" height="28" viewBox="0 0 99 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip_d)">
+          <path d="M27.9891 4.75635L24.42 11.0479C24.2755 11.299 23.6253 12.3249 23.4013 12.4899C22.8089 13.1857 21.9925 13.6449 21.0821 13.8027C20.8654 13.8745 20.0129 13.9175 19.7744 13.9175H7.89676L0 27.8493H11.8704C12.5568 27.8422 15.0566 27.7059 15.678 27.4619C18.1416 26.9669 20.3235 25.3385 21.5951 23.093L25.1642 16.8014C25.3087 16.5503 25.9589 15.5245 26.1829 15.3595C26.7753 14.6636 27.599 14.2044 28.5093 14.0395C28.7261 13.9677 29.5714 13.9247 29.8098 13.9247H41.6874L49.5842 0H37.721C37.0346 0.00717398 34.5348 0.143479 33.9135 0.387394C31.4426 0.875225 29.2607 2.51089 27.9891 4.75635Z" fill="#F4780B"/>
+          <path d="M27.9448 25.2742L28.017 25.2383C29.6932 25.8696 31.4705 26.1494 33.9269 26.1494C36.5568 26.1494 37.6766 25.7333 37.6766 25.1236C37.6766 23.3372 27.887 25.6903 27.887 21.472C27.887 19.6498 29.9099 18.6885 33.7824 18.6885C35.7187 18.6885 37.496 18.9252 39.1361 19.4059V21.2783L39.0638 21.2998C37.3515 20.7976 35.5959 20.5322 33.833 20.5322C31.3116 20.5322 30.2423 20.8407 30.2423 21.3931C30.2423 23.1794 40.0247 20.8981 40.0247 25.059C40.0247 27.0964 38.1969 27.9931 33.7752 27.9931C31.5139 27.9931 29.4548 27.7205 27.9231 27.2398V25.2742H27.9448Z" fill="#F4780B"/>
+          <path d="M44.0144 18.9551V27.858H41.6519V18.9551H44.0144Z" fill="#F4780B"/>
+          <path d="M47.8663 23.3666C47.8663 25.1026 49.4699 26.1501 52.5983 26.1501C53.5448 26.1501 54.4624 25.9994 55.344 25.7411V24.127H49.9905V22.5989H57.6994V26.7885C55.9362 27.6853 54.3686 27.9938 52.5045 27.9938C48.0975 27.9938 45.5037 26.2792 45.5037 23.3451C45.5037 20.4109 48.0903 18.6963 52.3743 18.6963C54.4119 18.6963 56.1025 19.0765 57.7138 19.9015V21.8959L57.6412 21.9103C56.0737 21.0566 54.3903 20.54 52.5983 20.54C49.5064 20.5543 47.8663 21.6018 47.8663 23.3666Z" fill="#F4780B"/>
+          <path d="M72.2555 18.9551V27.858H69.5246L62.0613 21.5305V27.858H59.6987V18.9551H62.1844L69.8933 25.469V18.9551H72.2555Z" fill="#F4780B"/>
+          <path d="M83.237 26.0638H76.9009L75.7809 27.8502H73.2448L78.9598 18.9473H81.3945L86.8206 27.8502H84.2844L83.237 26.0638ZM82.1675 24.256L80.1591 20.8412L78.0205 24.256H82.1675Z" fill="#F4780B"/>
+          <path d="M98.4243 26.043V27.858H87.9413V18.9551H90.3035V26.043H98.4243Z" fill="#F4780B"/>
+        </g>
+        <defs><clipPath id="clip_d"><rect width="98.4242" height="28" fill="white"/></clipPath></defs>
+      </svg>
+      <div class="brand-sep"></div>
+      <span class="brand-text">Franchise</span>
+    </div>
+    <div class="nav-center">
+      <a href="#" class="nav-btn" id="lots-nav-btn" onclick="goToLots();return false;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+        Lots
+      </a>
+      <button class="nav-btn active" id="franchises-nav-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="#0032a0" stroke-width="1.4"><path d="M1.5 7h13M3 7V13.5h10V7"/><path d="M2 7l1.5-4.5h9L14 7"/><path d="M6 13.5V10h4v3.5"/></svg>
+        Franchises
+      </button>
+    </div>
+    <div class="profile">
+      <div class="profile-pic">PS</div>
+      <div class="profile-info">
+        <span class="profile-name-text">Paul Smith</span>
+        <span class="profile-role">Admin</span>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#7d899b" stroke-width="1.5" style="margin-top:4px"><path d="M3.5 5.25L7 8.75l3.5-3.5"/></svg>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR -->
+  <div class="d-sidebar">
+    <div class="d-search-wrap">
+      <div class="d-search-box">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M14 14l4 4"/></svg>
+        <input type="text" placeholder="Search" />
+      </div>
+    </div>
+    <div id="d-sidebar-items"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="d-main">
+
+    <!-- Info bar: franchise name / owner / status — sticky below nav -->
+    <div class="d-infobar">
+
+      <!-- Franchise cell -->
+      <div class="d-infobar-franchise">
+
+        <!-- Icon: grey circle with blue building/grid icon — matches Figma Franchise-Placeholder -->
+        <div style="width:40px;height:40px;border-radius:50%;background:#e8eaf0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="6" height="6" rx="1" fill="#3B5BDB" opacity="0.9"/>
+            <rect x="11" y="3" width="6" height="6" rx="1" fill="#3B5BDB" opacity="0.9"/>
+            <rect x="3" y="11" width="6" height="6" rx="1" fill="#3B5BDB" opacity="0.9"/>
+            <rect x="11" y="11" width="6" height="6" rx="1" fill="#3B5BDB" opacity="0.9"/>
+          </svg>
+        </div>
+
+        <div class="d-franchise-meta">
+          <!-- ID chip -->
+          <div style="display:inline-flex;background:rgba(159,159,159,0.1);border-radius:2px;padding:1px 4px;width:fit-content;">
+            <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#262527;line-height:18px;" id="d-id">#4500</span>
+          </div>
+          <!-- Name + New badge row -->
+          <div class="d-franchise-namerow">
+            <span class="d-franchise-name" id="d-name">Wichita, KS</span>
+            <!-- "✦ New" badge: #e5f6ff pill, sparkle + blue text -->
+            <div style="display:inline-flex;align-items:center;gap:4px;background:#e5f6ff;border-radius:16px;padding:2px 8px 2px 6px;">
+              <!-- sparkle / auto_awesome icon in blue -->
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 1L6.8 4.5H10.5L7.5 6.8L8.5 10.5L6 8.5L3.5 10.5L4.5 6.8L1.5 4.5H5.2L6 1Z" fill="#146DFF"/>
+              </svg>
+              <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#146dff;line-height:18px;white-space:nowrap;">New</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Owner cell -->
+      <div class="d-infobar-cell" id="owner-infobar-cell">
+        <span class="d-cell-label">Owner</span>
+        <!-- Effective date — hidden until a lot is transferred -->
+        <div id="effective-date-label" style="display:none;flex-direction:column;gap:1px;margin-bottom:2px;">
+          <span style="font-family:'FK Display',sans-serif;font-size:10px;color:#86868b;line-height:16px;text-transform:uppercase;letter-spacing:0.4px;">Effective From</span>
+          <span id="effective-date-value" style="font-family:'FK Display',sans-serif;font-size:12px;color:#2e964b;line-height:18px;font-weight:500;"></span>
+        </div>
+        <div class="d-owner-row">
+          <!-- Avatar: purple circle with initials fallback — matches Figma #c7b9da circle -->
+          <div style="width:20px;height:20px;border-radius:50%;background:#c7b9da;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:8px;font-weight:700;color:#fff;overflow:hidden;">
+            <span id="d-owner-avatar-text">AB</span>
+          </div>
+          <span class="d-owner-name" id="d-owner-name">Annette Black</span>
+        </div>
+      </div>
+
+      <!-- Status cell -->
+      <div class="d-infobar-cell" style="border-right:none;">
+        <span class="d-cell-label">Status</span>
+        <!-- Non-Functional badge: #fef0c7 pill, ⊘ icon + orange text -->
+        <div style="display:inline-flex;align-items:center;gap:4px;background:#fef0c7;border-radius:16px;padding:2px 8px 2px 6px;">
+          <!-- ⊘ circle-slash icon -->
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="6" cy="6" r="4.5" stroke="#F4780B" stroke-width="1.2"/>
+            <line x1="3.2" y1="8.8" x2="8.8" y2="3.2" stroke="#F4780B" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#f4780b;line-height:18px;white-space:nowrap;">Non-Functional</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Tabs + Make it Functional button -->
+    <div class="d-tabs-bar">
+      <button class="d-tab active">General Information</button>
+      <button class="d-tab">Settings</button>
+      <div class="d-tabs-action">
+        <button class="d-make-btn">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="8" cy="8" r="6.5"/>
+            <line x1="8" y1="5" x2="8" y2="8.5" stroke-linecap="round"/>
+            <circle cx="8" cy="10.5" r=".7" fill="currentColor" stroke="none"/>
+          </svg>
+          Make it Functional
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="d-content">
+
+      <!-- TOP 3-COLUMN INFO GRID -->
+      <div class="d-top-grid">
+
+        <!-- Franchise Information -->
+        <div class="d-section">
+          <div class="d-section-head">
+            <span class="d-section-title">Franchise Information</span>
+            <svg class="d-edit-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.3 2.7a1 1 0 0 1 1.4 0l.6.6a1 1 0 0 1 0 1.4L5 13H3v-2L11.3 2.7z"/></svg>
+          </div>
+          <div class="d-fields-row">
+            <div class="d-col">
+              <div class="d-field"><span class="d-flabel">Franchise Name</span><span class="d-fvalue">Wichita, KS</span></div>
+              <div class="d-field"><span class="d-flabel">Owner's Name</span><span class="d-fvalue">Traci Withrow and Kris Withrow</span></div>
+              <div class="d-field"><span class="d-flabel">Email</span><span class="d-fvalue">traci@teamsignal.com</span></div>
+              <div class="d-field"><span class="d-flabel">Phone</span><span class="d-fvalue">123 456 7899</span></div>
+              <div class="d-field"><span class="d-flabel">Work Cell Number</span><span class="d-fvalue">123 456 7899</span></div>
+            </div>
+            <div class="d-col">
+              <div class="d-field"><span class="d-flabel">Country</span><span class="d-fvalue">United State</span></div>
+              <div class="d-field"><span class="d-flabel">Region/State</span><span class="d-fvalue">Nebraska</span></div>
+              <div class="d-field"><span class="d-flabel">City</span><span class="d-fvalue">Omaha</span></div>
+              <div class="d-field"><span class="d-flabel">Address</span><span class="d-fvalue">344, Orchard<br>Apartments, 3808 S.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="d-section">
+          <div class="d-section-head">
+            <span class="d-section-title">Stats</span>
+          </div>
+          <div class="d-stats-grid">
+            <div class="d-stats-col">
+              <div class="d-field"><span class="d-flabel">Franchise ID</span><span class="d-fvalue">1234</span></div>
+              <div class="d-field"><span class="d-flabel">Functional Date</span><span class="d-fvalue">May 2009</span></div>
+              <div class="d-field"><span class="d-flabel">No. of Customers</span><span class="d-fvalue">400</span></div>
+            </div>
+            <div class="d-stats-col">
+              <div class="d-field"><span class="d-flabel">No. of Employees</span><span class="d-fvalue">200</span></div>
+              <div class="d-field"><span class="d-flabel">Service Zips</span><span class="d-fvalue">40</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Contacts -->
+        <div class="d-section">
+          <div class="d-section-head">
+            <span class="d-section-title">Additional Contacts</span>
+            <svg class="d-edit-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11.3 2.7a1 1 0 0 1 1.4 0l.6.6a1 1 0 0 1 0 1.4L5 13H3v-2L11.3 2.7z"/></svg>
+          </div>
+
+          <div class="d-contact">
+            <span class="d-clabel">Person 1</span>
+            <div class="d-cname-row">
+              <span class="d-cname">Augustus Waters</span>
+              <svg viewBox="0 0 16 16" fill="none" stroke="#f4780b" stroke-width="1.5" style="width:14px;height:14px;flex-shrink:0"><path d="M3 3h2l2 4-1.5 1.5a11 11 0 0 0 4 4L11 11l4 2v2a2 2 0 0 1-2 2A16 16 0 0 1 1 5a2 2 0 0 1 2-2z" fill="rgba(244,120,11,0.15)"/></svg>
+            </div>
+            <div class="d-cdetails">
+              <span class="d-cemail">augustus@teamsignal.com</span>
+              <span class="d-cphone">+1-843-225-7754</span>
+            </div>
+          </div>
+
+          <div class="d-contact">
+            <span class="d-clabel">Person 2</span>
+            <span class="d-cname">Mike Ross</span>
+            <div class="d-cdetails">
+              <span class="d-cemail">mike@teamsignal.com</span>
+              <span class="d-cphone">+1-207-470-8937</span>
+            </div>
+          </div>
+
+          <div class="d-contact">
+            <span class="d-clabel">Person 3</span>
+            <span class="d-cname">Mike Ross</span>
+            <div class="d-cdetails">
+              <span class="d-cemail">mike@teamsignal.com</span>
+              <span class="d-cphone">+1-207-470-8937</span>
+            </div>
+          </div>
+        </div>
+      </div><!-- /d-top-grid -->
+
+      <!-- BOTTOM: Associated Lots + Map -->
+      <div class="d-bottom-grid">
+
+        <!-- Associated Lots -->
+        <div class="d-bottom-section">
+          <div class="d-bottom-title">Associated Lots</div>
+          <!-- Assigned lots badges container — hidden until lots are added -->
+          <div id="assigned-lots-list" style="display:none;display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
+          <div class="d-empty" id="lots-empty-state">
+            <!-- chain/link icon matching Figma -->
+            <svg class="d-empty-icon" viewBox="0 0 49 49" fill="none" stroke="#aeaeb2" stroke-width="2">
+              <path d="M20 29a8 8 0 0 0 11.3 0l6-6a8 8 0 0 0-11.3-11.3l-3 3"/>
+              <path d="M29 20a8 8 0 0 0-11.3 0l-6 6a8 8 0 0 0 11.3 11.3l3-3"/>
+            </svg>
+            <span class="d-empty-title">No Lots Associated</span>
+            <span class="d-empty-sub">Ready to associate lot with this franchise?</span>
+            <button class="d-add-btn" id="open-assign-lots-btn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+              Add Lot
+            </button>
+          </div>
+          <!-- Non-empty state — shown once lots are assigned -->
+          <div id="lots-assigned-state" style="display:none;flex-direction:column;gap:12px;">
+            <div id="assigned-lots-badges" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+            <button class="d-add-btn" id="open-assign-lots-btn-2" style="align-self:flex-start;">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+              Add Lot
+            </button>
+          </div>
+        </div>
+
+        <!-- Lots Map -->
+        <div class="d-bottom-section">
+          <div class="d-bottom-title">Lots Map</div>
+          <div class="d-map">
+            <img
+              src="https://www.figma.com/api/mcp/asset/275258c2-d416-41bc-9d19-a8fdcfddba82"
+              alt="Nebraska map"
+              onerror="this.style.display='none';this.parentElement.style.background='#d4e8f5';"
+            />
+          </div>
+        </div>
+
+      </div><!-- /d-bottom-grid -->
+
+    </div><!-- /d-content -->
+  </div><!-- /d-main -->
+</div><!-- /d-page -->
+</div><!-- /detail-screen -->
+
+<script>
+// ─── DATA ───────────────────────────────────────────────
+const FRANCHISES = [
+  { id:'#4500', name:'Wichita, KS',           owner:'Annette Black',                ownerInit:'AB', status:'nonfunc' },
+  { id:'#2301', name:'Northern Virginia, VA', owner:'Matt Quinn',                   ownerInit:'MQ', status:'functional' },
+  { id:'#2302', name:'Fremont, NE',           owner:'Jodi Wimer',                  ownerInit:'JW', status:'functional' },
+  { id:'#2303', name:'Oklahoma City, NE',     owner:'Darin Smith',                 ownerInit:'DS', status:'functional' },
+  { id:'#2304', name:'Boise, ID',             owner:'Don Crowell',                 ownerInit:'DC', status:'attention' },
+  { id:'#2305', name:'Anchorage, AK',         owner:'Derrick Dancy',               ownerInit:'DD', status:'functional' },
+  { id:'#2300', name:'Denver, CO',            owner:'Jeff Chovan and Jamie Chovan', ownerInit:'JC', status:'functional' },
+  { id:'#2300', name:'Wichita, KS',           owner:'Traci Withrow and Kris Withrow', ownerInit:'TW', status:'functional' },
+];
+
+const STATUS_BADGE = {
+  nonfunc:    `<span class="badge badge-nf" style="mix-blend-mode:normal"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><circle cx="6" cy="6" r="2" fill="currentColor" stroke="none"/></svg><span class="badge-label">Non-Functional</span></span>`,
+  attention:  `<span class="badge badge-ra" style="mix-blend-mode:normal"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke-linecap="round"/><circle cx="6" cy="8.3" r="0.65" fill="currentColor" stroke="none"/></svg><span class="badge-label">Requires Attention</span></span>`,
+  functional: `<span class="badge badge-fn" style="mix-blend-mode:normal"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="6" cy="6" r="4.5"/><path d="M3.8 6.1l1.7 1.7 2.7-2.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="badge-label">Functional</span></span>`,
+};
+
+// ─── BUILD SIDEBAR ───────────────────────────────────────
+const sidebarEl = document.getElementById('d-sidebar-items');
+FRANCHISES.forEach((f, i) => {
+  const div = document.createElement('div');
+  div.className = 'd-fitem' + (i === 0 ? ' sel' : '');
+  div.dataset.idx = i;
+  div.innerHTML = `
+    <div class="fi-title">${f.name}</div>
+    <div class="fi-sub">${f.owner}</div>
+    <div class="fi-tags">
+      <span class="fi-id">${f.id}</span>
+      ${f.status === 'nonfunc' || f.status === 'attention' ? STATUS_BADGE[f.status] : ''}
+    </div>`;
+  div.addEventListener('click', () => selectFranchise(i));
+  sidebarEl.appendChild(div);
+});
+
+function selectFranchise(i) {
+  const f = FRANCHISES[i];
+  // update sidebar highlight
+  document.querySelectorAll('.d-fitem').forEach((el, idx) => el.classList.toggle('sel', idx === i));
+  // update header — guard against null if detail screen not yet in DOM
+  const idEl    = document.getElementById('d-id');
+  const nameEl  = document.getElementById('d-name');
+  const ownerEl = document.getElementById('d-owner-name');
+  const avatarEl= document.getElementById('d-owner-avatar-text');
+  if (idEl)     idEl.textContent     = f.id;
+  if (nameEl)   nameEl.textContent   = f.name;
+  if (ownerEl)  ownerEl.textContent  = f.owner;
+  if (avatarEl) avatarEl.textContent = f.ownerInit;
+}
+
+// ─── SCREEN SWITCHING ───────────────────────────────────
+function goToDetail(rowIdx) {
+  document.getElementById('list-screen').style.display = 'none';
+  document.getElementById('detail-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+  // select after screen is visible so DOM elements are accessible
+  selectFranchise(rowIdx % FRANCHISES.length);
+}
+
+function goToList() {
+  document.getElementById('detail-screen').style.display = 'none';
+  document.getElementById('list-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+const backBtn = document.getElementById('d-back-btn');
+if (backBtn) backBtn.addEventListener('click', goToList);
+
+// ─── TABLE ROW CLICKS ────────────────────────────────────
+function attachRowClicks() {
+  const cols = document.querySelectorAll('#list-screen .col');
+  cols.forEach(col => {
+    const tds = [...col.querySelectorAll('.td')];
+    tds.forEach((td, rowIdx) => {
+      td.style.cursor = 'pointer';
+      td.addEventListener('mouseenter', () => highlightRow(rowIdx, true));
+      td.addEventListener('mouseleave', () => highlightRow(rowIdx, false));
+      td.addEventListener('click', () => goToDetail(rowIdx));
+    });
+  });
+}
+
+function highlightRow(rowIdx, on) {
+  document.querySelectorAll('#list-screen .col').forEach(col => {
+    const tds = [...col.querySelectorAll('.td')];
+    if (tds[rowIdx]) tds[rowIdx].style.background = on ? '#f5f5f6' : '';
+  });
+}
+
+window.addEventListener('load', attachRowClicks);
+</script>
+<!-- ══════════════════════════════════════ -->
+<!-- ASSIGN LOTS MODAL                      -->
+<!-- ══════════════════════════════════════ -->
+<div id="assign-lots-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1000;display:none;align-items:center;justify-content:center;">
+  <div id="assign-lots-modal" style="
+    background:#fff;
+    border-radius:8px;
+    width:1024px;
+    max-width:96vw;
+    max-height:90vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.2);
+  ">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #e6e6e7;flex-shrink:0;">
+      <span style="font-family:'FK Display',sans-serif;font-size:16px;color:#272d37;line-height:28px;">Assign Lots</span>
+      <button id="close-assign-lots-btn" style="background:none;border:none;cursor:pointer;padding:2px;display:flex;align-items:center;justify-content:center;width:20px;height:20px;">
+        <!-- X icon -->
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L11 11M11 1L1 11" stroke="#444446" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Filters row -->
+    <div style="display:flex;gap:8px;align-items:center;padding:20px 24px;flex-shrink:0;">
+      <!-- Search -->
+      <div style="width:283px;height:40px;border:1px solid #d8dadc;border-radius:2px;background:#fff;padding:0 12px;display:flex;align-items:center;gap:6px;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#7d899b" stroke-width="1.5" style="flex-shrink:0;"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/></svg>
+        <span style="font-family:'FK Display',sans-serif;font-size:14px;color:#7d899b;flex:1;white-space:nowrap;">Search by lot no/name</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7d899b" stroke-width="1.5" style="flex-shrink:0;"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+      <!-- Status dropdown -->
+      <div style="width:130px;height:40px;border:1px solid #ccd1d8;background:#fff;padding:0 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+        <span style="font-family:'Inter',sans-serif;font-size:14px;color:#000;">All Status</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5" style="flex-shrink:0;"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div style="flex:1;overflow-y:auto;padding:0 24px;">
+      <table id="assign-lots-table" style="width:100%;border-collapse:collapse;font-family:'FK Display',sans-serif;">
+        <thead>
+          <tr style="background:#eff0f3;">
+            <th style="padding:14px 12px;text-align:left;font-size:12px;font-weight:400;color:#414c5c;white-space:nowrap;">Lot No.</th>
+            <th style="padding:14px 12px;text-align:left;font-size:12px;font-weight:400;color:#414c5c;">Lot Name</th>
+            <th style="padding:14px 12px;text-align:left;font-size:12px;font-weight:400;color:#414c5c;white-space:nowrap;">State Name</th>
+            <th style="padding:14px 12px;text-align:left;font-size:12px;font-weight:400;color:#414c5c;white-space:nowrap;">Lot Opportunity/year</th>
+            <th style="padding:14px 12px;text-align:left;font-size:12px;font-weight:400;color:#414c5c;white-space:nowrap;">Total Zipcodes</th>
+            <th style="padding:14px 12px;text-align:left;font-size:12px;font-weight:400;color:#414c5c;">Status</th>
+            <th style="padding:14px 12px;text-align:center;width:64px;">
+              <!-- Select-all checkbox -->
+              <div style="display:flex;align-items:center;justify-content:center;">
+                <div style="width:16px;height:16px;border:1px solid #6a6a70;border-radius:4px;background:#fff;cursor:pointer;" id="select-all-chk"></div>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="assign-lots-tbody">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:16px 24px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #e6e6e7;flex-shrink:0;">
+      <span id="selected-count" style="font-family:'FK Display',sans-serif;font-size:12px;color:#5c6b82;opacity:0;">Selected (0)</span>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="cancel-assign-btn" style="
+          border:1px solid #e6e6e7;border-radius:8px;background:#fff;
+          padding:8px 14px;cursor:pointer;
+          font-family:'FK Display',sans-serif;font-size:14px;color:#444446;line-height:20px;
+          white-space:nowrap;
+        ">Cancel</button>
+        <button id="update-assign-btn" style="
+          border:1px solid #0032a0;border-radius:2px;background:#0032a0;
+          padding:8px 14px;cursor:pointer;
+          font-family:'Inter',sans-serif;font-size:14px;color:#fff;line-height:20px;
+          white-space:nowrap;
+          box-shadow:0 1px 2px rgba(16,24,40,0.05);
+        ">Update</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+/* status badge variants inside modal */
+.lot-badge-available {
+  display:inline-flex;align-items:center;gap:4px;
+  background:#e5f6ff;border-radius:2px;padding:2px 6px 2px 8px;
+}
+.lot-badge-available span { font-family:'FK Display',sans-serif;font-size:12px;color:#146dff;line-height:14px; }
+.lot-badge-sold {
+  display:inline-flex;align-items:center;gap:4px;
+  background:#eff0f3;border-radius:2px;padding:2px 6px 2px 8px;
+}
+.lot-badge-sold span { font-family:'FK Display',sans-serif;font-size:12px;color:#546176;line-height:14px; }
+.lot-badge-pending {
+  display:inline-flex;align-items:center;gap:4px;
+  background:#fff7ed;border-radius:2px;padding:2px 6px 2px 8px;
+}
+.lot-badge-pending span { font-family:'FK Display',sans-serif;font-size:12px;color:#ff9332;line-height:14px; }
+
+/* chevron-down small */
+.lot-badge-chevron { width:12px;height:12px;flex-shrink:0; }
+
+/* row hover */
+#assign-lots-tbody tr:hover { background:#f9f9f9; }
+#assign-lots-tbody tr { border-bottom:1px solid #e6e6e7; }
+#assign-lots-tbody td { padding:16px 12px;font-family:'FK Display',sans-serif;font-size:14px;line-height:16px; }
+</style>
+
+<script>
+// ─── ASSIGN LOTS MODAL DATA ────────────────────────────────
+const LOTS = [
+  { no:'NB-006', name:'1', state:'Colorado',   opp:'675,959', zips:'60', status:'available' },
+  { no:'NB-005', name:'1', state:'Georgia',    opp:'675,959', zips:'60', status:'available' },
+  { no:'NB-002', name:'1', state:'New York',   opp:'675,959', zips:'60', status:'sold'      },
+  { no:'NB-004', name:'1', state:'Illinois',   opp:'675,959', zips:'60', status:'sold'      },
+  { no:'NB-007', name:'1', state:'Oregon',     opp:'675,959', zips:'60', status:'available' },
+  { no:'NB-009', name:'1', state:'California', opp:'675,959', zips:'60', status:'pending'   },
+  { no:'NB-001', name:'1', state:'Washington', opp:'675,959', zips:'60', status:'pending'   },
+  { no:'NB-008', name:'1', state:'Texas',      opp:'675,959', zips:'60', status:'pending'   },
+  { no:'NB-003', name:'1', state:'Florida',    opp:'675,959', zips:'60', status:'sold'      },
+];
+
+const chevronSVG = `<svg class="lot-badge-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 4.5l3 3 3-3"/></svg>`;
+
+function statusBadge(s) {
+  if (s === 'available') return `<span class="lot-badge-available"><span>Available</span>${chevronSVG}</span>`;
+  if (s === 'sold')      return `<span class="lot-badge-sold"><span>Sold</span>${chevronSVG}</span>`;
+  if (s === 'pending')   return `<span class="lot-badge-pending"><span>Pending</span>${chevronSVG}</span>`;
+  return '';
+}
+
+function checkbox(checked) {
+  return `<div style="display:flex;align-items:center;justify-content:center;">
+    <div class="lot-row-chk" style="width:16px;height:16px;border:1.5px solid ${checked?'#0032a0':'#6a6a70'};border-radius:4px;background:${checked?'#0032a0':'#fff'};cursor:pointer;display:flex;align-items:center;justify-content:center;">
+      ${checked ? `<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>` : ''}
+    </div>
+  </div>`;
+}
+
+// Build table rows
+const tbody = document.getElementById('assign-lots-tbody');
+const selected = new Set();
+
+function renderRows() {
+  tbody.innerHTML = '';
+  LOTS.forEach((lot, i) => {
+    const isSelected = selected.has(i);
+    const tr = document.createElement('tr');
+    tr.style.background = isSelected ? '#f0f6ff' : '';
+    tr.innerHTML = `
+      <td style="color:#444446;font-weight:400;">${lot.no}</td>
+      <td style="color:#86868b;">${lot.name}</td>
+      <td style="color:#444446;">${lot.state}</td>
+      <td style="color:#86868b;">${lot.opp}</td>
+      <td style="color:#86868b;">${lot.zips}</td>
+      <td>${statusBadge(lot.status)}</td>
+      <td style="text-align:center;">${checkbox(isSelected)}</td>
+    `;
+    // click anywhere on row to toggle
+    tr.addEventListener('click', () => {
+      if (selected.has(i)) selected.delete(i);
+      else selected.add(i);
+      renderRows();
+      updateSelectedCount();
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+function updateSelectedCount() {
+  const el = document.getElementById('selected-count');
+  if (selected.size > 0) {
+    el.style.opacity = '1';
+    el.textContent = `Selected (${selected.size})`;
+  } else {
+    el.style.opacity = '0';
+  }
+}
+
+// Select-all checkbox
+document.getElementById('select-all-chk').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (selected.size === LOTS.length) {
+    selected.clear();
+  } else {
+    LOTS.forEach((_, i) => selected.add(i));
+  }
+  renderRows();
+  updateSelectedCount();
+});
+
+renderRows();
+
+// ─── OPEN / CLOSE ─────────────────────────────────────────
+const overlay = document.getElementById('assign-lots-overlay');
+
+function openAssignLots() {
+  selected.clear();
+  renderRows();
+  updateSelectedCount();
+  overlay.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAssignLots() {
+  overlay.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// Wire "Add Lot" button
+const openBtn = document.getElementById('open-assign-lots-btn');
+if (openBtn) openBtn.addEventListener('click', openAssignLots);
+
+document.getElementById('close-assign-lots-btn').addEventListener('click', closeAssignLots);
+document.getElementById('cancel-assign-btn').addEventListener('click', closeAssignLots);
+document.getElementById('update-assign-btn').addEventListener('click', () => {
+  // Collect selected sold lots
+  const soldSelected = [...selected].filter(i => LOTS[i].status === 'sold');
+  const nonSoldSelected = [...selected].filter(i => LOTS[i].status !== 'sold');
+
+  if (selected.size === 0) {
+    closeAssignLots();
+    return;
+  }
+
+  // If any sold lots selected, open transfer modal for first sold lot
+  if (soldSelected.length > 0) {
+    openTransferModal(soldSelected[0]);
+  } else {
+    // All available/pending — just close
+    closeAssignLots();
+  }
+});
+
+// Close on overlay backdrop click
+overlay.addEventListener('click', (e) => {
+  if (e.target === overlay) closeAssignLots();
+});
+
+// Close on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && overlay.style.display === 'flex') closeAssignLots();
+});
+</script>
+<!-- ══════════════════════════════════════════ -->
+<!-- SOLD LOT TRANSFER MODAL                   -->
+<!-- ══════════════════════════════════════════ -->
+<div id="transfer-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1100;align-items:center;justify-content:center;">
+  <div id="transfer-modal" style="
+    background:#fff;border-radius:8px;
+    width:560px;max-width:96vw;
+    display:flex;flex-direction:column;
+    box-shadow:0 20px 60px rgba(0,0,0,0.2);
+    overflow:hidden;
+  ">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid #e6e6e7;">
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <span style="font-family:'FK Display',sans-serif;font-size:16px;color:#272d37;line-height:24px;">Transfer Lot Ownership</span>
+        <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#86868b;line-height:18px;">This lot is already assigned to another franchise</span>
+      </div>
+      <button id="close-transfer-btn" style="background:none;border:none;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 1L11 11M11 1L1 11" stroke="#444446" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <!-- Lot info banner -->
+    <div id="transfer-lot-banner" style="margin:20px 24px 0;background:#f5f5f6;border-radius:4px;padding:12px 16px;display:flex;align-items:center;gap:16px;">
+      <div style="display:flex;flex-direction:column;gap:2px;flex:1;">
+        <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#86868b;line-height:18px;">Lot</span>
+        <span id="transfer-lot-no" style="font-family:'FK Display',sans-serif;font-size:14px;color:#262527;line-height:20px;font-weight:500;">NB-002</span>
+      </div>
+      <div style="width:1px;height:32px;background:#e6e6e7;"></div>
+      <div style="display:flex;flex-direction:column;gap:2px;flex:1;">
+        <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#86868b;line-height:18px;">State</span>
+        <span id="transfer-lot-state" style="font-family:'FK Display',sans-serif;font-size:14px;color:#262527;line-height:20px;">New York</span>
+      </div>
+      <div style="width:1px;height:32px;background:#e6e6e7;"></div>
+      <div style="display:flex;flex-direction:column;gap:2px;flex:1;">
+        <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#86868b;line-height:18px;">Status</span>
+        <span style="display:inline-flex;align-items:center;gap:4px;background:#eff0f3;border-radius:2px;padding:1px 6px 1px 8px;">
+          <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#546176;line-height:14px;">Sold</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#546176" stroke-width="1.3"><path d="M3 4.5l3 3 3-3"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <!-- Warning notice -->
+    <div style="margin:16px 24px 0;background:#fef0c7;border-radius:4px;padding:12px 16px;display:flex;gap:10px;align-items:flex-start;">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;margin-top:1px;">
+        <circle cx="8" cy="8" r="6.5" stroke="#f4780b" stroke-width="1.3"/>
+        <line x1="8" y1="5" x2="8" y2="8.5" stroke="#f4780b" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="8" cy="10.8" r=".7" fill="#f4780b"/>
+      </svg>
+      <div style="display:flex;flex-direction:column;gap:2px;">
+        <span style="font-family:'FK Display',sans-serif;font-size:13px;color:#272d37;line-height:20px;font-weight:500;">This lot is currently assigned to</span>
+        <span id="transfer-old-franchise" style="font-family:'FK Display',sans-serif;font-size:13px;color:#444446;line-height:20px;">Northern Virginia, VA — Matt Quinn</span>
+      </div>
+    </div>
+
+    <!-- Form fields -->
+    <div style="padding:20px 24px;display:flex;flex-direction:column;gap:16px;">
+
+      <!-- Cut-off Date -->
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label style="font-family:'FK Display',sans-serif;font-size:14px;color:#272d37;line-height:20px;">
+          Cut-off Date of Current Franchise<span style="color:#df372b;">*</span>
+        </label>
+        <div style="position:relative;">
+          <input
+            type="datetime-local"
+            id="cutoff-date-input"
+            style="
+              width:100%;height:40px;border:1px solid #d8dadc;border-radius:2px;
+              padding:0 36px 0 12px;font-family:'FK Display',sans-serif;font-size:14px;
+              color:#262527;background:#fff;outline:none;box-sizing:border-box;
+            "
+          />
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#86868b" stroke-width="1.3" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;">
+            <rect x="2" y="3" width="12" height="11" rx="1.5"/><path d="M5 1v3M11 1v3M2 7h12"/>
+          </svg>
+        </div>
+        <span id="cutoff-error" style="font-family:'FK Display',sans-serif;font-size:12px;color:#df372b;line-height:18px;display:none;"></span>
+        <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#86868b;line-height:18px;">
+          Must be at least 24 hours from now. This is the last day the previous franchise operates this lot.
+        </span>
+      </div>
+
+      <!-- Effective Date -->
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <label style="font-family:'FK Display',sans-serif;font-size:14px;color:#272d37;line-height:20px;">
+          Effective Date of New Franchise
+          <span style="color:#df372b;">*</span>
+        </label>
+        <div style="position:relative;">
+          <input
+            type="datetime-local"
+            id="effective-date-input"
+            style="
+              width:100%;height:40px;border:1px solid #d8dadc;border-radius:2px;
+              padding:0 36px 0 12px;font-family:'FK Display',sans-serif;font-size:14px;
+              color:#262527;background:#fff;outline:none;box-sizing:border-box;
+            "
+          />
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#86868b" stroke-width="1.3" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;">
+            <rect x="2" y="3" width="12" height="11" rx="1.5"/><path d="M5 1v3M11 1v3M2 7h12"/>
+          </svg>
+        </div>
+        <span id="effective-error" style="font-family:'FK Display',sans-serif;font-size:12px;color:#df372b;line-height:18px;display:none;"></span>
+        <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#86868b;line-height:18px;">
+          Must be after the cut-off date. This is when the new franchise takes over this lot.
+        </span>
+      </div>
+
+      <!-- Timeline visual -->
+      <div id="transfer-timeline" style="display:none;background:#f5f5f6;border-radius:4px;padding:14px 16px;">
+        <div style="display:flex;align-items:center;gap:0;position:relative;">
+          <!-- Old franchise node -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#86868b;"></div>
+            <span style="font-family:'FK Display',sans-serif;font-size:11px;color:#86868b;text-align:center;line-height:16px;" id="tl-old-franchise">—</span>
+          </div>
+          <!-- Line -->
+          <div style="flex:1;height:1px;background:#e6e6e7;margin-bottom:22px;"></div>
+          <!-- Cut-off node -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#f4780b;"></div>
+            <span style="font-family:'FK Display',sans-serif;font-size:11px;color:#f4780b;text-align:center;line-height:16px;" id="tl-cutoff">Cut-off</span>
+          </div>
+          <!-- Line -->
+          <div style="flex:1;height:1px;background:#146dff;margin-bottom:22px;"></div>
+          <!-- New franchise node -->
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#146dff;"></div>
+            <span style="font-family:'FK Display',sans-serif;font-size:11px;color:#146dff;text-align:center;line-height:16px;" id="tl-new-franchise">—</span>
+          </div>
+        </div>
+        <div style="display:flex;margin-top:2px;">
+          <div style="flex:1;text-align:center;"><span style="font-family:'FK Display',sans-serif;font-size:10px;color:#86868b;">Current</span></div>
+          <div style="flex:1;"></div>
+          <div style="flex:1;text-align:center;"><span style="font-family:'FK Display',sans-serif;font-size:10px;color:#f4780b;" id="tl-cutoff-date">—</span></div>
+          <div style="flex:1;"></div>
+          <div style="flex:1;text-align:center;"><span style="font-family:'FK Display',sans-serif;font-size:10px;color:#146dff;" id="tl-effective-date">—</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:16px 24px;display:flex;align-items:center;justify-content:flex-end;gap:8px;border-top:1px solid #e6e6e7;">
+      <button id="cancel-transfer-btn" style="
+        border:1px solid #e6e6e7;border-radius:8px;background:#fff;
+        padding:8px 14px;cursor:pointer;
+        font-family:'FK Display',sans-serif;font-size:14px;color:#444446;line-height:20px;
+      ">Cancel</button>
+      <button id="confirm-transfer-btn" style="
+        border:1px solid #0032a0;border-radius:2px;background:#0032a0;
+        padding:8px 20px;cursor:pointer;
+        font-family:'Inter',sans-serif;font-size:14px;color:#fff;line-height:20px;
+        box-shadow:0 1px 2px rgba(16,24,40,0.05);
+        opacity:0.5;cursor:not-allowed;
+      " disabled>Confirm Transfer</button>
+    </div>
+
+  </div>
+</div>
+
+<style>
+/* Lot badge in Associated Lots */
+.lot-assigned-badge {
+  display:inline-flex;align-items:center;gap:6px;
+  background:#f0f6ff;border:1px solid #c2d9ff;
+  border-radius:4px;padding:6px 10px;
+  font-family:'FK Display',sans-serif;
+}
+.lot-assigned-badge .lab-no {
+  font-size:13px;color:#0032a0;font-weight:500;line-height:18px;white-space:nowrap;
+}
+.lot-assigned-badge .lab-edd {
+  font-size:12px;line-height:18px;white-space:nowrap;
+}
+.lot-assigned-badge .lab-remove {
+  background:none;border:none;cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  margin-left:2px;color:#5c6b82;
+}
+.lot-assigned-badge .lab-remove:hover { color:#df372b; }
+
+/* Date input focus styles */
+#cutoff-date-input:focus, #effective-date-input:focus {
+  border-color:#146dff;
+  box-shadow:0 0 0 3px rgba(20,109,255,0.1);
+}
+#cutoff-date-input.input-error, #effective-date-input.input-error {
+  border-color:#df372b !important;
+  box-shadow:0 0 0 3px rgba(223,55,43,0.08) !important;
+}
+#cutoff-date-input.input-ok, #effective-date-input.input-ok {
+  border-color:#2e964b !important;
+}
+</style>
+
+<script>
+// ─── TRANSFER MODAL LOGIC ─────────────────────────────────
+const transferOverlay = document.getElementById('transfer-overlay');
+
+// Old franchise data (mock — the lot is currently assigned to this)
+const OLD_FRANCHISE_MAP = {
+  'NB-002': { name:'Northern Virginia, VA', owner:'Matt Quinn' },
+  'NB-004': { name:'Fremont, NE',           owner:'Jodi Wimer' },
+  'NB-003': { name:'Oklahoma City, NE',     owner:'Darin Smith' },
+};
+
+function openTransferModal(lotIdx) {
+  const lot = LOTS[lotIdx];
+  const oldFr = OLD_FRANCHISE_MAP[lot.no] || { name:'Northern Virginia, VA', owner:'Matt Quinn' };
+
+  // Populate lot info
+  document.getElementById('transfer-lot-no').textContent    = lot.no;
+  document.getElementById('transfer-lot-state').textContent = lot.state;
+  document.getElementById('transfer-old-franchise').textContent = `${oldFr.name} — ${oldFr.owner}`;
+
+  // Timeline labels
+  document.getElementById('tl-old-franchise').textContent = oldFr.name;
+  const currentFranchise = document.getElementById('d-name');
+  document.getElementById('tl-new-franchise').textContent = currentFranchise ? currentFranchise.textContent : 'New Franchise';
+
+  // Set min cut-off = now + 24 hours
+  const minCutoff = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  const minCutoffStr = toDatetimeLocal(minCutoff);
+  const cutoffInput    = document.getElementById('cutoff-date-input');
+  const effectiveInput = document.getElementById('effective-date-input');
+  cutoffInput.min    = minCutoffStr;
+  effectiveInput.min = minCutoffStr;
+  cutoffInput.value    = '';
+  effectiveInput.value = '';
+  cutoffInput.className    = '';
+  effectiveInput.className = '';
+  document.getElementById('cutoff-error').style.display    = 'none';
+  document.getElementById('effective-error').style.display = 'none';
+  document.getElementById('transfer-timeline').style.display = 'none';
+  setConfirmEnabled(false);
+
+  // Show modal on top of assign modal
+  transferOverlay.style.display = 'flex';
+}
+
+function closeTransferModal() {
+  transferOverlay.style.display = 'none';
+}
+
+function toDatetimeLocal(date) {
+  const pad = n => String(n).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function formatDisplay(val) {
+  if (!val) return '—';
+  const d = new Date(val);
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) +
+         ' ' + d.toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+}
+
+function setConfirmEnabled(on) {
+  const btn = document.getElementById('confirm-transfer-btn');
+  btn.disabled = !on;
+  btn.style.opacity = on ? '1' : '0.5';
+  btn.style.cursor  = on ? 'pointer' : 'not-allowed';
+}
+
+function validateDates() {
+  const cutoffInput    = document.getElementById('cutoff-date-input');
+  const effectiveInput = document.getElementById('effective-date-input');
+  const cutoffErr      = document.getElementById('cutoff-error');
+  const effectiveErr   = document.getElementById('effective-error');
+  const timeline       = document.getElementById('transfer-timeline');
+
+  const cutoffVal    = cutoffInput.value;
+  const effectiveVal = effectiveInput.value;
+  let valid = true;
+
+  // Validate cut-off
+  if (cutoffVal) {
+    const cutoffDate = new Date(cutoffVal);
+    const minCutoff  = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    if (cutoffDate < minCutoff) {
+      cutoffErr.textContent = 'Cut-off date must be at least 24 hours from now.';
+      cutoffErr.style.display = 'block';
+      cutoffInput.className = 'input-error';
+      valid = false;
+    } else {
+      cutoffErr.style.display = 'none';
+      cutoffInput.className = 'input-ok';
+      // update effective min to be after cutoff
+      effectiveInput.min = cutoffVal;
+    }
+  } else {
+    cutoffErr.style.display = 'none';
+    cutoffInput.className = '';
+    valid = false;
+  }
+
+  // Validate effective
+  if (effectiveVal) {
+    const effectiveDate = new Date(effectiveVal);
+    const cutoffDate    = cutoffVal ? new Date(cutoffVal) : null;
+    if (cutoffDate && effectiveDate <= cutoffDate) {
+      effectiveErr.textContent = 'Effective date must be after the cut-off date.';
+      effectiveErr.style.display = 'block';
+      effectiveInput.className = 'input-error';
+      valid = false;
+    } else if (!cutoffVal) {
+      effectiveErr.textContent = 'Please set the cut-off date first.';
+      effectiveErr.style.display = 'block';
+      effectiveInput.className = 'input-error';
+      valid = false;
+    } else {
+      effectiveErr.style.display = 'none';
+      effectiveInput.className = 'input-ok';
+    }
+  } else {
+    effectiveErr.style.display = 'none';
+    effectiveInput.className = effectiveInput.className === 'input-error' ? 'input-error' : '';
+    valid = false;
+  }
+
+  // Show timeline if both valid
+  if (cutoffVal && effectiveVal && valid) {
+    document.getElementById('tl-cutoff-date').textContent    = formatDisplay(cutoffVal);
+    document.getElementById('tl-effective-date').textContent = formatDisplay(effectiveVal);
+    timeline.style.display = 'block';
+  } else {
+    timeline.style.display = 'none';
+  }
+
+  setConfirmEnabled(valid);
+}
+
+document.getElementById('cutoff-date-input').addEventListener('change', validateDates);
+document.getElementById('effective-date-input').addEventListener('change', validateDates);
+
+// Close buttons
+document.getElementById('close-transfer-btn').addEventListener('click', closeTransferModal);
+document.getElementById('cancel-transfer-btn').addEventListener('click', closeTransferModal);
+
+// ─── ASSIGNED LOTS STATE ────────────────────────────────
+const assignedLots = []; // { no, state, effectiveDate }
+
+function renderAssignedLots() {
+  const emptyState   = document.getElementById('lots-empty-state');
+  const assignedState = document.getElementById('lots-assigned-state');
+  const badgesEl     = document.getElementById('assigned-lots-badges');
+  if (!emptyState || !assignedState || !badgesEl) return;
+
+  if (assignedLots.length === 0) {
+    emptyState.style.display   = 'flex';
+    assignedState.style.display = 'none';
+    // hide effective date label
+    const effLabel = document.getElementById('effective-date-label');
+    if (effLabel) effLabel.style.display = 'none';
+    return;
+  }
+
+  emptyState.style.display    = 'none';
+  assignedState.style.display = 'flex';
+
+  // Render badges
+  badgesEl.innerHTML = '';
+  assignedLots.forEach((lot, i) => {
+    const badge = document.createElement('div');
+    badge.className = 'lot-assigned-badge';
+    badge.innerHTML = `
+      <span class="lab-no">${lot.no}</span>
+      <span class="lab-edd" style="color:#2e964b;font-size:11px;">
+        Effective ${lot.effectiveDate}
+      </span>
+      <button class="lab-remove" data-idx="${i}" title="Remove">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+    `;
+    badge.querySelector('.lab-remove').addEventListener('click', (e) => {
+      const idx = parseInt(e.currentTarget.dataset.idx);
+      assignedLots.splice(idx, 1);
+      renderAssignedLots();
+    });
+    badgesEl.appendChild(badge);
+  });
+
+  // Show effective date on Owner cell — use the latest effective date
+  const latestLot = assignedLots[assignedLots.length - 1];
+  const effLabel  = document.getElementById('effective-date-label');
+  const effValue  = document.getElementById('effective-date-value');
+  if (effLabel && effValue) {
+    effLabel.style.display = 'flex';
+    effValue.textContent   = latestLot.effectiveDate;
+  }
+}
+
+// Wire second Add Lot button
+window.addEventListener('load', () => {
+  const btn2 = document.getElementById('open-assign-lots-btn-2');
+  if (btn2) btn2.addEventListener('click', openAssignLots);
+});
+
+// Confirm
+document.getElementById('confirm-transfer-btn').addEventListener('click', () => {
+  if (document.getElementById('confirm-transfer-btn').disabled) return;
+
+  const effectiveVal = document.getElementById('effective-date-input').value;
+  const lotIdx = [...selected].find(i => LOTS[i].status === 'sold');
+  if (lotIdx !== undefined) {
+    const lot = LOTS[lotIdx];
+    const effDate = new Date(effectiveVal);
+    const formatted = effDate.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    assignedLots.push({ no: lot.no, state: lot.state, effectiveDate: formatted });
+    renderAssignedLots();
+  }
+
+  closeTransferModal();
+  closeAssignLots();
+});
+
+// Close on backdrop
+transferOverlay.addEventListener('click', (e) => {
+  if (e.target === transferOverlay) closeTransferModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && transferOverlay.style.display === 'flex') closeTransferModal();
+});
+</script>
+<!-- ══════════════════════════════════════════════════ -->
+<!-- LOTS SCREEN                                        -->
+<!-- ══════════════════════════════════════════════════ -->
+<div id="lots-screen" style="display:none;">
+<style>
+/* ─── LOTS PAGE ─── */
+.lots-page { min-height:100vh; background:#fff; display:flex; flex-direction:column; }
+
+/* NAV — lots active state */
+.lots-page nav .lots-nav-active { background:rgba(20,109,255,0.08); color:#146dff; border-radius:2px; }
+.lots-page nav .lots-nav-inactive { color:#7d899b; background:none; }
+
+/* STATS BAR */
+.lots-stats-bar {
+  display:flex; border-bottom:1px solid #e6e6e7;
+}
+.lots-stat-cell {
+  flex:1; padding:20px 32px; display:flex; align-items:center; justify-content:space-between;
+  border-right:1px solid #e6e6e7; position:relative;
+}
+.lots-stat-cell:last-child { border-right:none; }
+.lots-stat-cell.active::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:#0d9488;
+}
+.lots-stat-val  { font-family:'FK Display',sans-serif; font-size:28px; color:#262527; line-height:36px; font-weight:400; }
+.lots-stat-label{ font-family:'FK Display',sans-serif; font-size:14px; color:#86868b; line-height:20px; margin-top:2px; }
+.lots-stat-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+
+/* TOOLBAR */
+.lots-toolbar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 32px; border-bottom:1px solid #e6e6e7;
+}
+.lots-toolbar-left  { display:flex; align-items:center; gap:12px; }
+.lots-toolbar-right { display:flex; align-items:center; gap:12px; }
+
+.lots-search {
+  width:301px; height:40px; border:1px solid #d8dadc; border-radius:2px;
+  background:#fff; padding:0 12px; display:flex; align-items:center; gap:8px;
+}
+.lots-search input {
+  border:none; outline:none; font-family:'FK Display',sans-serif;
+  font-size:14px; color:#262527; background:transparent; flex:1;
+}
+.lots-search input::placeholder { color:#7d899b; }
+.lots-search svg { width:16px; height:16px; color:#7d899b; flex-shrink:0; }
+
+.lots-price-btn {
+  height:40px; border:1px solid #ccd1d8; background:#fff; padding:0 14px;
+  display:flex; align-items:center; gap:6px; cursor:pointer; font-family:'FK Display',sans-serif;
+  font-size:14px; color:#000; white-space:nowrap;
+}
+.lots-price-btn svg { width:24px; height:24px; }
+
+.lots-unassigned-link {
+  display:flex; align-items:center; gap:4px;
+  font-family:'FK Display',sans-serif; font-size:14px; color:#146dff;
+  cursor:pointer; text-decoration:none; white-space:nowrap;
+}
+.lots-unassigned-link svg { width:16px; height:16px; }
+
+/* List/Map view toggle */
+.lots-view-toggle {
+  display:flex; border:1px solid #e6e6e7; border-radius:2px; overflow:hidden; height:40px;
+}
+.lots-view-btn {
+  padding:0 16px; border:none; background:#fff; cursor:pointer;
+  font-family:'FK Display',sans-serif; font-size:14px; color:#444446;
+  display:flex; align-items:center; white-space:nowrap;
+}
+.lots-view-btn.active { background:#eff0f3; color:#262527; }
+.lots-view-btn + .lots-view-btn { border-left:1px solid #e6e6e7; }
+
+/* Create button */
+.lots-create-btn {
+  height:40px; background:#0032a0; border:1px solid #0032a0; border-radius:2px;
+  padding:0 16px; display:flex; align-items:center; gap:6px; cursor:pointer;
+  font-family:'Inter',sans-serif; font-size:14px; color:#fff; white-space:nowrap;
+  box-shadow:0 1px 2px rgba(16,24,40,0.05);
+}
+.lots-create-btn svg { width:16px; height:16px; }
+
+/* MAIN LAYOUT: table + right panel */
+.lots-body {
+  display:flex; flex:1; overflow:hidden;
+}
+
+/* TABLE AREA */
+.lots-table-area {
+  flex:1; min-width:0; padding:28px 32px; overflow-x:auto; overflow-y:auto;
+}
+
+.lots-table {
+  width:100%; border-collapse:collapse;
+  font-family:'FK Display',sans-serif;
+  min-width:900px;
+}
+.lots-table thead tr { background:#eff0f3; }
+.lots-table th {
+  padding:14px 12px; text-align:left;
+  font-size:12px; font-weight:400; color:#414c5c;
+  white-space:nowrap; border:none;
+}
+.lots-table tbody tr { border-bottom:1px solid #e6e6e7; cursor:pointer; }
+.lots-table tbody tr:hover { background:#f9f9f9; }
+.lots-table td { padding:16px 12px; font-size:14px; line-height:20px; }
+.lots-table td.lot-name-col  { color:#444446; font-weight:400; }
+.lots-table td.lot-dim-col   { color:#86868b; }
+.lots-table td.lot-dark-col  { color:#444446; }
+
+/* Assign button in table */
+.assign-btn {
+  display:inline-flex; align-items:center; gap:4px;
+  background:#e43f32; border:none; border-radius:100px;
+  padding:3px 10px 3px 4px; cursor:pointer;
+  font-family:'FK Display',sans-serif; font-size:12px; color:#fff;
+  white-space:nowrap;
+}
+.assign-btn .assign-icon {
+  width:20px; height:20px; border-radius:50%; background:rgba(255,255,255,0.25);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.assign-btn .assign-icon svg { width:12px; height:12px; }
+
+/* Status badges in table */
+.tbl-badge-available { display:inline-flex; align-items:center; gap:3px; background:#e5f6ff; border-radius:2px; padding:2px 6px 2px 8px; }
+.tbl-badge-available span { font-family:'FK Display',sans-serif; font-size:12px; color:#146dff; line-height:14px; }
+.tbl-badge-sold      { display:inline-flex; align-items:center; gap:3px; background:#eff0f3; border-radius:2px; padding:2px 6px 2px 8px; }
+.tbl-badge-sold span { font-family:'FK Display',sans-serif; font-size:12px; color:#546176; line-height:14px; }
+.tbl-badge-pending   { display:inline-flex; align-items:center; gap:3px; background:#fff7ed; border-radius:2px; padding:2px 6px 2px 8px; }
+.tbl-badge-pending span { font-family:'FK Display',sans-serif; font-size:12px; color:#ff9332; line-height:14px; }
+.tbl-badge-chevron { width:12px; height:12px; flex-shrink:0; }
+
+/* PAGINATION */
+.lots-pagination {
+  display:flex; align-items:center; justify-content:flex-end; gap:16px;
+  padding:12px 0; border-top:1px solid #e6e6e7; margin-top:0;
+}
+.lots-rows-per-page {
+  display:flex; align-items:center; gap:6px;
+  font-family:'FK Display',sans-serif; font-size:14px; color:#444446;
+}
+.lots-rows-per-page select {
+  border:none; outline:none; font-family:'FK Display',sans-serif;
+  font-size:14px; color:#444446; cursor:pointer; background:transparent;
+}
+.lots-page-info { font-family:'FK Display',sans-serif; font-size:14px; color:#444446; }
+.lots-page-btn {
+  width:32px; height:32px; border:1px solid #e6e6e7; border-radius:50%;
+  background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.lots-page-btn svg { width:18px; height:18px; color:#444446; }
+
+/* RIGHT PANEL — Expression of Interests */
+.lots-right-panel {
+  width:382px; flex-shrink:0;
+  border-left:1px solid #e6e6e7;
+  background:#f0f6ff;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.eoi-header {
+  padding:16px 32px 0;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.eoi-title-row { display:flex; align-items:center; gap:8px; }
+.eoi-dot { width:8px; height:8px; border-radius:50%; background:#e43f32; flex-shrink:0; }
+.eoi-title { font-family:'FK Display',sans-serif; font-size:16px; color:#272d37; line-height:24px; }
+.eoi-arrow-btn {
+  width:26px; height:26px; border:1px solid #e6e6e7; border-radius:4px; background:#fff;
+  display:flex; align-items:center; justify-content:center; cursor:pointer;
+}
+.eoi-arrow-btn svg { width:14px; height:14px; color:#444446; }
+
+.eoi-recent-bar {
+  padding:12px 32px 12px;
+  display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid #e6e6e7;
+}
+.eoi-recent-label { font-family:'FK Display',sans-serif; font-size:14px; color:#444446; line-height:20px; }
+.eoi-sync-btn {
+  background:#0032a0; border:none; border-radius:4px;
+  padding:6px 12px; cursor:pointer; display:flex; align-items:center; gap:6px;
+  font-family:'FK Display',sans-serif; font-size:13px; color:#fff; line-height:18px;
+}
+.eoi-sync-btn svg { width:14px; height:14px; }
+
+.eoi-entries { flex:1; overflow-y:auto; background:#fff; }
+.eoi-entry {
+  padding:16px 32px; border-bottom:1px solid #e6e6e7;
+  display:flex; flex-direction:column; gap:4px; cursor:pointer;
+}
+.eoi-entry:hover { background:#f9f9f9; }
+.eoi-entry-name { font-family:'FK Display',sans-serif; font-size:14px; color:#262527; line-height:20px; }
+.eoi-entry-meta { font-family:'FK Display',sans-serif; font-size:12px; color:#5c6b82; line-height:18px; }
+.eoi-entry-meta span { color:#86868b; }
+
+.eoi-footer {
+  padding:16px 32px; background:#e0eeff;
+  border-top:1px solid #c2d9ff;
+}
+.eoi-footer-text {
+  font-family:'FK Display',sans-serif; font-size:13px; color:#146dff; line-height:20px;
+}
+</style>
+
+<div class="lots-page">
+
+  <!-- NAV -->
+  <nav>
+    <div class="brand" id="lots-back-to-home" style="cursor:pointer;">
+      <svg width="99" height="28" viewBox="0 0 99 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip_lots)">
+          <path d="M27.9891 4.75635L24.42 11.0479C24.2755 11.299 23.6253 12.3249 23.4013 12.4899C22.8089 13.1857 21.9925 13.6449 21.0821 13.8027C20.8654 13.8745 20.0129 13.9175 19.7744 13.9175H7.89676L0 27.8493H11.8704C12.5568 27.8422 15.0566 27.7059 15.678 27.4619C18.1416 26.9669 20.3235 25.3385 21.5951 23.093L25.1642 16.8014C25.3087 16.5503 25.9589 15.5245 26.1829 15.3595C26.7753 14.6636 27.599 14.2044 28.5093 14.0395C28.7261 13.9677 29.5714 13.9247 29.8098 13.9247H41.6874L49.5842 0H37.721C37.0346 0.00717398 34.5348 0.143479 33.9135 0.387394C31.4426 0.875225 29.2607 2.51089 27.9891 4.75635Z" fill="#F4780B"/>
+          <path d="M27.9448 25.2742L28.017 25.2383C29.6932 25.8696 31.4705 26.1494 33.9269 26.1494C36.5568 26.1494 37.6766 25.7333 37.6766 25.1236C37.6766 23.3372 27.887 25.6903 27.887 21.472C27.887 19.6498 29.9099 18.6885 33.7824 18.6885C35.7187 18.6885 37.496 18.9252 39.1361 19.4059V21.2783L39.0638 21.2998C37.3515 20.7976 35.5959 20.5322 33.833 20.5322C31.3116 20.5322 30.2423 20.8407 30.2423 21.3931C30.2423 23.1794 40.0247 20.8981 40.0247 25.059C40.0247 27.0964 38.1969 27.9931 33.7752 27.9931C31.5139 27.9931 29.4548 27.7205 27.9231 27.2398V25.2742H27.9448Z" fill="#F4780B"/>
+          <path d="M44.0144 18.9551V27.858H41.6519V18.9551H44.0144Z" fill="#F4780B"/>
+          <path d="M47.8663 23.3666C47.8663 25.1026 49.4699 26.1501 52.5983 26.1501C53.5448 26.1501 54.4624 25.9994 55.344 25.7411V24.127H49.9905V22.5989H57.6994V26.7885C55.9362 27.6853 54.3686 27.9938 52.5045 27.9938C48.0975 27.9938 45.5037 26.2792 45.5037 23.3451C45.5037 20.4109 48.0903 18.6963 52.3743 18.6963C54.4119 18.6963 56.1025 19.0765 57.7138 19.9015V21.8959L57.6412 21.9103C56.0737 21.0566 54.3903 20.54 52.5983 20.54C49.5064 20.5543 47.8663 21.6018 47.8663 23.3666Z" fill="#F4780B"/>
+          <path d="M72.2555 18.9551V27.858H69.5246L62.0613 21.5305V27.858H59.6987V18.9551H62.1844L69.8933 25.469V18.9551H72.2555Z" fill="#F4780B"/>
+          <path d="M83.237 26.0638H76.9009L75.7809 27.8502H73.2448L78.9598 18.9473H81.3945L86.8206 27.8502H84.2844L83.237 26.0638ZM82.1675 24.256L80.1591 20.8412L78.0205 24.256H82.1675Z" fill="#F4780B"/>
+          <path d="M98.4243 26.043V27.858H87.9413V18.9551H90.3035V26.043H98.4243Z" fill="#F4780B"/>
+        </g>
+        <defs><clipPath id="clip_lots"><rect width="98.4242" height="28" fill="white"/></clipPath></defs>
+      </svg>
+      <div class="brand-sep"></div>
+      <span class="brand-text">Lot Insights</span>
+    </div>
+    <div class="nav-center">
+      <button class="nav-btn active" style="color:#146dff;background:rgba(20,109,255,0.08);">
+        <svg viewBox="0 0 16 16" fill="none" stroke="#146dff" stroke-width="1.4"><path d="M8 1.5C5.5 1.5 3.5 3.5 3.5 6c0 3.5 4.5 8.5 4.5 8.5s4.5-5 4.5-8.5c0-2.5-2-4.5-4.5-4.5z"/><circle cx="8" cy="6" r="1.5"/></svg>
+        Lots
+      </button>
+      <a href="#" class="nav-btn" onclick="goToFranchises();return false;">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 7h13M3 7V13.5h10V7"/><path d="M2 7l1.5-4.5h9L14 7"/><path d="M6 13.5V10h4v3.5"/></svg>
+        Franchises
+      </a>
+    </div>
+    <div class="profile">
+      <div class="profile-pic">PS</div>
+      <div class="profile-info">
+        <span class="profile-name-text">Paul Smith</span>
+        <span class="profile-role">Admin</span>
+      </div>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#7d899b" stroke-width="1.5" style="margin-top:4px"><path d="M3.5 5.25L7 8.75l3.5-3.5"/></svg>
+    </div>
+  </nav>
+
+  <!-- STATS BAR -->
+  <div class="lots-stats-bar">
+    <!-- Total Lots -->
+    <div class="lots-stat-cell active">
+      <div>
+        <div class="lots-stat-val">1000</div>
+        <div class="lots-stat-label">Total Lots</div>
+      </div>
+      <div class="lots-stat-icon" style="background:#e5f6ff;">
+        <!-- globe icon -->
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#146dff" stroke-width="1.4"><circle cx="9" cy="9" r="7"/><path d="M9 2C9 2 6 5.5 6 9s3 7 3 7M9 2c0 0 3 3.5 3 7s-3 7-3 7M2 9h14"/></svg>
+      </div>
+    </div>
+    <!-- Available Lots -->
+    <div class="lots-stat-cell">
+      <div>
+        <div class="lots-stat-val">632</div>
+        <div class="lots-stat-label">Available Lots</div>
+      </div>
+      <div class="lots-stat-icon" style="background:#e5f6ff;">
+        <!-- pin icon -->
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#146dff" stroke-width="1.4"><path d="M9 1.5C6.5 1.5 4.5 3.5 4.5 6c0 4 4.5 10.5 4.5 10.5s4.5-6.5 4.5-10.5c0-2.5-2-4.5-4.5-4.5z"/><circle cx="9" cy="6" r="1.8"/></svg>
+      </div>
+    </div>
+    <!-- Sold Lots -->
+    <div class="lots-stat-cell">
+      <div>
+        <div class="lots-stat-val">340</div>
+        <div class="lots-stat-label">Sold Lots</div>
+      </div>
+      <div class="lots-stat-icon" style="background:#f0f0f3;">
+        <!-- grey pin icon -->
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#6a6a70" stroke-width="1.4"><path d="M9 1.5C6.5 1.5 4.5 3.5 4.5 6c0 4 4.5 10.5 4.5 10.5s4.5-6.5 4.5-10.5c0-2.5-2-4.5-4.5-4.5z"/><circle cx="9" cy="6" r="1.8"/></svg>
+      </div>
+    </div>
+    <!-- Pending Lots -->
+    <div class="lots-stat-cell">
+      <div>
+        <div class="lots-stat-val">42</div>
+        <div class="lots-stat-label">Pending Lots</div>
+      </div>
+      <div class="lots-stat-icon" style="background:#fff7ed;">
+        <!-- orange store icon -->
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="#f4780b" stroke-width="1.4"><path d="M2 8h14M4 8V15h10V8"/><path d="M3 8l1.5-5h9L15 8"/><path d="M7 15V11h4v4"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="lots-toolbar">
+    <div class="lots-toolbar-left">
+      <!-- Search -->
+      <div class="lots-search">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M11 11l3 3"/></svg>
+        <input type="text" placeholder="Search by state, city, zip code" />
+      </div>
+      <!-- Price dropdown -->
+      <button class="lots-price-btn">
+        $ Price
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="lots-toolbar-right">
+      <!-- Unassigned zip codes link -->
+      <a href="#" class="lots-unassigned-link" onclick="return false;">
+        Unassigned Zip Codes
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 13L13 3M13 3H7M13 3v6"/></svg>
+      </a>
+      <!-- List/Map view toggle -->
+      <div class="lots-view-toggle">
+        <button class="lots-view-btn active">List View</button>
+        <button class="lots-view-btn">Map View</button>
+      </div>
+      <!-- Create button -->
+      <button class="lots-create-btn">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="8" y1="2" x2="8" y2="14"/><line x1="2" y1="8" x2="14" y2="8"/></svg>
+        Create
+      </button>
+    </div>
+  </div>
+
+  <!-- BODY: Table + Right Panel -->
+  <div class="lots-body">
+
+    <!-- TABLE -->
+    <div class="lots-table-area">
+      <table class="lots-table">
+        <thead>
+          <tr>
+            <th>Lot Name</th>
+            <th>State Name</th>
+            <th>Lot No.</th>
+            <th>Lot Price $</th>
+            <th>Lot Opportunity/year</th>
+            <th>Population</th>
+            <th>Total Zipcodes</th>
+            <th>Lot Priority</th>
+            <th>Franchise</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="lots-tbody">
+          <!-- rows built by JS -->
+        </tbody>
+      </table>
+
+      <!-- PAGINATION -->
+      <div class="lots-pagination">
+        <div class="lots-rows-per-page">
+          Rows per page :
+          <select>
+            <option>20</option>
+            <option>50</option>
+            <option>100</option>
+          </select>
+        </div>
+        <span class="lots-page-info">1-6 of 6</span>
+        <button class="lots-page-btn">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 14l-5-5 5-5"/></svg>
+        </button>
+        <button class="lots-page-btn">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 4l5 5-5 5"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="lots-right-panel">
+      <!-- Header: Expression of Interests -->
+      <div class="eoi-header" style="padding:24px 32px 0;">
+        <div class="eoi-title-row">
+          <div class="eoi-dot"></div>
+          <span class="eoi-title">Expression of Interests</span>
+        </div>
+        <div class="eoi-arrow-btn">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+        </div>
+      </div>
+
+      <!-- Recent Entries + Sync -->
+      <div class="eoi-recent-bar" style="padding:12px 32px;">
+        <span class="eoi-recent-label">Recent Entries</span>
+        <button class="eoi-sync-btn">
+          <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12.5 2.5A6 6 0 1 0 13 7"/><path d="M13 2.5V6h-3.5"/></svg>
+          Sync
+        </button>
+      </div>
+
+      <!-- Entries list -->
+      <div class="eoi-entries">
+        <div class="eoi-entry">
+          <span class="eoi-entry-name">Mike Orton</span>
+          <span class="eoi-entry-meta">Market 27 · Ohio · $77k</span>
+        </div>
+        <div class="eoi-entry">
+          <span class="eoi-entry-name">Carla Smith</span>
+          <span class="eoi-entry-meta">Market 12 · Nebraska · $120k</span>
+        </div>
+        <div class="eoi-entry">
+          <span class="eoi-entry-name">Micheal Fernendez</span>
+          <span class="eoi-entry-meta">Market 35 · Kansas · $80k</span>
+        </div>
+        <div class="eoi-entry">
+          <span class="eoi-entry-name">Henry Octane</span>
+          <span class="eoi-entry-meta">Market 12 · Nebraska · $57k</span>
+        </div>
+        <div class="eoi-entry">
+          <span class="eoi-entry-name">Anna Smith</span>
+          <span class="eoi-entry-meta">Market 15 · Texas · $67k</span>
+        </div>
+        <div class="eoi-entry">
+          <span class="eoi-entry-name">Richard K.</span>
+          <span class="eoi-entry-meta">Market 27 · Florida · $190k</span>
+        </div>
+      </div>
+
+      <!-- Footer note -->
+      <div class="eoi-footer">
+        <span class="eoi-footer-text">Please refer to Hubspot for details of these requests.</span>
+      </div>
+    </div>
+
+  </div><!-- /lots-body -->
+</div><!-- /lots-page -->
+</div><!-- /lots-screen -->
+
+<script>
+// ─── LOTS TABLE DATA ──────────────────────────────────────
+const LOTS_DATA = [
+  { name:'NB-001', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Assign',      status:'available' },
+  { name:'NB-006', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Raleigh, NC',  status:'available' },
+  { name:'NB-002', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Orlando, FL',  status:'sold'      },
+  { name:'NB-005', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Raleigh, NC',  status:'sold'      },
+  { name:'NB-003', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Tucson, AZ',   status:'available' },
+  { name:'NB-009', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Assign',       status:'pending'   },
+  { name:'NB-004', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Assign',       status:'pending'   },
+  { name:'NB-006', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Assign',       status:'pending'   },
+  { name:'NB-007', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Assign',       status:'sold'      },
+  { name:'NB-008', state:'Nebraska', no:1, price:64, opp:'675,959', pop:'670,000', zips:60, priority:1, franchise:'Raleigh, NC',  status:'available' },
+];
+
+const tblChevron = `<svg class="tbl-badge-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 4.5l3 3 3-3"/></svg>`;
+
+function tblStatusBadge(s) {
+  if (s === 'available') return `<span class="tbl-badge-available"><span>Available</span>${tblChevron}</span>`;
+  if (s === 'sold')      return `<span class="tbl-badge-sold"><span>Sold</span>${tblChevron}</span>`;
+  if (s === 'pending')   return `<span class="tbl-badge-pending"><span>Pending</span>${tblChevron}</span>`;
+  return '';
+}
+
+function franchiseCell(f) {
+  if (f === 'Assign') {
+    return `<button class="assign-btn">
+      <span class="assign-icon">
+        <svg viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="1.4"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg>
+      </span>
+      Assign
+    </button>`;
+  }
+  return `<span style="font-family:'FK Display',sans-serif;font-size:14px;color:#444446;">${f}</span>`;
+}
+
+// Build table rows
+const tbody = document.getElementById('lots-tbody');
+if (tbody) {
+  LOTS_DATA.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="lot-name-col">${row.name}</td>
+      <td class="lot-dim-col">${row.state}</td>
+      <td class="lot-dim-col">${row.no}</td>
+      <td class="lot-dim-col">${row.price}</td>
+      <td class="lot-dim-col">${row.opp}</td>
+      <td class="lot-dim-col">${row.pop}</td>
+      <td class="lot-dim-col">${row.zips}</td>
+      <td class="lot-dim-col">${row.priority}</td>
+      <td>${franchiseCell(row.franchise)}</td>
+      <td>${tblStatusBadge(row.status)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+// ─── SCREEN NAVIGATION ───────────────────────────────────
+function goToLots() {
+  document.getElementById('list-screen').style.display    = 'none';
+  document.getElementById('detail-screen').style.display  = 'none';
+  document.getElementById('lots-screen').style.display    = 'block';
+  window.scrollTo(0, 0);
+}
+
+function goToFranchises() {
+  document.getElementById('lots-screen').style.display    = 'none';
+  document.getElementById('list-screen').style.display    = 'block';
+  window.scrollTo(0, 0);
+}
+
+// Wire nav buttons in list and detail screens
+document.getElementById('lots-nav-btn').addEventListener('click', goToLots);
+
+// Back from lots to list
+const lotsBackBtn = document.getElementById('lots-back-to-home');
+if (lotsBackBtn) lotsBackBtn.addEventListener('click', goToFranchises);
+</script>
+</body>
+</html>
