@@ -198,9 +198,10 @@
   width:100%; height:360px; border-radius:2px; overflow:hidden;
   background:#d4e8f5; position:relative;
 }
+.d-map .d-map-base { z-index:0; }
 .d-map img.d-map-base { width:100%; height:100%; object-fit:cover; display:block; }
 
-.d-map-overlay { position:absolute; inset:0; pointer-events:none; }
+.d-map-overlay { position:absolute; inset:0; pointer-events:none; z-index:1; }
 .d-map-polygon { position:absolute; z-index:1; object-fit:fill; pointer-events:none; }
 /* NB-007: use cover + slice into NB-004 artwork so highlight runs into NEBRASKA band without a beige seam */
 .d-map-polygon--nb007 { object-fit:cover; object-position:82% 38%; }

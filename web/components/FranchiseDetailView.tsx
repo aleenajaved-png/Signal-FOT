@@ -335,16 +335,8 @@ export function FranchiseDetailView({ listRowId }: Props) {
                     <span className="d-fvalue">Omaha, NE</span>
                   </div>
                   <div className="d-field">
-                    <span className="d-flabel">Franchise ID</span>
-                    <span className="d-fvalue">{f.id.replace(/^#/, "")}</span>
-                  </div>
-                  <div className="d-field">
                     <span className="d-flabel">Functional Date</span>
                     <span className="d-fvalue">Dec 2026</span>
-                  </div>
-                  <div className="d-field">
-                    <span className="d-flabel">Owner&apos;s Name</span>
-                    <span className="d-fvalue">Aleena Javed</span>
                   </div>
                   <div className="d-field">
                     <span className="d-flabel">Email</span>
@@ -476,8 +468,9 @@ export function FranchiseDetailView({ listRowId }: Props) {
                   className="d-map-base"
                   src={FRANCHISE_MAP_BASE_SRC}
                   alt="Franchise lots map"
-                  width={800}
-                  height={360}
+                  fill
+                  sizes="(max-width: 1200px) 100vw, 918px"
+                  style={{ objectFit: "cover" }}
                   unoptimized
                 />
 
@@ -530,6 +523,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
         <AssignLotsModal
           onClose={() => setAssignOpen(false)}
           newFranchiseName={f.name}
+          newFranchiseId={f.id}
           onAssignLots={(lotIndices) => {
             const newLots = lotIndices
               .map((i) => LOTS_FOR_MODAL[i])
@@ -539,7 +533,6 @@ export function FranchiseDetailView({ listRowId }: Props) {
                 no: lot.no,
                 state: lot.state,
                 effectiveDate: formatFranchiseEffectiveDateLabel(new Date()),
-                isNewFromTransfer: true,
               }));
             if (newLots.length > 0) setAssigned((prev) => [...prev, ...newLots]);
           }}

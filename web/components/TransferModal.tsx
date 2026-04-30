@@ -41,6 +41,11 @@ function addDaysYmd(ymd: string, days: number): string {
   return toYmd(t);
 }
 
+/** Dayjs from YYYY-MM-DD without UTC date-only parsing drift (matches MM/DD in the fields). */
+function dayjsFromYmdLocal(ymd: string): Dayjs {
+  return dayjs(`${ymd}T12:00:00`);
+}
+
 /**
  * First calendar date (YYYY-MM-DD) whose end-of-day is at least `minTime` (epoch ms) from now+24h rule uses minTime = now + 24h.
  * I.e. endOfLocalDay(ymd) >= minTime.
@@ -60,16 +65,29 @@ function computeMinCutoffYmd(): string {
   return toYmd(new Date());
 }
 
+const US_MONTH_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
+
+/** Long US date (e.g. May 2, 2026) from YYYY-MM-DD — same y/m/d as the Effective and Cut-off row (MM/DD/YYYY). */
 function formatDateLong(ymd: string): string {
   const [y, m, d] = ymd.split("-").map(Number);
-  if (!y || !m || !d) return ymd;
-  return new Date(y, m - 1, d, 12, 0, 0, 0).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  if (!y || !m || !d || m < 1 || m > 12) return ymd;
+  return `${US_MONTH_SHORT[m - 1]} ${d}, ${y}`;
+}
+
+/** e.g. `#0205` + `Omaha, NE` → `0205 - Omaha, NE` (matches current-franchise id – name style). */
+function newFranchiseDisplay(id: string | undefined, name: string): string {
+  if (!id) return name;
+  const noid = id.replace(/^#/, "").trim();
+  return noid ? `${noid} - ${name}` : name;
 }
 
 type Props = {
   onClose: () => void;
   lotIndex: number;
+  /** Franchise name only (city label). */
   newFranchiseName: string;
+  /** Optional list/detail id (e.g. `#0205`); shown before name in timeline and status. */
+  newFranchiseId?: string;
   onConfirm: (effectiveYmd: string, transferAllUsers: boolean) => void;
 };
 
@@ -82,14 +100,15 @@ export function TransferLotOwnershipPanel({
   onClose,
   lotIndex,
   newFranchiseName,
+  newFranchiseId,
   onConfirm,
   showBack = false,
   onBack,
 }: PanelProps) {
   const lot: LotForModal | undefined = LOTS_FOR_MODAL[lotIndex];
   const oldFr = useMemo(() => {
-    if (!lot) return { id: "0502", name: "New Jersey", owner: "Matt Quinn" };
-    return OLD_FRANCHISE_MAP[lot.no] ?? { id: "0502", name: "New Jersey", owner: "Matt Quinn" };
+    if (!lot) return { id: "0026", name: "Nebraska", owner: "" };
+    return OLD_FRANCHISE_MAP[lot.no] ?? { id: "0026", name: "Nebraska", owner: "" };
   }, [lot]);
 
   const [minCutYmd] = useState(computeMinCutoffYmd);
@@ -97,7 +116,7 @@ export function TransferLotOwnershipPanel({
   const [transferAllUsers, setTransferAllUsers] = useState(false);
 
   const minEffectiveYmd = useMemo(() => addDaysYmd(minCutYmd, 1), [minCutYmd]);
-  const minEffectiveDayjs = useMemo(() => dayjs(minEffectiveYmd), [minEffectiveYmd]);
+  const minEffectiveDayjs = useMemo(() => dayjsFromYmdLocal(minEffectiveYmd), [minEffectiveYmd]);
 
   /** Last calendar day of the current franchise: day before effective (cut-off at 11:59 PM that night). */
   const cutoffYmd = useMemo(() => {
@@ -126,13 +145,18 @@ export function TransferLotOwnershipPanel({
       setEffective("");
       return;
     }
-    const ymd = v.format("YYYY-MM-DD");
+    const ymd = `${v.year()}-${pad2(v.month() + 1)}-${pad2(v.date())}`;
     setEffective(ymd);
   };
 
   if (!lot) return null;
 
   const oldFrLabel = `${oldFr.id ? `${oldFr.id} - ` : ""}${oldFr.name}`;
+  const newFrLabel = newFranchiseDisplay(newFranchiseId, newFranchiseName);
+
+  /** Same Y-M-D as cut-off MM/DD/YYYY input + effective DatePicker → timeline + status. */
+  const cutoffTimelineLine = cutoffYmd ? `${formatDateLong(cutoffYmd)} (11:59 PM)` : "";
+  const effectiveTimelineLine = effective ? `Effective ${formatDateLong(effective)} (12:00 AM)` : "";
 
   return (
     <div style={{ minHeight: 0, display: "flex", flexDirection: "column", flex: 1, fontFamily: "var(--fk), sans-serif" }}>
@@ -191,7 +215,9 @@ export function TransferLotOwnershipPanel({
         <div style={{ flex: 2 }}>
           <div style={{ fontSize: 12, color: "#86868b" }}>Current Franchise</div>
           <div style={{ fontSize: 14, color: "#262527" }}>
-            {oldFr.id ? `${oldFr.id} - ${oldFr.name} - ${oldFr.owner}` : `${oldFr.name} - ${oldFr.owner}`}
+            {oldFr.id
+              ? `${oldFr.id} - ${oldFr.name}${oldFr.owner ? ` - ${oldFr.owner}` : ""}`
+              : `${oldFr.name}${oldFr.owner ? ` - ${oldFr.owner}` : ""}`}
           </div>
         </div>
       </div>
@@ -241,7 +267,7 @@ export function TransferLotOwnershipPanel({
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 format="MM/DD/YYYY"
-                value={effective ? dayjs(effective) : null}
+                value={effective ? dayjsFromYmdLocal(effective) : null}
                 minDate={minEffectiveDayjs}
                 onChange={applyEffectiveDayjs}
                 slotProps={{
@@ -384,7 +410,7 @@ export function TransferLotOwnershipPanel({
             onChange={(e) => setTransferAllUsers(e.target.checked)}
             style={{ width: 18, height: 18, marginTop: 2, flexShrink: 0, cursor: "pointer", accentColor: "#0032a0" }}
           />
-          <span>Transfer all the users from the previous franchise to the new franchise</span>
+          <span>Migrate all users from the previous franchise to the new one</span>
         </label>
 
         {showTimeline && (
@@ -423,7 +449,7 @@ export function TransferLotOwnershipPanel({
                     {oldFrLabel}
                   </div>
                   <div style={{ color: "#546176", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {formatDateLong(cutoffYmd)} (11:59 PM)
+                    {cutoffTimelineLine}
                   </div>
                 </div>
               </div>
@@ -439,9 +465,9 @@ export function TransferLotOwnershipPanel({
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingTop: 2 }}>
                   <div style={{ color: "#0032a0", fontWeight: 700, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {newFranchiseName}
+                    {newFrLabel}
                   </div>
-                  <div style={{ color: "#546176", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>Effective {formatDateLong(effective)} (12:00 AM)</div>
+                  <div style={{ color: "#546176", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{effectiveTimelineLine}</div>
                 </div>
               </div>
             </div>
@@ -458,14 +484,14 @@ export function TransferLotOwnershipPanel({
                 lineHeight: 1.5,
               }}
             >
-              After <strong>11:59 PM</strong> on {formatDateLong(cutoffYmd)}, all ongoing shifts will be split and will transition to <strong>{newFranchiseName}</strong>. The new franchise is effective at <strong>12:00 AM</strong> on {formatDateLong(effective)}.
+              After <strong>11:59 PM</strong> on {formatDateLong(cutoffYmd)} this lot will transition to <strong>{newFrLabel}</strong>. The new franchise is effective at <strong>12:00 AM</strong> on {formatDateLong(effective)}.
             </div>
           </div>
         )}
       </div>
 
       <div style={{ padding: "16px 24px", display: "flex", justifyContent: "flex-end", gap: 8, borderTop: "1px solid #e6e6e7" }}>
-        <button type="button" onClick={onClose} style={{ border: "1px solid #e6e6e7", borderRadius: 8, padding: "8px 14px", background: "#fff", cursor: "pointer" }}>
+        <button type="button" onClick={onClose} style={{ border: "1px solid #e6e6e7", borderRadius: 2, padding: "8px 14px", background: "#fff", cursor: "pointer" }}>
           Cancel
         </button>
         <button
@@ -489,7 +515,7 @@ export function TransferLotOwnershipPanel({
   );
 }
 
-export function TransferModal({ onClose, lotIndex, newFranchiseName, onConfirm }: Props) {
+export function TransferModal({ onClose, lotIndex, newFranchiseName, newFranchiseId, onConfirm }: Props) {
   useEffect(() => {
     const onK = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", onK);
@@ -508,7 +534,13 @@ export function TransferModal({ onClose, lotIndex, newFranchiseName, onConfirm }
         role="dialog"
         aria-modal
       >
-        <TransferLotOwnershipPanel onClose={onClose} lotIndex={lotIndex} newFranchiseName={newFranchiseName} onConfirm={onConfirm} />
+        <TransferLotOwnershipPanel
+          onClose={onClose}
+          lotIndex={lotIndex}
+          newFranchiseName={newFranchiseName}
+          newFranchiseId={newFranchiseId}
+          onConfirm={onConfirm}
+        />
       </div>
     </div>
   );

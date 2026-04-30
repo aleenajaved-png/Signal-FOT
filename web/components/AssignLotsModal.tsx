@@ -75,13 +75,14 @@ function Radio({ checked }: { checked: boolean }) {
 type Props = {
   onClose: () => void;
   newFranchiseName: string;
+  newFranchiseId?: string;
   onAssignLots: (lotIndices: number[]) => void;
   onConfirmTransfer: (lotIndex: number, effectiveYmd: string, transferAllUsers: boolean, allSelectedIndices: number[]) => void;
 };
 
 type Step = "assign" | "transfer";
 
-export function AssignLotsModal({ onClose, newFranchiseName, onAssignLots, onConfirmTransfer }: Props) {
+export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onAssignLots, onConfirmTransfer }: Props) {
   const [selected, setSelected] = useState<number | null>(null);
   const [step, setStep] = useState<Step>("assign");
   const [transferLot, setTransferLot] = useState<number | null>(null);
@@ -336,6 +337,7 @@ export function AssignLotsModal({ onClose, newFranchiseName, onAssignLots, onCon
               onClose={onClose}
               lotIndex={transferLot}
               newFranchiseName={newFranchiseName}
+              newFranchiseId={newFranchiseId}
               showBack
               onBack={() => setStep("assign")}
               onConfirm={(effectiveYmd, transferAllUsers) => {

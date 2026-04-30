@@ -196,6 +196,125 @@
   flex-shrink: 0;
 }
 
+/* Franchise association — single accordion (deal-list style header + stacked rows) */
+.lot-details-fa-acc {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  font-family: var(--fk), sans-serif;
+  border: 1px solid #e6e6e7;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #fff;
+}
+.lot-details-fa-acc__header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  margin: 0;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  text-align: left;
+  box-sizing: border-box;
+}
+.lot-details-fa-acc__header:hover {
+  background: #fafbfb;
+}
+.lot-details-fa-acc__chevron-disk {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #146dff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.lot-details-fa-acc__header-title {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 700;
+  color: #272d37;
+}
+.lot-details-fa-acc__header-dot {
+  font-weight: 700;
+  color: #272d37;
+}
+.lot-details-fa-acc__header-count {
+  font-weight: 700;
+}
+.lot-details-fa-acc__panel {
+  background: #fafbfc;
+  border-top: 1px solid #e6e6e7;
+}
+.lot-details-fa-acc__list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0 12px;
+}
+.lot-details-fa-acc__item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 12px;
+  margin: 0;
+  border-top: 1px solid #eaecee;
+}
+.lot-details-fa-acc__item:first-child {
+  border-top: none;
+}
+.lot-details-fa-acc__item-main {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.lot-details-fa-acc__item-title {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #929cab;
+}
+.lot-details-fa-acc__item-line2 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  color: #272d37;
+}
+.lot-details-fa-acc__item-meta {
+  font-size: 12px;
+  line-height: 18px;
+  color: #7d899b;
+}
+.lot-details-fa-acc__item-meta .lot-details-fa__status {
+  gap: 6px;
+  color: inherit;
+  font-weight: 500;
+}
+.lot-details-fa-acc__link-btn {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #146dff;
+}
+.lot-details-fa-acc__link-btn:hover {
+  background: rgba(20, 109, 255, 0.08);
+}
+
 /* Franchise association table — light panel, matches lot-details left column */
 .lot-details-fa {
   min-width: 0;

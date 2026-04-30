@@ -33,33 +33,7 @@ export type ListRow = {
   address: string;
 };
 
-/** Used for the franchise detail sidebar (matches original `FRANCHISES` in `franchise-home.html`). */
-export const FRANCHISES_DETAIL: FranchiseInSidebar[] = [
-  {
-    id: "#0205",
-    name: "Omaha, NE",
-    owner: "Annette Black",
-    ownerInit: "AB",
-    status: "nonfunc",
-    isNew: true,
-    ownerImageUrl: "https://www.figma.com/api/mcp/asset/0c004869-9095-44d4-950a-fd7e0019d858",
-  },
-  { id: "#2301", name: "Lincoln, NE", owner: "Matt Quinn", ownerInit: "MQ", status: "functional" },
-  { id: "#2302", name: "Fremont, NE", owner: "Jodi Wimer", ownerInit: "JW", status: "functional" },
-  { id: "#2303", name: "Norfolk, NE", owner: "Darin Smith", ownerInit: "DS", status: "functional" },
-  { id: "#2304", name: "Kearney, NE", owner: "Don Crowell", ownerInit: "DC", status: "attention" },
-  { id: "#2305", name: "Grand Island, NE", owner: "Derrick Dancy", ownerInit: "DD", status: "functional" },
-  { id: "#2306", name: "Hastings, NE", owner: "Jeff Chovan and Jamie Chovan", ownerInit: "JC", status: "functional" },
-  {
-    id: "#2307",
-    name: "Bellevue, NE",
-    owner: "Traci Withrow and Kris Withrow",
-    ownerInit: "TW",
-    status: "functional",
-  },
-];
-
-export const FRANCHISE_LIST: ListRow[] = [
+const FRANCHISE_LIST_RAW: ListRow[] = [
   {
     franchiseNo: "#0205",
     name: "Omaha, NE",
@@ -219,6 +193,19 @@ export const FRANCHISE_LIST: ListRow[] = [
   },
 ];
 
+export const FRANCHISE_LIST: ListRow[] = FRANCHISE_LIST_RAW;
+
+/** Used for the franchise detail sidebar — derived from the same rows as the list table so it stays synced. */
+export const FRANCHISES_DETAIL: FranchiseInSidebar[] = FRANCHISE_LIST.map((row) => ({
+  id: row.franchiseNo,
+  name: row.name,
+  owner: row.owner.name,
+  ownerInit: row.owner.initials,
+  status: row.status,
+  isNew: row.isNew,
+  ownerImageUrl: row.owner.imageUrl,
+}));
+
 export type LotForModal = {
   no: string;
   name: string;
@@ -283,7 +270,7 @@ export const EOI_LIST_ENTRIES: EoiListEntry[] = [
 ];
 
 export const OLD_FRANCHISE_MAP: Record<string, { id?: string; name: string; owner: string }> = {
-  "NB-002": { id: "0502", name: "New Jersey", owner: "Matt Quinn" },
+  "NB-002": { id: "0026", name: "Nebraska", owner: "" },
   "NB-004": { name: "Lincoln Metro, NE", owner: "Jodi Wimer" },
   "NB-003": { name: "Fremont, NE", owner: "Darin Smith" },
 };
