@@ -27,13 +27,13 @@ interface Contact {
 }
 
 const mockLots: Lot[] = [
-  { id: "1", lotNumber: "NB-009", location: "1234 North Ave", city: "Omaha", state: "NE", status: "Active" },
+  { id: "1", lotNumber: "NB-002", location: "1234 North Ave", city: "Omaha", state: "NE", status: "Active" },
 ];
 
 const mockContacts: Contact[] = [
-  { id: "1", name: "Andre Martin", role: "Primary Owner", phone: "(402) 555-0101", email: "andre.martin@example.com", territory: "NB-009" },
-  { id: "2", name: "Sarah Kim", role: "Fleet Manager", phone: "(402) 555-0182", email: "s.kim@example.com", territory: "NB-009" },
-  { id: "3", name: "James Torres", role: "Operations Lead", phone: "(402) 555-0147", email: "j.torres@example.com", territory: "NB-009" },
+  { id: "1", name: "Andre Martin", role: "Primary Owner", phone: "(402) 555-0101", email: "andre.martin@example.com", territory: "NB-002" },
+  { id: "2", name: "Sarah Kim", role: "Fleet Manager", phone: "(402) 555-0182", email: "s.kim@example.com", territory: "NB-002" },
+  { id: "3", name: "James Torres", role: "Operations Lead", phone: "(402) 555-0147", email: "j.torres@example.com", territory: "NB-002" },
 ];
 
 const statusColors: Record<Lot["status"], string> = {

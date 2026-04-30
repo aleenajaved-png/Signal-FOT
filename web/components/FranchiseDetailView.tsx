@@ -98,6 +98,7 @@ function OwnerInfobarCell({
   cellId,
   ownerInit,
   owner,
+  ownerImageUrl,
   assigned = [],
   label = "Owner",
   showAvatar = true,
@@ -109,6 +110,7 @@ function OwnerInfobarCell({
   cellId: string;
   ownerInit: string;
   owner: string;
+  ownerImageUrl?: string;
   assigned?: Assigned[];
   label?: string;
   showAvatar?: boolean;
@@ -144,25 +146,36 @@ function OwnerInfobarCell({
     <div className="d-infobar-cell" id={cellId} aria-label={ariaLabel}>
       <span className="d-cell-label">{label}</span>
       <div className="d-owner-row">
-        {showAvatar && (
-          <div
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: "50%",
-              background: "#c7b9da",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 8,
-              fontWeight: 700,
-              color: "#fff",
-              fontFamily: "var(--inter), sans-serif",
-            }}
-          >
-            {ownerInit}
-          </div>
-        )}
+        {showAvatar &&
+          (ownerImageUrl ? (
+            <Image
+              src={ownerImageUrl}
+              alt={owner}
+              width={20}
+              height={20}
+              unoptimized
+              className="d-infobar-owner-avatar"
+            />
+          ) : (
+            <div
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: "50%",
+                background: "#c7b9da",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 8,
+                fontWeight: 700,
+                color: "#fff",
+                fontFamily: "var(--inter), sans-serif",
+              }}
+              aria-hidden
+            >
+              {ownerInit}
+            </div>
+          ))}
         <span className="d-owner-name">{owner}</span>
       </div>
     </div>
@@ -175,12 +188,9 @@ export function FranchiseDetailView({ listRowId }: Props) {
   const [selected, setSelected] = useState(() => getDetailIndexForRow(listRowId));
   const [assignOpen, setAssignOpen] = useState(false);
   const [assigned, setAssigned] = useState<Assigned[]>([
-    { no: "NB-001", state: "Nebraska", effectiveDate: "Apr 1, 26" },
+    { no: "NB-009", state: "Nebraska", effectiveDate: "Apr 1, 26" },
   ]);
-  const [previousAssigned] = useState<PreviousAssigned[]>([
-    { no: "NB-007", state: "Nebraska", transitionedAt: "Mar 12, 26" },
-    { no: "NB-004", state: "Nebraska", transitionedAt: "Apr 02, 26" },
-  ]);
+  const [previousAssigned] = useState<PreviousAssigned[]>([]);
   const f = FRANCHISES_DETAIL[selected];
 
   const openAssign = useCallback(() => setAssignOpen(true), []);
@@ -194,8 +204,15 @@ export function FranchiseDetailView({ listRowId }: Props) {
 
   /** Active + previous lots, deduped (active wins) — same set drives Associated Lots and the map. */
   const mapLots = useMemo(() => {
-    const m = new Map<string, { no: string; state: string; kind: "active" | "previous" }>();
-    for (const a of assigned) m.set(a.no, { no: a.no, state: a.state, kind: "active" });
+    const m = new Map<string, { no: string; state: string; kind: "active" | "previous"; isNew?: boolean }>();
+    for (const a of assigned) {
+      m.set(a.no, {
+        no: a.no,
+        state: a.state,
+        kind: "active",
+        isNew: a.isNewFromTransfer === true,
+      });
+    }
     for (const p of previousAssigned) {
       if (!m.has(p.no)) m.set(p.no, { no: p.no, state: p.state, kind: "previous" });
     }
@@ -203,6 +220,11 @@ export function FranchiseDetailView({ listRowId }: Props) {
   }, [assigned, previousAssigned]);
 
   const lotNosOnMap = useMemo(() => new Set(mapLots.map((l) => l.no)), [mapLots]);
+
+  const newlyAddedLotNos = useMemo(
+    () => new Set(assigned.filter((a) => a.isNewFromTransfer === true).map((a) => a.no)),
+    [assigned],
+  );
 
   return (
     <div className="d-page">
@@ -225,7 +247,10 @@ export function FranchiseDetailView({ listRowId }: Props) {
               tabIndex={0}
               onKeyDown={(e) => e.key === "Enter" && setSelected(i)}
             >
-              <div className="fi-title">{fr.name}</div>
+              <div className="fi-title-row">
+                <span className="fi-title">{fr.name}</span>
+                {fr.isNew ? <span className="fi-new-tag">New</span> : null}
+              </div>
               <div className="fi-sub">{fr.owner}</div>
               <div className="fi-tags">
                 <span className="fi-id">{fr.id}</span>
@@ -249,6 +274,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
               </div>
               <div className="d-franchise-namerow">
                 <span className="d-franchise-name">{f.name}</span>
+                {f.isNew ? <span className="d-infobar-new-tag">New</span> : null}
               </div>
             </div>
           </div>
@@ -264,10 +290,10 @@ export function FranchiseDetailView({ listRowId }: Props) {
               aria-label="Effective Date (left)"
             />
           )}
-          <OwnerInfobarCell cellId="owner-infobar-cell" ownerInit={f.ownerInit} owner={f.owner} />
+          <OwnerInfobarCell cellId="owner-infobar-cell" ownerInit={f.ownerInit} owner={f.owner} ownerImageUrl={f.ownerImageUrl} />
 
           <div className="d-infobar-cell">
-            <span className="d-cell-label">Operations</span>
+            <span className="d-cell-label">Status</span>
             <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#eff8ef", borderRadius: 16, padding: "2px 8px 2px 6px", width: "fit-content" }}>
               <CheckCircleOutlineOutlined sx={oIcon(12, { color: "#2e964b" })} aria-hidden />
               <span style={{ fontFamily: "var(--fk), sans-serif", fontSize: 12, color: "#2e964b", lineHeight: "18px" }}>Active</span>
@@ -275,7 +301,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
           </div>
 
           <div className="d-infobar-cell" style={{ borderRight: "none" }}>
-            <span className="d-cell-label">Status</span>
+            <span className="d-cell-label">Operations</span>
             <DetailStatusPill status={f.status} />
           </div>
         </div>
@@ -310,11 +336,11 @@ export function FranchiseDetailView({ listRowId }: Props) {
                   </div>
                   <div className="d-field">
                     <span className="d-flabel">Franchise ID</span>
-                    <span className="d-fvalue">1234</span>
+                    <span className="d-fvalue">{f.id.replace(/^#/, "")}</span>
                   </div>
                   <div className="d-field">
                     <span className="d-flabel">Functional Date</span>
-                    <span className="d-fvalue">May 2009</span>
+                    <span className="d-fvalue">Dec 2026</span>
                   </div>
                   <div className="d-field">
                     <span className="d-flabel">Owner&apos;s Name</span>
@@ -360,30 +386,6 @@ export function FranchiseDetailView({ listRowId }: Props) {
 
             <div className="d-section">
               <div className="d-section-head">
-                <span className="d-section-title">Stats</span>
-              </div>
-              <div className="d-stats-grid">
-                <div className="d-stats-col">
-                  <div className="d-field">
-                    <span className="d-flabel">No. of Customers</span>
-                    <span className="d-fvalue">400</span>
-                  </div>
-                </div>
-                <div className="d-stats-col">
-                  <div className="d-field">
-                    <span className="d-flabel">No. of Employees</span>
-                    <span className="d-fvalue">200</span>
-                  </div>
-                  <div className="d-field">
-                    <span className="d-flabel">Service Zips</span>
-                    <span className="d-fvalue">40</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="d-section">
-              <div className="d-section-head">
                 <span className="d-section-title">Additional Contacts</span>
                 <EditOutlined className="d-edit-icon" sx={oIcon(16, { color: "currentColor" })} aria-hidden />
               </div>
@@ -398,12 +400,10 @@ export function FranchiseDetailView({ listRowId }: Props) {
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="d-bottom-grid">
-            <div className="d-bottom-section">
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "flex-start", gap: 20, marginLeft: 50 }}>
-                <div className="d-bottom-title">Associated Lots</div>
+            <div className="d-section">
+              <div className="d-section-head">
+                <span className="d-section-title">Associated Lots</span>
                 <button
                   type="button"
                   onClick={openAssign}
@@ -420,7 +420,6 @@ export function FranchiseDetailView({ listRowId }: Props) {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 6,
-                    marginLeft: 60,
                   }}
                 >
                   <AddOutlined sx={oIcon(16, { color: "currentColor" })} aria-hidden />
@@ -458,17 +457,19 @@ export function FranchiseDetailView({ listRowId }: Props) {
                           >
                             {badge}
                           </Link>
-                        ) : badge;
+                        ) : (
+                          badge
+                        );
                       })}
                     </div>
                   )}
                 </div>
-
-
               </div>
             </div>
+          </div>
 
-            <div className="d-bottom-section">
+          <div className="d-bottom-grid">
+            <div className="d-bottom-section d-bottom-section--full">
               <div className="d-bottom-title">Franchise Lots Map</div>
               <div className="d-map" style={{ position: "relative" }}>
                 <Image
@@ -481,26 +482,39 @@ export function FranchiseDetailView({ listRowId }: Props) {
                 />
 
                 <div className="d-map-overlay" aria-hidden>
-                  {FRANCHISE_MAP_POLYGON_LAYERS.filter((layer) => lotNosOnMap.has(layer.lotNo)).map((layer) => (
-                    <img
-                      key={layer.lotNo}
-                      src={layer.src}
-                      alt=""
-                      className="d-map-polygon"
-                      style={{ top: layer.top, left: layer.left, width: layer.width, height: layer.height }}
-                    />
-                  ))}
+                  {FRANCHISE_MAP_POLYGON_LAYERS.filter((layer) => lotNosOnMap.has(layer.lotNo)).map((layer) => {
+                    const isNb007 = layer.lotNo === "NB-007";
+                    const isNewOnMap = newlyAddedLotNos.has(layer.lotNo);
+                    const polyClass = [
+                      "d-map-polygon",
+                      isNb007 && "d-map-polygon--nb007",
+                      isNewOnMap && "d-map-polygon--new",
+                    ]
+                      .filter(Boolean)
+                      .join(" ");
+                    return (
+                      <img
+                        key={layer.lotNo}
+                        src={layer.src}
+                        alt=""
+                        className={polyClass}
+                        style={{ top: layer.top, left: layer.left, width: layer.width, height: layer.height }}
+                      />
+                    );
+                  })}
                 </div>
                 <div className="d-map-overlay" aria-label="Associated lots on map">
                   {mapLots.map((lot) => {
                     const pos = FRANCHISE_MAP_LOT_CALLOUT_POS[lot.no];
                     if (!pos) return null;
+                    const calloutClass =
+                      lot.kind === "previous"
+                        ? "d-map-lot-callout d-map-lot-callout--previous"
+                        : lot.isNew
+                          ? "d-map-lot-callout d-map-lot-callout--new"
+                          : "d-map-lot-callout";
                     return (
-                      <div
-                        key={`${lot.kind}-${lot.no}`}
-                        className={lot.kind === "previous" ? "d-map-lot-callout d-map-lot-callout--previous" : "d-map-lot-callout"}
-                        style={{ top: pos.top, left: pos.left }}
-                      >
+                      <div key={`${lot.kind}-${lot.no}`} className={calloutClass} style={{ top: pos.top, left: pos.left }}>
                         {lot.no}
                       </div>
                     );

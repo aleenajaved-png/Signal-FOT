@@ -61,32 +61,33 @@
   border-color: #2e964b !important;
 }
 
-/* Cut-off field: read-only / disabled appearance */
+/* Cut-off field: same chrome as effective-date column; label + value read disabled via text color only */
 .transfer-cutoff-field-disabled {
-  padding: 14px 16px;
-  background: #f2f3f5;
-  border: 1px solid #e6e6e7;
-  border-radius: 8px;
   box-sizing: border-box;
 }
 
 .transfer-cutoff-date-input--disabled:disabled {
   cursor: not-allowed !important;
-  background: #e8eaed !important;
-  border-color: #d2d6dc !important;
-  color: #6b7280 !important;
-  -webkit-text-fill-color: #6b7280 !important;
+  background: #fff !important;
+  border: 1px solid #d8dadc !important;
+  color: #86868b !important;
+  -webkit-text-fill-color: #86868b !important;
   opacity: 1 !important;
+}
+
+.transfer-cutoff-date-input--disabled:disabled::placeholder {
+  color: #86868b;
+  opacity: 1;
 }
 
 .transfer-cutoff-date-input--disabled:disabled:focus {
   outline: none;
-  border-color: #d2d6dc !important;
+  border-color: #d8dadc !important;
   box-shadow: none !important;
 }
 
 .transfer-cutoff-date-input--disabled:disabled.input-ok,
 .transfer-cutoff-date-input--disabled:disabled.input-error {
-  border-color: #d2d6dc !important;
+  border-color: #d8dadc !important;
   box-shadow: none !important;
 }

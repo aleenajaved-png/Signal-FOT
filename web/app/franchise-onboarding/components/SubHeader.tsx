@@ -9,7 +9,7 @@ interface SubHeaderProps {
 }
 
 export function SubHeader({
-  dealName = "0026 - Nebraska",
+  dealName = "0205 - Omaha, NE",
   dealPath = "Deal Onboarding",
 }: SubHeaderProps) {
   return (

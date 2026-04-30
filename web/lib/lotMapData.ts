@@ -23,6 +23,13 @@ export const FRANCHISE_MAP_POLYGON_LAYERS: MapPolygonLayer[] = [
   { lotNo: "NB-003", src: "https://www.figma.com/api/mcp/asset/b4ab20fa-5226-46be-8693-822479f7b9d2", top: "30.4%", left: "65.55%", width: "14.23%", height: "32.35%" },
   { lotNo: "NB-004", src: "https://www.figma.com/api/mcp/asset/0ab7f5df-ec95-480a-b05a-45d79d2796d3", top: "37.89%", left: "15.02%", width: "53.48%", height: "29.2%" },
   { lotNo: "NB-005", src: "https://www.figma.com/api/mcp/asset/c37531a9-2642-4a98-9d67-2cb0a2a3907f", top: "12.35%", left: "62.33%", width: "13.39%", height: "13.51%" },
+  /**
+   * NB-007: tall column east of NB-001; uses same mask as NB-004 so tint matches the NEBRASKA band,
+   * with `object-fit: cover` + `.d-map-polygon--nb007` to remove the beige seam.
+   */
+  { lotNo: "NB-007", src: "https://www.figma.com/api/mcp/asset/0ab7f5df-ec95-480a-b05a-45d79d2796d3", top: "21.5%", left: "51.5%", width: "16%", height: "33%" },
+  /** Southeast Nebraska — shown when NB-009 is the only associated lot. */
+  { lotNo: "NB-009", src: "https://www.figma.com/api/mcp/asset/b4ab20fa-5226-46be-8693-822479f7b9d2", top: "31%", left: "62%", width: "15.5%", height: "33%" },
 ];
 
 /**
@@ -34,5 +41,6 @@ export const FRANCHISE_MAP_LOT_CALLOUT_POS: Record<string, { top: string; left: 
   "NB-003": { top: "45%", left: "72.7%" },
   "NB-004": { top: "49.5%", left: "40.2%" },
   "NB-005": { top: "18.3%", left: "68.6%" },
-  "NB-007": { top: "56%", left: "44%" },
+  "NB-007": { top: "36%", left: "59.5%" },
+  "NB-009": { top: "47%", left: "70%" },
 };

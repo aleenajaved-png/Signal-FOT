@@ -66,5 +66,5 @@ export function formatFranchiseAssociationCell(r: FranchiseAssociationRow): stri
 
 export const franchiseAssociationHistoryRows: FranchiseAssociationRow[] = [
   { franchise: "0502, Omaha, NE", effectiveDate: null, endsDate: "2026-04-24", startsDate: null, status: "active" },
-  { franchise: "4500, Fremont, NE", effectiveDate: null, endsDate: null, startsDate: "2026-04-27", status: "inactive" },
+  { franchise: "0205, Omaha, NE", effectiveDate: null, endsDate: null, startsDate: "2026-04-27", status: "inactive" },
 ];

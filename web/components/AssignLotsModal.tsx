@@ -198,7 +198,6 @@ export function AssignLotsModal({ onClose, newFranchiseName, onAssignLots, onCon
                 <span style={{ fontFamily: "var(--fk), sans-serif", fontSize: 14, color: "#7d899b", flex: 1, whiteSpace: "nowrap" }}>
                   Search by lot no/name
                 </span>
-                <KeyboardArrowDownOutlined sx={oIcon(24, { color: "#7d899b" })} aria-hidden />
               </div>
               <div
                 style={{

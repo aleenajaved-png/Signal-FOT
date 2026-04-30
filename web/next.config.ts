@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "www.figma.com", pathname: "/api/mcp/**" },
+      { protocol: "https", hostname: "randomuser.me", pathname: "/api/portraits/**" },
     ],
   },
 };

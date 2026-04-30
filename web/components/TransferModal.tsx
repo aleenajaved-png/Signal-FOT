@@ -5,6 +5,10 @@ import ArrowBackOutlined from "@mui/icons-material/ArrowBackOutlined";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs, { type Dayjs } from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { oIcon } from "@/lib/muiIconSx";
 import { LOTS_FOR_MODAL, OLD_FRANCHISE_MAP, type LotForModal } from "@/lib/data";
@@ -16,20 +20,6 @@ function formatYmdAsMmDdYyyy(ymd: string): string {
   const [y, m, d] = ymd.split("-").map(Number);
   if (!y || !m || !d) return "";
   return `${pad2(m)}/${pad2(d)}/${y}`;
-}
-
-/** Parse MM/DD/YYYY to YYYY-MM-DD or null */
-function parseMmDdYyyyToYmd(s: string): string | null {
-  const trimmed = s.trim();
-  const match = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-  if (!match) return null;
-  const mo = Number(match[1]);
-  const da = Number(match[2]);
-  const yr = Number(match[3]);
-  if (mo < 1 || mo > 12 || da < 1 || da > 31) return null;
-  const dt = new Date(yr, mo - 1, da, 12, 0, 0, 0);
-  if (dt.getFullYear() !== yr || dt.getMonth() !== mo - 1 || dt.getDate() !== da) return null;
-  return `${yr}-${pad2(mo)}-${pad2(da)}`;
 }
 
 /** Local calendar day as YYYY-MM-DD */
@@ -98,96 +88,51 @@ export function TransferLotOwnershipPanel({
 }: PanelProps) {
   const lot: LotForModal | undefined = LOTS_FOR_MODAL[lotIndex];
   const oldFr = useMemo(() => {
-    if (!lot) return { id: "2033", name: "Omaha Metro, NE", owner: "Matt Quinn" };
-    return OLD_FRANCHISE_MAP[lot.no] ?? { id: "2033", name: "Omaha Metro, NE", owner: "Matt Quinn" };
+    if (!lot) return { id: "0502", name: "New Jersey", owner: "Matt Quinn" };
+    return OLD_FRANCHISE_MAP[lot.no] ?? { id: "0502", name: "New Jersey", owner: "Matt Quinn" };
   }, [lot]);
 
   const [minCutYmd] = useState(computeMinCutoffYmd);
-  /** Derived from effective date (day before effective), never below minCutYmd; display-only. */
-  const [cutoff, setCutoff] = useState(minCutYmd);
   const [effective, setEffective] = useState("");
-  const [effectiveInput, setEffectiveInput] = useState("");
-  const [effectiveParseErr, setEffectiveParseErr] = useState("");
   const [transferAllUsers, setTransferAllUsers] = useState(false);
 
+  const minEffectiveYmd = useMemo(() => addDaysYmd(minCutYmd, 1), [minCutYmd]);
+  const minEffectiveDayjs = useMemo(() => dayjs(minEffectiveYmd), [minEffectiveYmd]);
+
+  /** Last calendar day of the current franchise: day before effective (cut-off at 11:59 PM that night). */
+  const cutoffYmd = useMemo(() => {
+    if (!effective) return "";
+    return addDaysYmd(effective, -1);
+  }, [effective]);
+
   const { valid, showTimeline, coErr, coMsg, efErr, efMsg, coCls, efCls } = useMemo(() => {
-    if (!cutoff) {
+    if (!effective || !cutoffYmd) {
       return {
         valid: false,
         showTimeline: false,
         coErr: false,
         coMsg: "",
         efErr: false,
-        efMsg: effective ? "Please set the cut-off date first." : "",
+        efMsg: "",
         coCls: "",
-        efCls: effective ? "input-error" : "",
-      };
-    }
-    if (cutoff < minCutYmd) {
-      return {
-        valid: false,
-        showTimeline: false,
-        coErr: true,
-        coMsg: "Cut-off date must allow at least 24 hours from now (end of that day, 11:59 PM, counts).",
-        efErr: false,
-        efMsg: "",
-        coCls: "input-error",
         efCls: "",
-      };
-    }
-    if (!effective) {
-      return {
-        valid: false,
-        showTimeline: false,
-        coErr: false,
-        coMsg: "",
-        efErr: false,
-        efMsg: "",
-        coCls: "input-ok",
-        efCls: "",
-      };
-    }
-    if (effective <= cutoff) {
-      return {
-        valid: false,
-        showTimeline: false,
-        coErr: false,
-        coMsg: "",
-        efErr: true,
-        efMsg: "Effective date must be a full calendar day after the cut-off date.",
-        coCls: "input-ok",
-        efCls: "input-error",
       };
     }
     return { valid: true, showTimeline: true, coErr: false, coMsg: "", efErr: false, efMsg: "", coCls: "input-ok", efCls: "input-ok" };
-  }, [cutoff, effective, minCutYmd]);
+  }, [cutoffYmd, effective]);
 
-  const normalizeEffectiveOnBlur = () => {
-    const t = effectiveInput.trim();
-    if (!t) {
+  const applyEffectiveDayjs = (v: Dayjs | null) => {
+    if (v == null || !v.isValid()) {
       setEffective("");
-      setEffectiveParseErr("");
-      setCutoff(minCutYmd);
       return;
     }
-    const ymd = parseMmDdYyyyToYmd(t);
-    if (!ymd) {
-      setEffective("");
-      setEffectiveParseErr("Enter a valid date as MM/DD/YYYY.");
-      setCutoff(minCutYmd);
-      return;
-    }
-    setEffectiveParseErr("");
+    const ymd = v.format("YYYY-MM-DD");
     setEffective(ymd);
-    setEffectiveInput(formatYmdAsMmDdYyyy(ymd));
-    let derivedCutoff = addDaysYmd(ymd, -1);
-    if (derivedCutoff < minCutYmd) derivedCutoff = minCutYmd;
-    setCutoff(derivedCutoff);
   };
 
   if (!lot) return null;
 
-  const oldFrLabel = `${oldFr.id ? `${oldFr.id}, ` : ""}${oldFr.name}`;
+  const oldFrLabel = `${oldFr.id ? `${oldFr.id} - ` : ""}${oldFr.name}`;
 
   return (
     <div style={{ minHeight: 0, display: "flex", flexDirection: "column", flex: 1, fontFamily: "var(--fk), sans-serif" }}>
@@ -246,7 +191,7 @@ export function TransferLotOwnershipPanel({
         <div style={{ flex: 2 }}>
           <div style={{ fontSize: 12, color: "#86868b" }}>Current Franchise</div>
           <div style={{ fontSize: 14, color: "#262527" }}>
-            {(oldFr.id ? `${oldFr.id} ` : "") + oldFr.name} - {oldFr.owner}
+            {oldFr.id ? `${oldFr.id} - ${oldFr.name} - ${oldFr.owner}` : `${oldFr.name} - ${oldFr.owner}`}
           </div>
         </div>
       </div>
@@ -268,7 +213,7 @@ export function TransferLotOwnershipPanel({
                 Effective Date of New Franchise*
               </label>
               <Tooltip
-                title="Start date of the new franchise (MM/DD/YYYY). Must be after the cut-off date."
+                title="Start date of the new franchise (MM/DD/YYYY). The cut-off is the previous calendar day (11:59 PM), the last day the current franchise operates this lot."
                 enterTouchDelay={0}
                 slotProps={{
                   tooltip: {
@@ -293,33 +238,83 @@ export function TransferLotOwnershipPanel({
                 </IconButton>
               </Tooltip>
             </div>
-            <input
-              id="transfer-effective-date"
-              type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              placeholder="MM/DD/YYYY"
-              className={`transfer-date-input ${efCls}`}
-              value={effectiveInput}
-              onChange={(e) => {
-                setEffectiveInput(e.target.value);
-                setEffectiveParseErr("");
-              }}
-              onBlur={normalizeEffectiveOnBlur}
-              style={{ width: "100%", height: 40, marginTop: 6, border: "1px solid #d8dadc", borderRadius: 2, padding: "0 12px" }}
-            />
-            {effectiveParseErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{effectiveParseErr}</div>}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                format="MM/DD/YYYY"
+                value={effective ? dayjs(effective) : null}
+                minDate={minEffectiveDayjs}
+                onChange={applyEffectiveDayjs}
+                slotProps={{
+                  popper: { sx: { zIndex: 2000 } },
+                  textField: {
+                    id: "transfer-effective-date",
+                    size: "small",
+                    placeholder: "MM/DD/YYYY",
+                    slotProps: {
+                      htmlInput: { autoComplete: "off" as const },
+                    },
+                    error: efErr,
+                    className: `transfer-date-input ${efCls}`,
+                    sx: {
+                      mt: "6px",
+                      width: "100%",
+                      "& .MuiOutlinedInput-root": {
+                        height: 40,
+                        fontFamily: "var(--fk), sans-serif",
+                        fontSize: 14,
+                        borderRadius: "2px",
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: efCls === "input-ok" && effective ? "#2e964b" : "#d8dadc",
+                      },
+                      "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: efCls === "input-error" ? undefined : efCls === "input-ok" && effective ? "#2e964b" : "#d8dadc",
+                      },
+                      "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderWidth: 1,
+                        ...(efCls === "input-error"
+                          ? {
+                              borderColor: "#df372b",
+                              boxShadow: "0 0 0 3px rgba(223, 55, 43, 0.08)",
+                            }
+                          : efCls === "input-ok" && effective
+                            ? { borderColor: "#2e964b", boxShadow: "0 0 0 3px rgba(46, 150, 75, 0.12)" }
+                            : {
+                                borderColor: "#146dff",
+                                boxShadow: "0 0 0 3px rgba(20, 109, 255, 0.1)",
+                              }),
+                      },
+                      "& .MuiOutlinedInput-root.Mui-error .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "#df372b",
+                      },
+                      "& .MuiOutlinedInput-root.Mui-error.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        boxShadow: "0 0 0 3px rgba(223, 55, 43, 0.08)",
+                      },
+                      "& .MuiOutlinedInput-input": {
+                        "&::placeholder": {
+                          color: "#86868b",
+                          opacity: 1,
+                        },
+                      },
+                      "& .MuiInputAdornment-root .MuiSvgIcon-root": {
+                        width: "20px",
+                        height: "20px",
+                      },
+                    },
+                  },
+                }}
+              />
+            </LocalizationProvider>
             {efErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{efMsg}</div>}
-            {!efErr && efMsg && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{efMsg}</div>}
           </div>
           <div style={{ flex: "1 1 280px", minWidth: 0 }}>
             <div className="transfer-cutoff-field-disabled">
               <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-                <label htmlFor="transfer-cutoff-date" style={{ fontSize: 14, color: "#86868b", fontWeight: 500 }}>
+                <label htmlFor="transfer-cutoff-date" style={{ fontSize: 14, color: "#86868b" }}>
                   Cut-off Date of Current Franchise*
                 </label>
                 <Tooltip
-                  title="Filled automatically when you set the effective date: the calendar day before it (MM/DD/YYYY), or the earliest allowed cut-off if that day would be too soon."
+                  title="Filled automatically after you choose an effective date: the previous calendar day (MM/DD/YYYY), when the current franchise ends at 11:59 PM."
                   enterTouchDelay={0}
                   slotProps={{
                     tooltip: {
@@ -338,7 +333,7 @@ export function TransferLotOwnershipPanel({
                     type="button"
                     size="small"
                     aria-label="More about cut-off date"
-                    sx={{ p: 0.25, color: "#86868b" }}
+                    sx={{ p: 0.25, color: "#146dff" }}
                   >
                     <InfoOutlined sx={{ fontSize: 16 }} />
                   </IconButton>
@@ -351,18 +346,22 @@ export function TransferLotOwnershipPanel({
                 disabled
                 aria-disabled="true"
                 className={`transfer-date-input transfer-cutoff-date-input--disabled ${coCls}`}
-                value={formatYmdAsMmDdYyyy(cutoff)}
+                value={cutoffYmd ? formatYmdAsMmDdYyyy(cutoffYmd) : ""}
+                placeholder={cutoffYmd ? undefined : "MM/DD/YYYY"}
                 style={{
                   width: "100%",
                   height: 40,
-                  marginTop: 8,
-                  borderRadius: 6,
+                  marginTop: 6,
+                  border: "1px solid #d8dadc",
+                  borderRadius: 2,
                   padding: "0 12px",
                   cursor: "not-allowed",
                   boxSizing: "border-box",
+                  fontFamily: "var(--fk), sans-serif",
+                  fontSize: 14,
                 }}
               />
-              {coErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 8 }}>{coMsg}</div>}
+              {coErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{coMsg}</div>}
             </div>
           </div>
         </div>
@@ -421,10 +420,10 @@ export function TransferLotOwnershipPanel({
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 2 }}>
                   <div style={{ color: "#444446", fontSize: 13, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {newFranchiseName}
+                    {oldFrLabel}
                   </div>
                   <div style={{ color: "#546176", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    Ends {formatDateLong(cutoff)} (11:59 PM)
+                    {formatDateLong(cutoffYmd)} (11:59 PM)
                   </div>
                 </div>
               </div>
@@ -459,7 +458,7 @@ export function TransferLotOwnershipPanel({
                 lineHeight: 1.5,
               }}
             >
-              <strong>After 11:59 PM</strong> on {formatDateLong(cutoff)}, all ongoing shifts will be split and will transition to <strong>{newFranchiseName}</strong>. The new franchise is effective at <strong>12:00 AM</strong> on {formatDateLong(effective)}.
+              After <strong>11:59 PM</strong> on {formatDateLong(cutoffYmd)}, all ongoing shifts will be split and will transition to <strong>{newFranchiseName}</strong>. The new franchise is effective at <strong>12:00 AM</strong> on {formatDateLong(effective)}.
             </div>
           </div>
         )}

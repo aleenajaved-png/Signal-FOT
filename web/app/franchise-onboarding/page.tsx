@@ -30,8 +30,8 @@ const sectionToSidebarId: Record<string, SectionId> = {
 };
 
 const DEAL_INITIAL_DATA: FranchiseInitialData = {
-  franchiseName: "0026 - Nebraska",
-  franchiseNumber: "NB-009",
+  franchiseName: "0205 - Omaha, NE",
+  franchiseNumber: "0205",
   dbaName: "Andre Martin",
   businessEmail: "andre.martin@example.com",
   businessPhone: "(402) 555-0101",
@@ -47,7 +47,7 @@ const DEAL_INITIAL_DATA: FranchiseInitialData = {
   officeCountry: "US",
 };
 
-const FRANCHISE_LOTS = ["NB-009"];
+const FRANCHISE_LOTS = ["NB-002"];
 
 function formatLotList(lots: string[]) {
   if (lots.length === 0) return "";
@@ -250,7 +250,7 @@ export default function FranchiseOnboardingPage() {
                   Franchise Name
                 </div>
                 <span className="text-xs font-semibold text-gray-800 text-right max-w-[55%] truncate">
-                  {createdFranchise.franchiseName || "0026 - Nebraska"}
+                  {createdFranchise.franchiseName || "0205 - Omaha, NE"}
                 </span>
               </div>
               <div className="flex items-center justify-between px-4 py-3">
@@ -259,7 +259,7 @@ export default function FranchiseOnboardingPage() {
                   Deal / Lot Number
                 </div>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                  NB-009
+                  {formatLotList(FRANCHISE_LOTS)}
                 </span>
               </div>
               <div className="flex items-center justify-between px-4 py-3">

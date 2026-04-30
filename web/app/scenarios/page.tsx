@@ -14,7 +14,7 @@ const scenarios = [
   {
     title: "Assign lots and transfer (sold lot)",
     path: "/franchises/0",
-    text: "On detail, choose Add Lot, select rows in the modal, then Update. If a sold lot is selected, the Transfer Lot Ownership flow opens. Enter cut-off and effective dates (validation matches the static HTML behavior), then confirm to add a badge under Associated Lots.",
+    text: "On detail, choose Add Lot, select rows in the modal, then Update. If a sold lot is selected, the Transfer Lot Ownership flow opens. Pick an effective date for the new franchise; cut-off fills in as the prior calendar day (11:59 PM), then confirm to add a badge under Associated Lots.",
   },
   {
     title: "Lot insights",

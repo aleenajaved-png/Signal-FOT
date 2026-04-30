@@ -70,7 +70,7 @@ export function LotInsightsAppNav({ active, brandLabel, brandHref = "/franchises
         <div className="app-top-nav__avatar" data-name="Profile">
           <Image
             src={FIGMA_APP_NAV.profileAvatar}
-            alt="Profile"
+            alt="Paul Smith"
             width={32}
             height={32}
             className="app-top-nav__avatar-img"

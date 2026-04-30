@@ -35,7 +35,7 @@ const licenseOptions = [
 ];
 
 const franchiseNumberOptions = [
-  { label: "NB-009", value: "nb-009" },
+  { label: "NB-002", value: "nb-002" },
 ];
 
 interface FormData {

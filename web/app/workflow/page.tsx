@@ -87,7 +87,7 @@ export default function WorkflowPage() {
           <nav className={styles.breadcrumb} aria-label="breadcrumb">
             <span className={styles.breadcrumbStep}>Deal Onboarding</span>
             <span className={styles.breadcrumbSep}>{"//"}</span>
-            <span className={styles.breadcrumbCurrent}>0026 - Nebraska</span>
+            <span className={styles.breadcrumbCurrent}>0205 - Omaha, NE</span>
           </nav>
         </div>
       </header>
@@ -97,7 +97,7 @@ export default function WorkflowPage() {
         {/* Left sidebar */}
         <aside className={styles.sidebar}>
           <div className={styles.dealInfo}>
-            <p className={styles.dealName}>0026 - Nebraska</p>
+            <p className={styles.dealName}>0205 - Omaha, NE</p>
             <p className={styles.dealId}>Deal ID: 46786371719</p>
             <div className={styles.progressRow}>
               <div className={styles.progressTrack}>

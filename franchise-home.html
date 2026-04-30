@@ -292,7 +292,7 @@ nav{
       <div class="sticky-cols">
         <div class="col w-no">
           <div class="th"><span class="th-text">Franchise No.</span></div><div class="div"></div>
-          <div class="td"><span class="td-txt">#4500</span></div><div class="div"></div>
+          <div class="td"><span class="td-txt">#0205</span></div><div class="div"></div>
           <div class="td"><span class="td-txt">#0230</span></div><div class="div"></div>
           <div class="td"><span class="td-txt">#2456</span></div><div class="div"></div>
           <div class="td"><span class="td-txt">#8765</span></div><div class="div"></div>
@@ -632,7 +632,7 @@ nav{
 .d-fitem.sel .fi-id { background:#6a6a70; color:#fff; }
 
 /* MAIN CONTENT (offset by sidebar) */
-.d-main { margin-left:232px; display:flex; flex-direction:column; }
+.d-main { margin-left:232px; display:flex; flex-direction:column; min-width:0; }
 
 /* TOP INFO BAR (franchise name, owner, status) */
 .d-infobar {
@@ -651,8 +651,16 @@ nav{
   border-right:1px solid #e6e6e7;
 }
 .d-franchise-meta { display:flex; flex-direction:column; gap:4px; }
-.d-franchise-namerow { display:flex; align-items:center; gap:8px; }
+.d-franchise-namerow { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
 .d-franchise-name { font-family:'FK Display',sans-serif; font-size:20px; color:#262527; line-height:32px; white-space:nowrap; }
+.d-infobar-new-tag {
+  flex-shrink:0;
+  font-family:'FK Display',sans-serif;
+  font-size:11px; font-weight:600; line-height:16px;
+  padding:2px 10px; border-radius:100px;
+  background:#e8efff; color:#146dff;
+  border:1px solid rgba(20, 109, 255, 0.25);
+}
 
 .d-infobar-cell {
   width:171px; flex-shrink:0; padding:16px;
@@ -662,6 +670,7 @@ nav{
 }
 .d-cell-label { font-family:'FK Display',sans-serif; font-size:14px; color:#262527; line-height:20px; }
 .d-owner-row { display:flex; align-items:center; gap:10px; }
+.d-infobar-owner-avatar { width:20px; height:20px; border-radius:50%; object-fit:cover; flex-shrink:0; }
 .d-owner-name { font-family:'FK Display',sans-serif; font-size:14px; color:#86868b; line-height:18px; white-space:nowrap; }
 
 /* TABS BAR */
@@ -695,7 +704,7 @@ nav{
 .d-make-btn svg { width:16px; height:16px; }
 
 /* CONTENT AREA */
-.d-content { padding:28px 32px; overflow-y:auto; }
+.d-content { padding:28px 32px; overflow-x:clip; overflow-y:auto; min-width:0; }
 
 /* TOP INFO GRID: 3 columns separated by lines */
 .d-top-grid {
@@ -710,6 +719,7 @@ nav{
 }
 .d-section-title { font-family:'FK Display',sans-serif; font-size:16px; color:#272d37; line-height:24px; }
 .d-edit-icon { width:16px; height:16px; color:#7d899b; cursor:pointer; flex-shrink:0; }
+.d-section-head .d-edit-icon { margin-right:20px; }
 .d-fields-row { display:flex; gap:32px; }
 .d-col { display:flex; flex-direction:column; gap:10px; }
 .d-field { display:flex; flex-direction:column; gap:1px; }
@@ -727,7 +737,7 @@ nav{
 .d-cname-row { display:flex; align-items:center; gap:6px; }
 .d-cname { font-family:'FK Display',sans-serif; font-size:14px; color:#272d37; line-height:20px; }
 .d-cname svg { width:14px; height:14px; color:#7d899b; }
-.d-cdetails { display:flex; justify-content:space-between; gap:8px; }
+.d-cdetails { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
 .d-cemail { font-family:'FK Display',sans-serif; font-size:14px; color:#5c6b82; line-height:20px; }
 .d-cphone { font-family:'FK Display',sans-serif; font-size:14px; color:#262527; line-height:20px; white-space:nowrap; }
 
@@ -838,11 +848,11 @@ nav{
         <div class="d-franchise-meta">
           <!-- ID chip -->
           <div style="display:inline-flex;background:rgba(159,159,159,0.1);border-radius:2px;padding:1px 4px;width:fit-content;">
-            <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#262527;line-height:18px;" id="d-id">#4500</span>
+            <span style="font-family:'FK Display',sans-serif;font-size:12px;color:#262527;line-height:18px;" id="d-id">#0205</span>
           </div>
           <!-- Name + New badge row -->
           <div class="d-franchise-namerow">
-            <span class="d-franchise-name" id="d-name">Wichita, KS</span>
+            <span class="d-franchise-name" id="d-name">Omaha, NE</span>
             <!-- "✦ New" badge: #e5f6ff pill, sparkle + blue text -->
             <div style="display:inline-flex;align-items:center;gap:4px;background:#e5f6ff;border-radius:16px;padding:2px 8px 2px 6px;">
               <!-- sparkle / auto_awesome icon in blue -->
@@ -864,8 +874,8 @@ nav{
           <span id="effective-date-value" style="font-family:'FK Display',sans-serif;font-size:12px;color:#2e964b;line-height:18px;font-weight:500;"></span>
         </div>
         <div class="d-owner-row">
-          <!-- Avatar: purple circle with initials fallback — matches Figma #c7b9da circle -->
-          <div style="width:20px;height:20px;border-radius:50%;background:#c7b9da;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:8px;font-weight:700;color:#fff;overflow:hidden;">
+          <img id="d-owner-avatar-img" class="d-infobar-owner-avatar" src="https://www.figma.com/api/mcp/asset/0c004869-9095-44d4-950a-fd7e0019d858" alt="Annette Black" width="20" height="20" decoding="async" />
+          <div id="d-owner-avatar-fallback" style="display:none;width:20px;height:20px;border-radius:50%;background:#c7b9da;flex-shrink:0;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:8px;font-weight:700;color:#fff;">
             <span id="d-owner-avatar-text">AB</span>
           </div>
           <span class="d-owner-name" id="d-owner-name">Annette Black</span>
@@ -918,7 +928,7 @@ nav{
           </div>
           <div class="d-fields-row">
             <div class="d-col">
-              <div class="d-field"><span class="d-flabel">Franchise Name</span><span class="d-fvalue">Wichita, KS</span></div>
+              <div class="d-field"><span class="d-flabel">Franchise Name</span><span class="d-fvalue">Omaha, NE</span></div>
               <div class="d-field"><span class="d-flabel">Owner's Name</span><span class="d-fvalue">Traci Withrow and Kris Withrow</span></div>
               <div class="d-field"><span class="d-flabel">Email</span><span class="d-fvalue">traci@teamsignal.com</span></div>
               <div class="d-field"><span class="d-flabel">Phone</span><span class="d-fvalue">123 456 7899</span></div>
@@ -940,7 +950,7 @@ nav{
           </div>
           <div class="d-stats-grid">
             <div class="d-stats-col">
-              <div class="d-field"><span class="d-flabel">Franchise ID</span><span class="d-fvalue">1234</span></div>
+              <div class="d-field"><span class="d-flabel">Franchise ID</span><span class="d-fvalue">0205</span></div>
               <div class="d-field"><span class="d-flabel">Functional Date</span><span class="d-fvalue">May 2009</span></div>
               <div class="d-field"><span class="d-flabel">No. of Customers</span><span class="d-fvalue">400</span></div>
             </div>
@@ -1043,7 +1053,7 @@ nav{
 <script>
 // ─── DATA ───────────────────────────────────────────────
 const FRANCHISES = [
-  { id:'#4500', name:'Wichita, KS',           owner:'Annette Black',                ownerInit:'AB', status:'nonfunc' },
+  { id:'#0205', name:'Omaha, NE',            owner:'Annette Black',                ownerInit:'AB', status:'nonfunc', ownerImageUrl:'https://www.figma.com/api/mcp/asset/0c004869-9095-44d4-950a-fd7e0019d858' },
   { id:'#2301', name:'Northern Virginia, VA', owner:'Matt Quinn',                   ownerInit:'MQ', status:'functional' },
   { id:'#2302', name:'Fremont, NE',           owner:'Jodi Wimer',                  ownerInit:'JW', status:'functional' },
   { id:'#2303', name:'Oklahoma City, NE',     owner:'Darin Smith',                 ownerInit:'DS', status:'functional' },
@@ -1084,11 +1094,24 @@ function selectFranchise(i) {
   const idEl    = document.getElementById('d-id');
   const nameEl  = document.getElementById('d-name');
   const ownerEl = document.getElementById('d-owner-name');
-  const avatarEl= document.getElementById('d-owner-avatar-text');
+  const avatarImg = document.getElementById('d-owner-avatar-img');
+  const avatarFb = document.getElementById('d-owner-avatar-fallback');
+  const avatarEl = document.getElementById('d-owner-avatar-text');
   if (idEl)     idEl.textContent     = f.id;
   if (nameEl)   nameEl.textContent   = f.name;
   if (ownerEl)  ownerEl.textContent  = f.owner;
-  if (avatarEl) avatarEl.textContent = f.ownerInit;
+  if (f.ownerImageUrl && avatarImg) {
+    avatarImg.src = f.ownerImageUrl;
+    avatarImg.alt = f.owner;
+    avatarImg.style.display = '';
+    if (avatarFb) avatarFb.style.display = 'none';
+  } else {
+    if (avatarImg) avatarImg.style.display = 'none';
+    if (avatarFb) {
+      avatarFb.style.display = 'flex';
+    }
+    if (avatarEl) avatarEl.textContent = f.ownerInit;
+  }
 }
 
 // ─── SCREEN SWITCHING ───────────────────────────────────

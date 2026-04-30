@@ -39,7 +39,6 @@ export function FranchiseListMain() {
             <div className="search">
               <SearchOutlined sx={oIcon(16, { color: "currentColor" })} aria-hidden />
               <span className="search-text">Search by franchise id/name</span>
-              <KeyboardArrowDownOutlined className="search-arrow" sx={oIcon(24, { color: "currentColor" })} aria-hidden />
             </div>
             <div className="dropdown">
               <span>All Status</span>

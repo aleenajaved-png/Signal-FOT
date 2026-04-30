@@ -26,8 +26,21 @@
 }
 .d-fitem:hover { background:#f5f5f6; }
 .d-fitem.sel { background:#262527; }
+.d-fitem .fi-title-row {
+  display:flex; align-items:center; flex-wrap:wrap; gap:8px;
+}
 .d-fitem .fi-title { font-family:'FK Display',sans-serif; font-size:16px; line-height:24px; color:#262527; }
 .d-fitem.sel .fi-title { color:#fff; }
+.d-fitem .fi-new-tag {
+  flex-shrink:0;
+  font-family:'FK Display',sans-serif;
+  font-size:11px; font-weight:600; line-height:16px;
+  padding:2px 8px; border-radius:100px;
+  background:#e8efff; color:#3b5bdb;
+}
+.d-fitem.sel .fi-new-tag {
+  background:rgba(59,91,219,0.35); color:#d4dfff;
+}
 .d-fitem .fi-sub   { font-family:'FK Display',sans-serif; font-size:12px; line-height:18px; color:#444446; }
 .d-fitem.sel .fi-sub { color:#fff; }
 .d-fitem .fi-tags  { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
@@ -42,7 +55,7 @@
 .d-fitem .badge { mix-blend-mode: normal; }
 
 /* MAIN CONTENT (offset by sidebar) */
-.d-main { margin-left:232px; display:flex; flex-direction:column; }
+.d-main { margin-left:232px; display:flex; flex-direction:column; min-width:0; }
 
 /* TOP INFO BAR (franchise name, owner, status) */
 .d-infobar {
@@ -61,8 +74,16 @@
   border-right:1px solid #e6e6e7;
 }
 .d-franchise-meta { display:flex; flex-direction:column; gap:4px; }
-.d-franchise-namerow { display:flex; align-items:center; gap:8px; }
+.d-franchise-namerow { display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
 .d-franchise-name { font-family:'FK Display',sans-serif; font-size:20px; color:#262527; line-height:32px; white-space:nowrap; }
+.d-infobar-new-tag {
+  flex-shrink:0;
+  font-family:'FK Display',sans-serif;
+  font-size:11px; font-weight:600; line-height:16px;
+  padding:2px 10px; border-radius:100px;
+  background:#e8efff; color:#146dff;
+  border:1px solid rgba(20, 109, 255, 0.25);
+}
 
 .d-infobar-cell {
   width:171px; flex-shrink:0; padding:16px;
@@ -72,6 +93,7 @@
 }
 .d-cell-label { font-family:'FK Display',sans-serif; font-size:14px; color:#262527; line-height:20px; }
 .d-owner-row { display:flex; align-items:center; gap:10px; }
+.d-infobar-owner-avatar { border-radius:50%; object-fit:cover; flex-shrink:0; }
 .d-owner-name { font-family:'FK Display',sans-serif; font-size:14px; color:#86868b; line-height:18px; white-space:nowrap; }
 
 /* TABS BAR */
@@ -105,7 +127,7 @@
 .d-make-btn svg { width:16px; height:16px; }
 
 /* CONTENT AREA */
-.d-content { padding:28px 32px; overflow-y:auto; }
+.d-content { padding:28px 32px; overflow-x:clip; overflow-y:auto; min-width:0; }
 
 /* TOP INFO GRID: 3 columns separated by lines */
 .d-top-grid {
@@ -120,6 +142,7 @@
 }
 .d-section-title { font-family:'FK Display',sans-serif; font-size:16px; color:#272d37; line-height:24px; }
 .d-edit-icon { width:16px; height:16px; color:#7d899b; cursor:pointer; flex-shrink:0; }
+.d-section-head .d-edit-icon { margin-right:20px; }
 .d-fields-row { display:flex; gap:32px; }
 .d-col { display:flex; flex-direction:column; gap:10px; }
 .d-field { display:flex; flex-direction:column; gap:1px; }
@@ -137,7 +160,7 @@
 .d-cname-row { display:flex; align-items:center; gap:6px; }
 .d-cname { font-family:'FK Display',sans-serif; font-size:14px; color:#272d37; line-height:20px; }
 .d-cname svg { width:14px; height:14px; color:#7d899b; }
-.d-cdetails { display:flex; justify-content:space-between; gap:8px; }
+.d-cdetails { display:flex; flex-direction:column; align-items:flex-start; gap:3px; }
 .d-cemail { font-family:'FK Display',sans-serif; font-size:14px; color:#5c6b82; line-height:20px; }
 .d-cphone { font-family:'FK Display',sans-serif; font-size:14px; color:#262527; line-height:20px; white-space:nowrap; }
 
@@ -147,6 +170,9 @@
   border-top:1px solid #e6e6e7; margin-top:0;
 }
 .d-bottom-section { padding:20px 0; }
+.d-bottom-section--full {
+  grid-column: 1 / -1;
+}
 .d-bottom-section + .d-bottom-section { padding-left:32px; border-left:1px solid #e6e6e7; }
 .d-bottom-title { font-family:'FK Display',sans-serif; font-size:16px; color:#272d37; line-height:24px; margin-bottom:16px; }
 
@@ -176,6 +202,12 @@
 
 .d-map-overlay { position:absolute; inset:0; pointer-events:none; }
 .d-map-polygon { position:absolute; z-index:1; object-fit:fill; pointer-events:none; }
+/* NB-007: use cover + slice into NB-004 artwork so highlight runs into NEBRASKA band without a beige seam */
+.d-map-polygon--nb007 { object-fit:cover; object-position:82% 38%; }
+/* Newly added lots (Add Lot / transfer): amber map highlight */
+.d-map-polygon--new {
+  filter: brightness(1.12) sepia(0.85) saturate(2.8) hue-rotate(330deg);
+}
 
 /* Figma MAP3: white speech bubble, 12/14, shadow; active has white keyline */
 .d-map-lot-callout {
@@ -198,6 +230,12 @@
   background: #fafbfc;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
 }
+.d-map-lot-callout--new {
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fbbf24;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.2);
+}
 .d-map-lot-callout::after {
   content: "";
   position: absolute; left: 50%; bottom: -5px; transform: translateX(-50%);
@@ -205,3 +243,4 @@
   filter: drop-shadow(0 2px 2px rgba(0,0,0,0.06));
 }
 .d-map-lot-callout--previous::after { border-top-color: #fafbfc; }
+.d-map-lot-callout--new::after { border-top-color: #fffbeb; }

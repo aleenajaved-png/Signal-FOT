@@ -220,7 +220,7 @@ export default function FranchiseDashboardPage() {
             {/* Badges */}
             <div className="flex items-center gap-3">
               <span className="bg-[#E5F6FF] text-[#146DFF] text-[12px] font-medium px-2 py-0.5 rounded-full">US Central Time</span>
-              <span className="bg-[#E5F6FF] text-[#146DFF] text-[12px] font-medium px-2 py-0.5 rounded-full">ID: 1234</span>
+              <span className="bg-[#E5F6FF] text-[#146DFF] text-[12px] font-medium px-2 py-0.5 rounded-full">ID: 0205</span>
               <button className="flex items-center gap-2 border border-[#E6E6E7] rounded-lg px-3.5 py-2 text-[14px] text-[#444446] font-medium bg-white hover:bg-gray-50">
                 #709 Columbus, NE
                 <KeyboardArrowDownOutlined sx={{ fontSize: 14 }} />

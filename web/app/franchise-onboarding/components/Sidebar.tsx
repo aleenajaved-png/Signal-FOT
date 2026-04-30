@@ -115,7 +115,7 @@ export function Sidebar({
       >
         <div className="p-4 border-b border-gray-200 bg-white">
           <h2 className="text-sm font-semibold text-gray-800 leading-snug">
-            0026 - Nebraska
+            0205 - Omaha, NE
           </h2>
           <p className="text-xs text-gray-400 mt-0.5">Deal ID: 46786371719</p>
 

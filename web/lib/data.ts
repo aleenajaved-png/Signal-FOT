@@ -8,6 +8,10 @@ export type FranchiseInSidebar = {
   owner: string;
   ownerInit: string;
   status: FranchiseStatus;
+  /** Sidebar blue “New” tag next to franchise name */
+  isNew?: boolean;
+  /** Round avatar in detail infobar (optional). */
+  ownerImageUrl?: string;
 };
 
 export type ListRow = {
@@ -31,7 +35,15 @@ export type ListRow = {
 
 /** Used for the franchise detail sidebar (matches original `FRANCHISES` in `franchise-home.html`). */
 export const FRANCHISES_DETAIL: FranchiseInSidebar[] = [
-  { id: "#4500", name: "Omaha, NE", owner: "Annette Black", ownerInit: "AB", status: "nonfunc" },
+  {
+    id: "#0205",
+    name: "Omaha, NE",
+    owner: "Annette Black",
+    ownerInit: "AB",
+    status: "nonfunc",
+    isNew: true,
+    ownerImageUrl: "https://www.figma.com/api/mcp/asset/0c004869-9095-44d4-950a-fd7e0019d858",
+  },
   { id: "#2301", name: "Lincoln, NE", owner: "Matt Quinn", ownerInit: "MQ", status: "functional" },
   { id: "#2302", name: "Fremont, NE", owner: "Jodi Wimer", ownerInit: "JW", status: "functional" },
   { id: "#2303", name: "Norfolk, NE", owner: "Darin Smith", ownerInit: "DS", status: "functional" },
@@ -49,7 +61,7 @@ export const FRANCHISES_DETAIL: FranchiseInSidebar[] = [
 
 export const FRANCHISE_LIST: ListRow[] = [
   {
-    franchiseNo: "#4500",
+    franchiseNo: "#0205",
     name: "Omaha, NE",
     isNew: true,
     owner: { name: "Matt Quinn", initials: "MQ", bg: "#7c6fa0", imageUrl: "https://www.figma.com/api/mcp/asset/63502b56-d649-4afe-a9bc-b64eb410eb14" },
@@ -226,6 +238,10 @@ export const LOTS_FOR_MODAL: LotForModal[] = [
   { no: "NB-001", name: "Western Nebraska", state: "Nebraska", opp: "298,700", zips: "28", status: "pending" },
   { no: "NB-008", name: "Southwest Nebraska", state: "Nebraska", opp: "267,400", zips: "24", status: "pending" },
   { no: "NB-003", name: "Panhandle Nebraska", state: "Nebraska", opp: "198,600", zips: "18", status: "sold" },
+  { no: "NB-010", name: "North Platte Corridor", state: "Nebraska", opp: "445,200", zips: "42", status: "available" },
+  { no: "NB-011", name: "Norfolk Region", state: "Nebraska", opp: "312,900", zips: "33", status: "available" },
+  { no: "NB-012", name: "Grand Island Area", state: "Nebraska", opp: "528,100", zips: "55", status: "sold" },
+  { no: "NB-013", name: "Kearney Territory", state: "Nebraska", opp: "276,400", zips: "29", status: "available" },
 ];
 
 export type LotTableRow = {
@@ -267,7 +283,7 @@ export const EOI_LIST_ENTRIES: EoiListEntry[] = [
 ];
 
 export const OLD_FRANCHISE_MAP: Record<string, { id?: string; name: string; owner: string }> = {
-  "NB-002": { id: "2033", name: "Omaha Metro, NE", owner: "Matt Quinn" },
+  "NB-002": { id: "0502", name: "New Jersey", owner: "Matt Quinn" },
   "NB-004": { name: "Lincoln Metro, NE", owner: "Jodi Wimer" },
   "NB-003": { name: "Fremont, NE", owner: "Darin Smith" },
 };
