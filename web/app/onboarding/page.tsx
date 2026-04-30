@@ -127,7 +127,7 @@ const slides = [
           </div>
         </div>
 
-        <a className={styles.slide03Cta} href="/franchise-dashboard">
+        <a className={styles.slide03Cta} href="/franchise-dashboard/set">
           <p className={styles.slide03CtaText}>Lets see SET Dashboard</p>
           <img src={slide03Asset.ctaArrow} alt="" className={styles.slide03CtaIcon} />
         </a>
