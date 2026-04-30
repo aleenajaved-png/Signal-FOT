@@ -1439,3 +1439,50 @@
 
   .interestFormBody { grid-template-columns: 1fr; }
 }
+
+/* ─── Post-EOI floating CTA ──────────────────────────────── */
+.eoiCta {
+  position: fixed;
+  right: 32px;
+  bottom: 36px;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #173b65;
+  box-shadow: 0px 4px 40px -2px rgba(16, 24, 40, 0.36);
+  max-width: 440px;
+  z-index: 9999;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.eoiCtaText {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+}
+
+.eoiCtaText strong {
+  font-size: 15px;
+  font-weight: 600;
+  display: block;
+  margin-top: 6px;
+}
+
+.eoiCtaIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .eoiCta:hover {
+    transform: translateY(-2px);
+    background-color: #1f4a7d;
+  }
+}

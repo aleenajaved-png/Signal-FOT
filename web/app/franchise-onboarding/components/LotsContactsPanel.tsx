@@ -1,7 +1,12 @@
 "use client";
 
 import React from "react";
-import { X, MapPin, User, Phone, Mail, Building2 } from "lucide-react";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import PlaceOutlined from "@mui/icons-material/PlaceOutlined";
+import PersonOutlined from "@mui/icons-material/PersonOutlined";
+import PhoneOutlined from "@mui/icons-material/PhoneOutlined";
+import EmailOutlined from "@mui/icons-material/EmailOutlined";
+import BusinessOutlined from "@mui/icons-material/BusinessOutlined";
 
 interface Lot {
   id: string;
@@ -22,15 +27,13 @@ interface Contact {
 }
 
 const mockLots: Lot[] = [
-  { id: "1", lotNumber: "IL-033", location: "1234 North Ave", city: "Chicago", state: "IL", status: "Active" },
-  { id: "2", lotNumber: "IL-038", location: "5678 West Blvd", city: "Aurora", state: "IL", status: "Pending" },
-  { id: "3", lotNumber: "IL-039", location: "9012 South St", city: "Naperville", state: "IL", status: "Pending" },
+  { id: "1", lotNumber: "NB-009", location: "1234 North Ave", city: "Omaha", state: "NE", status: "Active" },
 ];
 
 const mockContacts: Contact[] = [
-  { id: "1", name: "Andre Martin", role: "Primary Owner", phone: "(312) 555-0101", email: "andre.martin@example.com", territory: "IL-033, 038, 039" },
-  { id: "2", name: "Sarah Kim", role: "Fleet Manager", phone: "(312) 555-0182", email: "s.kim@example.com", territory: "IL-033" },
-  { id: "3", name: "James Torres", role: "Operations Lead", phone: "(630) 555-0147", email: "j.torres@example.com", territory: "IL-038, 039" },
+  { id: "1", name: "Andre Martin", role: "Primary Owner", phone: "(402) 555-0101", email: "andre.martin@example.com", territory: "NB-009" },
+  { id: "2", name: "Sarah Kim", role: "Fleet Manager", phone: "(402) 555-0182", email: "s.kim@example.com", territory: "NB-009" },
+  { id: "3", name: "James Torres", role: "Operations Lead", phone: "(402) 555-0147", email: "j.torres@example.com", territory: "NB-009" },
 ];
 
 const statusColors: Record<Lot["status"], string> = {
@@ -51,12 +54,12 @@ export function LotsContactsPanel({ type, onClose }: LotsContactsPanelProps) {
         <h3 className="text-sm font-semibold text-gray-800 flex items-center gap-2">
           {type === "lots" ? (
             <>
-              <MapPin size={15} className="text-blue-500" />
+              <PlaceOutlined sx={{ fontSize: 15 }} className="text-blue-500" />
               Franchise Lots
             </>
           ) : (
             <>
-              <User size={15} className="text-orange-500" />
+              <PersonOutlined sx={{ fontSize: 15 }} className="text-orange-500" />
               Contacts
             </>
           )}
@@ -66,7 +69,7 @@ export function LotsContactsPanel({ type, onClose }: LotsContactsPanelProps) {
           className="p-1 rounded hover:bg-gray-100 text-gray-500 transition-colors"
           aria-label="Close panel"
         >
-          <X size={15} />
+          <CloseOutlined sx={{ fontSize: 15 }} />
         </button>
       </div>
 
@@ -87,7 +90,7 @@ export function LotsContactsPanel({ type, onClose }: LotsContactsPanelProps) {
                 <tr key={lot.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50 transition-colors">
                   <td className="py-2 pr-4">
                     <div className="flex items-center gap-1.5">
-                      <Building2 size={13} className="text-blue-400 shrink-0" />
+                      <BusinessOutlined sx={{ fontSize: 13 }} className="text-blue-400 shrink-0" />
                       <span className="font-medium text-gray-800">{lot.lotNumber}</span>
                     </div>
                   </td>
@@ -130,13 +133,13 @@ export function LotsContactsPanel({ type, onClose }: LotsContactsPanelProps) {
                   <td className="py-2 pr-4 text-gray-600">{contact.role}</td>
                   <td className="py-2 pr-4">
                     <div className="flex items-center gap-1 text-gray-600">
-                      <Phone size={11} />
+                      <PhoneOutlined sx={{ fontSize: 13 }} />
                       {contact.phone}
                     </div>
                   </td>
                   <td className="py-2 pr-4">
                     <div className="flex items-center gap-1 text-gray-600">
-                      <Mail size={11} />
+                      <EmailOutlined sx={{ fontSize: 13 }} />
                       {contact.email}
                     </div>
                   </td>

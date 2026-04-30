@@ -1,6 +1,7 @@
 import { execSync } from "child_process";
 import Link from "next/link";
 import Badge from "@/components/Badge";
+import NorthEastOutlined from "@mui/icons-material/NorthEastOutlined";
 import styles from "./page.module.css";
 
 function getLastUpdated(): string {
@@ -22,9 +23,9 @@ function getLastUpdated(): string {
 const signalLogo =
   "https://www.figma.com/api/mcp/asset/f302eb50-8c1d-4045-99a8-753bdea9e8a6";
 
-const personas = ["Home Office", "Franchise Owner", "Sales Rep", "Compliance Team"];
+const personas = ["Home Office", "Franchise Owner", "Compliance Team"];
 const platformsRow1 = ["SET", "EDGE", "LOTs", "Leads"];
-const platformsRow2 = ["PBX- HubSpot", "BPO- HubSpot"];
+const platformsRow2 = ["PBX- HubSpot", "FLC"];
 
 export default function Home() {
   const lastUpdated = getLastUpdated();
@@ -39,7 +40,7 @@ export default function Home() {
       <section className={styles.content}>
         <h1 className={styles.title}>
           <strong>Use Case</strong>
-          {" - Franchise Onboarding "}
+          {" - Franchise Life Cycle"}
         </h1>
 
         <article className={styles.blockBordered}>
@@ -105,9 +106,7 @@ export default function Home() {
       <Link href="/marketplace-flow" className={styles.cta}>
         <span className={styles.ctaLabel}>Lots Marketplace Flow</span>
         <span className={styles.ctaIcon} aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 6L18 6M18 6V18M18 6L6 18" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <NorthEastOutlined style={{ fontSize: 24, color: "white" }} />
         </span>
       </Link>
     </main>

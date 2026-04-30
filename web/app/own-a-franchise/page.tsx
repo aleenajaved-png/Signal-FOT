@@ -1,8 +1,29 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutlineOutlined";
+import HelpOutlineOutlined from "@mui/icons-material/HelpOutlineOutlined";
+import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined";
+import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined";
+import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import StraightenOutlined from "@mui/icons-material/StraightenOutlined";
+import GroupsOutlined from "@mui/icons-material/GroupsOutlined";
+import LocationCityOutlined from "@mui/icons-material/LocationCityOutlined";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import EmailOutlined from "@mui/icons-material/EmailOutlined";
+import PhoneOutlined from "@mui/icons-material/PhoneOutlined";
+import FullscreenOutlined from "@mui/icons-material/FullscreenOutlined";
+import AddOutlined from "@mui/icons-material/AddOutlined";
+import ArrowBackOutlined from "@mui/icons-material/ArrowBackOutlined";
+import OpenInNewOutlined from "@mui/icons-material/OpenInNewOutlined";
+import StorefrontOutlined from "@mui/icons-material/StorefrontOutlined";
+import PlaceOutlined from "@mui/icons-material/PlaceOutlined";
+import PeopleOutlineOutlined from "@mui/icons-material/PeopleOutlineOutlined";
+import TrendingUpOutlined from "@mui/icons-material/TrendingUpOutlined";
+import MapOutlined from "@mui/icons-material/MapOutlined";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import ChevronLeftOutlined from "@mui/icons-material/ChevronLeftOutlined";
+import ChevronRightOutlined from "@mui/icons-material/ChevronRightOutlined";
+import NorthEastOutlined from "@mui/icons-material/NorthEastOutlined";
 import styles from "./page.module.css";
 
 /* Figma asset URLs */
@@ -98,6 +119,88 @@ const imgCarouselChevronR =
 const imgSimilarClose =
   "https://www.figma.com/api/mcp/asset/1e1c4919-0be9-4314-82e3-0458ee15818b";
 
+/* ── Lot data shared between listing cards and the detail modal ── */
+type BadgeKind = "available" | "inNetwork" | "sold";
+interface Lot {
+  id: string;
+  name: string;
+  badge: BadgeKind;
+  priceLabel: string;
+  price: string;
+  lotOpportunity: string;
+  population: string;
+  zipcodes: string;
+  // modal detail fields
+  marketType: string;
+  leadVolume: string;
+  serviceableArea: string;
+  whyThisMarket: string;
+  priceHistory: { price: string; date: string }[];
+}
+
+const LOTS: Lot[] = [
+  {
+    id: "1",
+    name: "Lot NB - 09",
+    badge: "available",
+    priceLabel: "Available at",
+    price: "$120,000",
+    lotOpportunity: "591,700/ year Lot opportunity",
+    population: "4.2M",
+    zipcodes: "30",
+    marketType: "Suburban",
+    leadVolume: "310",
+    serviceableArea: "5,400 sq mi",
+    whyThisMarket:
+      "This market is located in a dense urban area with strong infrastructure and business accessibility. Demand is primarily driven by residential development and housing services. Located in the Midwest, this area benefits from a central position and strong local networks.",
+    priceHistory: [
+      { price: "$98,000", date: "Jan 18, 2021" },
+      { price: "$88,000", date: "Mar 28, 2020" },
+      { price: "$62,000", date: "Jan 18, 2019" },
+    ],
+  },
+  {
+    id: "2",
+    name: "Lot KA - 05",
+    badge: "inNetwork",
+    priceLabel: "Available at",
+    price: "$120,000",
+    lotOpportunity: "591,700/ year Lot opportunity",
+    population: "315,000",
+    zipcodes: "10",
+    marketType: "Urban",
+    leadVolume: "210",
+    serviceableArea: "2,100 sq mi",
+    whyThisMarket:
+      "Lot KA - 05 sits within a rapidly growing metro corridor with high commercial density. The local economy is bolstered by distribution hubs and light industrial zones, creating consistent demand for security services.",
+    priceHistory: [
+      { price: "$115,000", date: "Feb 10, 2022" },
+      { price: "$102,000", date: "Aug 5, 2021" },
+      { price: "$85,000", date: "May 20, 2019" },
+    ],
+  },
+  {
+    id: "3",
+    name: "Lot WY - 09 - 026",
+    badge: "inNetwork",
+    priceLabel: "Last Sold at",
+    price: "$230,000",
+    lotOpportunity: "591,700/ year Lot opportunity",
+    population: "315,000",
+    zipcodes: "60",
+    marketType: "Rural",
+    leadVolume: "490",
+    serviceableArea: "9,800 sq mi",
+    whyThisMarket:
+      "A premium lot covering extensive rural territory with significant untapped potential. Low competition, a wide serviceable area, and consistent government contract pipelines make this one of the highest-value lots in the marketplace.",
+    priceHistory: [
+      { price: "$210,000", date: "Nov 3, 2023" },
+      { price: "$180,000", date: "Jul 14, 2022" },
+      { price: "$145,000", date: "Jan 30, 2021" },
+    ],
+  },
+];
+
 /* Map cluster markers (positions derived from Figma node 504:15758 inset values) */
 const markerData = [
   { n: "20", top: "24.16%", left: "58.35%" },
@@ -123,17 +226,20 @@ const markerData = [
 ];
 
 export default function OwnAFranchisePage() {
-  const router = useRouter();
-  const [isLotModalOpen, setIsLotModalOpen] = useState(false);
+  const [selectedLot, setSelectedLot] = useState<Lot | null>(null);
   const [isInterestFormOpen, setIsInterestFormOpen] = useState(false);
+  const [showEoiCta, setShowEoiCta] = useState(false);
 
-  const openLotModal = () => setIsLotModalOpen(true);
+  const openLotModal = (lot: Lot) => setSelectedLot(lot);
   const closeLotModal = () => {
-    setIsLotModalOpen(false);
+    setSelectedLot(null);
     setIsInterestFormOpen(false);
   };
   const openInterestForm = () => setIsInterestFormOpen(true);
   const closeInterestForm = () => setIsInterestFormOpen(false);
+
+  const badgeClass = (badge: BadgeKind) =>
+    badge === "available" ? styles.badgeBlue : styles.badgeOrange;
 
   return (
     <main className={styles.page}>
@@ -143,13 +249,13 @@ export default function OwnAFranchisePage() {
         <img src={imgSignalLogo} alt="Signal" className={styles.logo} />
         <div className={styles.topLinks}>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
-            <img src={imgLocationOn} alt="" width={16} height={16} style={{ objectFit: "contain" }} />
+            <LocationOnOutlined sx={{ fontSize: 16 }} />
             Find a Location
           </span>
           <span style={{ display: "inline-flex", alignItems: "center", gap: 7 }}>
-            <img src={imgLocationOn} alt="" width={16} height={16} style={{ objectFit: "contain" }} />
+            <LocationOnOutlined sx={{ fontSize: 16 }} />
             Login
-            <img src={imgChevronDown} alt="" width={24} height={24} style={{ objectFit: "contain" }} />
+            <KeyboardArrowDownOutlined sx={{ fontSize: 20 }} />
           </span>
         </div>
       </header>
@@ -160,25 +266,25 @@ export default function OwnAFranchisePage() {
           <li>
             <a href="/own-a-franchise" className={styles.activeLink}>
               OWN A FRANCHISE
-              <img src={imgChevronDown} alt="" width={24} height={24} style={{ objectFit: "contain" }} />
+              <KeyboardArrowDownOutlined sx={{ fontSize: 20 }} />
             </a>
           </li>
           <li>
             EXPLORE SECURITY SOLUTIONS
-            <img src={imgChevronDown} alt="" width={24} height={24} style={{ objectFit: "contain" }} />
+            <KeyboardArrowDownOutlined sx={{ fontSize: 20 }} />
           </li>
           <li>
             JOIN OUR TEAM
-            <img src={imgChevronDown} alt="" width={24} height={24} style={{ objectFit: "contain" }} />
+            <KeyboardArrowDownOutlined sx={{ fontSize: 20 }} />
           </li>
         </ul>
         <div className={styles.contactMeta}>
           <p style={{ display: "flex", alignItems: "center", gap: 7 }}>
-            <img src={imgEmailIcon} alt="" width={16} height={16} style={{ objectFit: "contain", filter: "brightness(0)" }} />
+            <EmailOutlined sx={{ fontSize: 16, color: "#000" }} />
             lots@teamsignal.com
           </p>
           <p style={{ display: "flex", alignItems: "center", gap: 7 }}>
-            <img src={imgPhoneIcon} alt="" width={16} height={16} style={{ objectFit: "contain", filter: "brightness(0)" }} />
+            <PhoneOutlined sx={{ fontSize: 16, color: "#000" }} />
             877.498.8494
           </p>
         </div>
@@ -193,14 +299,14 @@ export default function OwnAFranchisePage() {
             <h1>Lots Marketplace</h1>
             <button type="button" className={styles.howItWorks}>
               How it Works
-              <HelpOutlineIcon sx={{ fontSize: 24, color: "#146dff" }} />
+              <HelpOutlineOutlined sx={{ fontSize: 24, color: "#146dff" }} />
             </button>
           </div>
           <p className={styles.subhead}>Explore lots and submit EOI - Expression of Interest form.</p>
 
           <div className={styles.filters}>
             <div className={styles.searchWrap}>
-              <img src={imgSearch} alt="" className={styles.searchIcon} />
+              <SearchOutlined sx={{ fontSize: 16 }} className={styles.searchIcon} />
               <input
                 type="search"
                 placeholder="Search"
@@ -210,7 +316,7 @@ export default function OwnAFranchisePage() {
             </div>
             <button type="button" className={styles.priceBtn}>
               $ Price
-              <img src={imgChevronDown} alt="" className={styles.priceChevron} />
+              <KeyboardArrowDownOutlined sx={{ fontSize: 16 }} className={styles.priceChevron} />
             </button>
           </div>
 
@@ -238,104 +344,49 @@ export default function OwnAFranchisePage() {
           </div>
 
           <div className={styles.cardList}>
-
-            {/* Card 1 — available */}
-            <article
-              className={styles.lotCard}
-              role="button"
-              tabIndex={0}
-              aria-haspopup="dialog"
-              aria-expanded={isLotModalOpen}
-              onClick={openLotModal}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLotModal(); }
-              }}
-            >
-              <div className={styles.cardHeader}>
-                <h2>Lot NB - 09</h2>
-                <img src={imgCloseCard} alt="" className={styles.cardCloseIcon} aria-hidden="true" />
-              </div>
-              <div className={styles.priceLine}>
-                <p className={styles.priceText}>
-                  <span className={styles.priceLabel}>Available at </span>
-                  <span className={styles.priceAmount}>$120,000</span>
-                </p>
-                <span className={styles.badgeBlue}>Available</span>
-              </div>
-              <div className={styles.statRows}>
-                <div className={styles.statRow}>
-                  <img src={imgArrowRange} alt="" className={styles.statIcon} />
-                  <span>591,700/ year Lot opportunity</span>
+            {LOTS.map((lot) => (
+              <article
+                key={lot.id}
+                className={styles.lotCard}
+                role="button"
+                tabIndex={0}
+                aria-haspopup="dialog"
+                aria-expanded={selectedLot?.id === lot.id}
+                onClick={() => openLotModal(lot)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openLotModal(lot); }
+                }}
+              >
+                <div className={styles.cardHeader}>
+                  <h2>{lot.name}</h2>
                 </div>
-                <div className={styles.statRow}>
-                  <img src={imgGroupIcon} alt="" className={styles.statIcon} />
-                  <span>4.2M population</span>
+                <div className={styles.priceLine}>
+                  <p className={styles.priceText}>
+                    <span className={styles.priceLabel}>{lot.priceLabel} </span>
+                    <span className={`${styles.priceAmount}${lot.badge === "sold" ? ` ${styles.priceAmountSold}` : ""}`}>
+                      {lot.price}
+                    </span>
+                  </p>
+                  <span className={badgeClass(lot.badge)}>
+                    {lot.badge === "available" ? "Available" : "In Network"}
+                  </span>
                 </div>
-                <div className={styles.statRow}>
-                  <img src={imgDistance} alt="" className={styles.statIcon} />
-                  <span>30 zipcodes</span>
+                <div className={styles.statRows}>
+                  <div className={styles.statRow}>
+                    <StraightenOutlined sx={{ fontSize: 16 }} className={styles.statIcon} />
+                    <span>{lot.lotOpportunity}</span>
+                  </div>
+                  <div className={styles.statRow}>
+                    <GroupsOutlined sx={{ fontSize: 16 }} className={styles.statIcon} />
+                    <span>{lot.population} population</span>
+                  </div>
+                  <div className={styles.statRow}>
+                    <LocationCityOutlined sx={{ fontSize: 16 }} className={styles.statIcon} />
+                    <span>{lot.zipcodes} zipcodes</span>
+                  </div>
                 </div>
-              </div>
-            </article>
-
-            {/* Card 2 — in network */}
-            <article className={styles.lotCard}>
-              <div className={styles.cardHeader}>
-                <h2>Lot KA - 05</h2>
-                <img src={imgCloseCard} alt="" className={styles.cardCloseIcon} aria-hidden="true" />
-              </div>
-              <div className={styles.priceLine}>
-                <p className={styles.priceText}>
-                  <span className={styles.priceLabel}>Available at </span>
-                  <span className={styles.priceAmount}>$120,000</span>
-                </p>
-                <span className={styles.badgeOrange}>In Network</span>
-              </div>
-              <div className={styles.statRows}>
-                <div className={styles.statRow}>
-                  <img src={imgArrowRange} alt="" className={styles.statIcon} />
-                  <span>591,700/ year Lot opportunity</span>
-                </div>
-                <div className={styles.statRow}>
-                  <img src={imgGroupIcon} alt="" className={styles.statIcon} />
-                  <span>315,000 population</span>
-                </div>
-                <div className={styles.statRow}>
-                  <img src={imgDistance} alt="" className={styles.statIcon} />
-                  <span>10 zipcodes</span>
-                </div>
-              </div>
-            </article>
-
-            {/* Card 3 — sold / in network */}
-            <article className={styles.lotCard}>
-              <div className={styles.cardHeader}>
-                <h2>Lot WY - 09 - 026</h2>
-                <img src={imgCloseCard} alt="" className={styles.cardCloseIcon} aria-hidden="true" />
-              </div>
-              <div className={styles.priceLine}>
-                <p className={styles.priceText}>
-                  <span className={styles.priceLabel}>Last Sold at </span>
-                  <span className={`${styles.priceAmount} ${styles.priceAmountSold}`}>$230,000</span>
-                </p>
-                <span className={styles.badgeOrange}>In Network</span>
-              </div>
-              <div className={styles.statRows}>
-                <div className={styles.statRow}>
-                  <img src={imgArrowRange} alt="" className={styles.statIcon} />
-                  <span>591,700/ year Lot opportunity</span>
-                </div>
-                <div className={styles.statRow}>
-                  <img src={imgGroupIcon} alt="" className={styles.statIcon} />
-                  <span>315,000 population</span>
-                </div>
-                <div className={styles.statRow}>
-                  <img src={imgDistance} alt="" className={styles.statIcon} />
-                  <span>60 zipcodes</span>
-                </div>
-              </div>
-            </article>
-
+              </article>
+            ))}
           </div>
         </aside>
 
@@ -350,7 +401,7 @@ export default function OwnAFranchisePage() {
           {/* Top bar: Full View + legend */}
           <div className={styles.mapTopBar}>
             <button type="button" className={styles.fullViewBtn}>
-              <img src={imgFullViewIcon} alt="" className={styles.fullViewIcon} aria-hidden="true" style={{ transform: "rotate(180deg)" }} />
+              <FullscreenOutlined sx={{ fontSize: 14 }} className={styles.fullViewIcon} aria-hidden="true" />
               Full View
             </button>
             <div className={styles.legend}>
@@ -383,7 +434,7 @@ export default function OwnAFranchisePage() {
           {/* Interest card */}
           <aside className={styles.interestCard}>
             <button type="button" className={styles.closeBtn} aria-label="Close interest card">
-              <img src={imgInterestClose} alt="" className={styles.closeBtnIcon} aria-hidden="true" />
+              <CloseOutlined sx={{ fontSize: 20 }} className={styles.closeBtnIcon} aria-hidden="true" />
             </button>
             <img src={imgMiniMap} alt="" className={styles.interestMapThumb} aria-hidden="true" />
             <h3>Interested in owning a region?</h3>
@@ -391,7 +442,6 @@ export default function OwnAFranchisePage() {
             <button
               type="button"
               className={styles.fillBtn}
-              onClick={() => router.push("/onboarding")}
             >
               Fill the Form
             </button>
@@ -400,14 +450,14 @@ export default function OwnAFranchisePage() {
           {/* Zoom controls */}
           <div className={styles.zoomControls}>
             <button type="button" className={styles.zoomBtn} aria-label="Zoom in">
-              <img src={imgZoomPlus} alt="" className={styles.zoomIcon} aria-hidden="true" />
+              <AddOutlined sx={{ fontSize: 16 }} className={styles.zoomIcon} aria-hidden="true" />
             </button>
           </div>
         </div>
       </section>
 
       {/* ── Lot detail modal ──────────────────────────────────────── */}
-      {isLotModalOpen && (
+      {selectedLot !== null && (
         <div className={styles.modalBackdrop} role="presentation" onClick={closeLotModal}>
           <section
             className={styles.lotModal}
@@ -419,21 +469,21 @@ export default function OwnAFranchisePage() {
             {/* Header */}
             <header className={styles.modalHeader}>
               <button type="button" className={styles.backLink} onClick={closeLotModal}>
-                <img src={imgModalChevronLeft} alt="" className={styles.backChevron} style={{ transform: "rotate(180deg)" }} />
+                <ArrowBackOutlined sx={{ fontSize: 16 }} className={styles.backChevron} />
                 Back to search
               </button>
               <div className={styles.modalHeaderLinks}>
                 <a href="#" onClick={(e) => e.preventDefault()} className={styles.modalHeaderLink}>
                   Security Services
-                  <img src={imgOpenInNew} alt="" className={styles.openInNewIcon} />
+                  <OpenInNewOutlined sx={{ fontSize: 16 }} className={styles.openInNewIcon} />
                 </a>
                 <a href="#" onClick={(e) => e.preventDefault()} className={styles.modalHeaderLink}>
                   Employment Opportunities
-                  <img src={imgOpenInNew} alt="" className={styles.openInNewIcon} />
+                  <OpenInNewOutlined sx={{ fontSize: 16 }} className={styles.openInNewIcon} />
                 </a>
               </div>
               <button type="button" className={styles.modalCloseBtn} aria-label="Close" onClick={closeLotModal}>
-                <img src={imgModalClose} alt="Close" width={14} height={14} />
+                <CloseOutlined sx={{ fontSize: 14 }} />
               </button>
             </header>
 
@@ -446,10 +496,12 @@ export default function OwnAFranchisePage() {
                 {/* Section 1: title + price + CTA */}
                 <div className={styles.mSec1}>
                   <div className={styles.mTitleRow}>
-                    <span className={styles.mLotName}>Lot NB - 001</span>
-                    <span className={styles.badgeOrange}>In Network</span>
+                    <span className={styles.mLotName}>{selectedLot.name}</span>
+                    <span className={badgeClass(selectedLot.badge)}>
+                      {selectedLot.badge === "available" ? "Available" : "In Network"}
+                    </span>
                   </div>
-                  <p className={styles.mPrice}>$120,000</p>
+                  <p className={styles.mPrice}>{selectedLot.price}</p>
                   <div className={styles.mCtaGroup}>
                     <p className={styles.mInterested}>Interested in this area?</p>
                     <button type="button" className={styles.submitInterestBtn} onClick={openInterestForm}>
@@ -461,44 +513,24 @@ export default function OwnAFranchisePage() {
                 {/* Section 2: Why this Market */}
                 <div className={styles.mSec2}>
                   <p className={styles.mSecHeading}>Why this Market?</p>
-                  <p className={styles.mSecBody}>
-                    This market is located in a dense urban area with strong infrastructure and business
-                    accessibility. Demand is primarily driven by residential development and housing services.
-                    Located in the Midwest, this area benefits from a central position and strong local networks.
-                  </p>
+                  <p className={styles.mSecBody}>{selectedLot.whyThisMarket}</p>
                 </div>
 
                 {/* Section 3: Price History */}
                 <div className={styles.mSec3}>
                   <p className={styles.mSecHeading}>Price History</p>
                   <div className={styles.mPriceHistoryList}>
-                    <div className={styles.mPriceRow}>
-                      <img src={imgBulletDot} alt="" className={styles.mBullet} />
-                      <p>
-                        <span className={styles.mPHMuted}>Bought for</span>
-                        {" "}<span className={styles.mPHDark}>$98,000</span>
-                        {" "}<span className={styles.mPHMuted}>on</span>
-                        {" "}<span className={styles.mPHDark}>Jan 18, 2021.</span>
-                      </p>
-                    </div>
-                    <div className={styles.mPriceRow}>
-                      <img src={imgBulletDot} alt="" className={styles.mBullet} />
-                      <p>
-                        <span className={styles.mPHMuted}>Bought for</span>
-                        {" "}<span className={styles.mPHDark}>$88,000</span>
-                        {" "}<span className={styles.mPHMuted}>on</span>
-                        {" "}<span className={styles.mPHDark}>Mar 28, 2020.</span>
-                      </p>
-                    </div>
-                    <div className={styles.mPriceRow}>
-                      <img src={imgBulletDot} alt="" className={styles.mBullet} />
-                      <p>
-                        <span className={styles.mPHMuted}>Bought for</span>
-                        {" "}<span className={styles.mPHDark}>$62,000</span>
-                        {" "}<span className={styles.mPHMuted}>on</span>
-                        {" "}<span className={styles.mPHDark}>Jan 18, 2019.</span>
-                      </p>
-                    </div>
+                    {selectedLot.priceHistory.map((entry, i) => (
+                      <div key={i} className={styles.mPriceRow}>
+                        <span className={styles.mBullet} style={{ display: "inline-block", borderRadius: "50%", background: "#444", flexShrink: 0 }} />
+                        <p>
+                          <span className={styles.mPHMuted}>Bought for</span>
+                          {" "}<span className={styles.mPHDark}>{entry.price}</span>
+                          {" "}<span className={styles.mPHMuted}>on</span>
+                          {" "}<span className={styles.mPHDark}>{entry.date}.</span>
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </aside>
@@ -535,111 +567,16 @@ export default function OwnAFranchisePage() {
                   </div>
                 </div>
 
-                {/* Lot Details */}
-                <div className={styles.mLotDetails}>
-                  <p className={styles.mSectionTitle}>Lot Details</p>
-                  <div className={styles.mDetailGrid}>
-                    <div className={styles.mDetailItem}>
-                      <div className={styles.mDetailIconWrap}>
-                        <img src={imgDetailStorefront} alt="" className={styles.mDetailIcon} />
-                      </div>
-                      <div className={styles.mDetailText}>
-                        <span className={styles.mDetailLabel}>Market Type</span>
-                        <span className={styles.mDetailValue}>Suburban</span>
-                      </div>
-                    </div>
-                    <div className={styles.mDetailItem}>
-                      <div className={styles.mDetailIconWrap}>
-                        <img src={imgDetailMapPin} alt="" className={styles.mDetailIcon} />
-                      </div>
-                      <div className={styles.mDetailText}>
-                        <span className={styles.mDetailLabelRow}>
-                          Zip Codes
-                          <img src={imgInfoCircle} alt="" className={styles.mInfoIcon} />
-                        </span>
-                        <span className={styles.mDetailValue}>32</span>
-                      </div>
-                    </div>
-                    <div className={styles.mDetailItem}>
-                      <div className={styles.mDetailIconWrap}>
-                        <img src={imgDetailUsers} alt="" className={styles.mDetailIcon} />
-                      </div>
-                      <div className={styles.mDetailText}>
-                        <span className={styles.mDetailLabel}>Population</span>
-                        <span className={styles.mDetailValue}>4M</span>
-                      </div>
-                    </div>
-                    <div className={styles.mDetailItem}>
-                      <div className={styles.mDetailIconWrap}>
-                        <img src={imgDetailLeads} alt="" className={styles.mDetailIcon} />
-                      </div>
-                      <div className={styles.mDetailText}>
-                        <span className={styles.mDetailLabel}>Lead Volume</span>
-                        <span className={styles.mDetailValue}>310</span>
-                      </div>
-                    </div>
-                    <div className={styles.mDetailItem}>
-                      <div className={styles.mDetailIconWrap}>
-                        <img src={imgDetailMap} alt="" className={styles.mDetailIcon} />
-                      </div>
-                      <div className={styles.mDetailText}>
-                        <span className={styles.mDetailLabel}>Serviceable Area</span>
-                        <span className={styles.mDetailValue}>5,400 sq mi</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Where the Opportunity Is */}
-                <div className={styles.mOpportunity}>
-                  <p className={styles.mSectionTitle}>Where the Opportunity Is</p>
-                  <div className={styles.mOpportunityCard}>
-                    {/* Numbers row above bars */}
-                    <div className={styles.mOpportunityNums}>
-                      <span style={{ flex: "82 0 0" }}>2,341</span>
-                      <span style={{ flex: "433 0 0" }}>23,872</span>
-                      <span style={{ flex: "127 0 0" }}>2,971</span>
-                      <span style={{ flex: "47 0 0" }}>19</span>
-                    </div>
-                    {/* Bar row */}
-                    <div className={styles.mOpportunityBarRow}>
-                      <span className={styles.mOppLabel}>Lead %</span>
-                      <div className={styles.mBars}>
-                        <div className={styles.mBar} style={{ flex: "82 0 0", background: "#e43f32" }}>15%</div>
-                        <div className={styles.mBar} style={{ flex: "433 0 0", background: "#ff9332" }}>36%</div>
-                        <div className={styles.mBar} style={{ flex: "127 0 0", background: "#146dff" }}>20%</div>
-                        <div className={styles.mBar} style={{ flex: "47 0 0", background: "#31a150" }}>3%</div>
-                      </div>
-                    </div>
-                    {/* Legend row */}
-                    <div className={styles.mOpportunityLegend}>
-                      {[
-                        { img: imgLegendDotRed, label: "Housing" },
-                        { img: imgLegendDotOrange, label: "Distribution" },
-                        { img: imgLegendDotBlue, label: "Industrial" },
-                        { img: imgLegendDotGreen, label: "Commercial" },
-                      ].map(({ img, label }) => (
-                        <span key={label} className={styles.mLegendItem}>
-                          <img src={img} alt="" className={styles.mLegendDot} />
-                          {label}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
                 {/* Similar Lots */}
                 <div className={styles.mSimilarLots}>
                   <div className={styles.mSimilarHeader}>
                     <p className={styles.mSimilarTitle}>Similar Lots</p>
                     <div className={styles.mCarouselBtns}>
                       <button type="button" className={styles.mCarouselBtn} aria-label="Previous">
-                        <img src={imgCarouselLeft} alt="" className={styles.mCarouselCircle} />
-                        <img src={imgCarouselChevronL} alt="" className={styles.mCarouselChevron} style={{ transform: "rotate(180deg)" }} />
+                        <ChevronLeftOutlined sx={{ fontSize: 18 }} />
                       </button>
                       <button type="button" className={styles.mCarouselBtn} aria-label="Next">
-                        <img src={imgCarouselRight} alt="" className={styles.mCarouselCircle} />
-                        <img src={imgCarouselChevronR} alt="" className={styles.mCarouselChevron} />
+                        <ChevronRightOutlined sx={{ fontSize: 18 }} />
                       </button>
                     </div>
                   </div>
@@ -653,11 +590,11 @@ export default function OwnAFranchisePage() {
                       <div key={lot.name} className={styles.mSimilarCard}>
                         <div className={styles.mSimilarCardHead}>
                           <span className={styles.mSimilarName}>{lot.name}</span>
-                          <img src={imgSimilarClose} alt="" className={styles.mSimilarClose} />
+                          <CloseOutlined sx={{ fontSize: 14 }} className={styles.mSimilarClose} />
                         </div>
                         <div className={styles.mSimilarStats}>
                           <div className={styles.statRow}>
-                            <img src={imgArrowRange} alt="" className={styles.statIcon} />
+                            <StraightenOutlined sx={{ fontSize: 16 }} className={styles.statIcon} />
                             <span>{lot.range}</span>
                           </div>
                           <p className={styles.mSimilarSub}>{lot.sub}</p>
@@ -698,8 +635,8 @@ export default function OwnAFranchisePage() {
               onSubmit={(e) => {
                 e.preventDefault();
                 setIsInterestFormOpen(false);
-                setIsLotModalOpen(false);
-                router.push("/own-a-franchise");
+                setSelectedLot(null);
+                setShowEoiCta(true);
               }}
             >
               <div className={styles.formField}>
@@ -756,6 +693,21 @@ export default function OwnAFranchisePage() {
           </section>
         </div>
       )}
+      {/* ── Post-EOI floating CTA ────────────────────────────────── */}
+      {showEoiCta && (
+        <a href="/onboarding" className={styles.eoiCta}>
+          <span className={styles.eoiCtaText}>
+            After the submission of EOI form, a deal is generated in HubSpot
+            with Lot and Contact associated.
+            <br />
+            <strong>Lets switch to Franchise Lifecycle (FLC)</strong>
+          </span>
+          <span className={styles.eoiCtaIcon} aria-hidden="true">
+            <NorthEastOutlined sx={{ fontSize: 24, color: "white" }} />
+          </span>
+        </a>
+      )}
+
     </main>
   );
 }

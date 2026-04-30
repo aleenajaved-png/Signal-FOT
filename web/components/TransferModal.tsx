@@ -11,6 +11,27 @@ import { LOTS_FOR_MODAL, OLD_FRANCHISE_MAP, type LotForModal } from "@/lib/data"
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
 
+/** Display ISO date as MM/DD/YYYY */
+function formatYmdAsMmDdYyyy(ymd: string): string {
+  const [y, m, d] = ymd.split("-").map(Number);
+  if (!y || !m || !d) return "";
+  return `${pad2(m)}/${pad2(d)}/${y}`;
+}
+
+/** Parse MM/DD/YYYY to YYYY-MM-DD or null */
+function parseMmDdYyyyToYmd(s: string): string | null {
+  const trimmed = s.trim();
+  const match = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!match) return null;
+  const mo = Number(match[1]);
+  const da = Number(match[2]);
+  const yr = Number(match[3]);
+  if (mo < 1 || mo > 12 || da < 1 || da > 31) return null;
+  const dt = new Date(yr, mo - 1, da, 12, 0, 0, 0);
+  if (dt.getFullYear() !== yr || dt.getMonth() !== mo - 1 || dt.getDate() !== da) return null;
+  return `${yr}-${pad2(mo)}-${pad2(da)}`;
+}
+
 /** Local calendar day as YYYY-MM-DD */
 function toYmd(d: Date): string {
   return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
@@ -77,13 +98,16 @@ export function TransferLotOwnershipPanel({
 }: PanelProps) {
   const lot: LotForModal | undefined = LOTS_FOR_MODAL[lotIndex];
   const oldFr = useMemo(() => {
-    if (!lot) return { id: "2033", name: "Northern Virginia, VA", owner: "Matt Quinn" };
-    return OLD_FRANCHISE_MAP[lot.no] ?? { id: "2033", name: "Northern Virginia, VA", owner: "Matt Quinn" };
+    if (!lot) return { id: "2033", name: "Omaha Metro, NE", owner: "Matt Quinn" };
+    return OLD_FRANCHISE_MAP[lot.no] ?? { id: "2033", name: "Omaha Metro, NE", owner: "Matt Quinn" };
   }, [lot]);
 
   const [minCutYmd] = useState(computeMinCutoffYmd);
-  const [cutoff, setCutoff] = useState("");
+  /** Derived from effective date (day before effective), never below minCutYmd; display-only. */
+  const [cutoff, setCutoff] = useState(minCutYmd);
   const [effective, setEffective] = useState("");
+  const [effectiveInput, setEffectiveInput] = useState("");
+  const [effectiveParseErr, setEffectiveParseErr] = useState("");
   const [transferAllUsers, setTransferAllUsers] = useState(false);
 
   const { valid, showTimeline, coErr, coMsg, efErr, efMsg, coCls, efCls } = useMemo(() => {
@@ -138,9 +162,31 @@ export function TransferLotOwnershipPanel({
     return { valid: true, showTimeline: true, coErr: false, coMsg: "", efErr: false, efMsg: "", coCls: "input-ok", efCls: "input-ok" };
   }, [cutoff, effective, minCutYmd]);
 
+  const normalizeEffectiveOnBlur = () => {
+    const t = effectiveInput.trim();
+    if (!t) {
+      setEffective("");
+      setEffectiveParseErr("");
+      setCutoff(minCutYmd);
+      return;
+    }
+    const ymd = parseMmDdYyyyToYmd(t);
+    if (!ymd) {
+      setEffective("");
+      setEffectiveParseErr("Enter a valid date as MM/DD/YYYY.");
+      setCutoff(minCutYmd);
+      return;
+    }
+    setEffectiveParseErr("");
+    setEffective(ymd);
+    setEffectiveInput(formatYmdAsMmDdYyyy(ymd));
+    let derivedCutoff = addDaysYmd(ymd, -1);
+    if (derivedCutoff < minCutYmd) derivedCutoff = minCutYmd;
+    setCutoff(derivedCutoff);
+  };
+
   if (!lot) return null;
 
-  const minEffectiveYmd = cutoff ? addDaysYmd(cutoff, 1) : addDaysYmd(minCutYmd, 1);
   const oldFrLabel = `${oldFr.id ? `${oldFr.id}, ` : ""}${oldFr.name}`;
 
   return (
@@ -218,61 +264,11 @@ export function TransferLotOwnershipPanel({
         >
           <div style={{ flex: "1 1 280px", minWidth: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-              <label htmlFor="transfer-cutoff-date" style={{ fontSize: 14, color: "#272d37" }}>
-                Cut-off Date of Current Franchise*
-              </label>
-              <Tooltip
-                title="End date of the current franchise. Must be at least 24 hours from now and earlier than the effective date."
-                enterTouchDelay={0}
-                slotProps={{
-                  tooltip: {
-                    sx: {
-                      bgcolor: "#000",
-                      color: "#fff",
-                      fontSize: 12,
-                      lineHeight: 1.4,
-                      maxWidth: 320,
-                      p: 1.25,
-                    },
-                  },
-                }}
-              >
-                <IconButton
-                  type="button"
-                  size="small"
-                  aria-label="More about cut-off date"
-                  sx={{ p: 0.25, color: "#146dff" }}
-                >
-                  <InfoOutlined sx={{ fontSize: 16 }} />
-                </IconButton>
-              </Tooltip>
-            </div>
-            <input
-              id="transfer-cutoff-date"
-              type="date"
-              className={`transfer-date-input ${coCls}`}
-              min={minCutYmd}
-              value={cutoff}
-              onChange={(e) => {
-                const v = e.target.value;
-                setCutoff(v);
-                setEffective((prev) => {
-                  if (!prev || !v) return prev;
-                  const minE = addDaysYmd(v, 1);
-                  return prev < minE ? "" : prev;
-                });
-              }}
-              style={{ width: "100%", height: 40, marginTop: 6, border: "1px solid #d8dadc", borderRadius: 2, padding: "0 12px" }}
-            />
-            {coErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{coMsg}</div>}
-          </div>
-          <div style={{ flex: "1 1 280px", minWidth: 0 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
               <label htmlFor="transfer-effective-date" style={{ fontSize: 14, color: "#272d37" }}>
                 Effective Date of New Franchise*
               </label>
               <Tooltip
-                title="Start date of the new franchise. Must come after the previous franchise cut-off date."
+                title="Start date of the new franchise (MM/DD/YYYY). Must be after the cut-off date."
                 enterTouchDelay={0}
                 slotProps={{
                   tooltip: {
@@ -299,15 +295,75 @@ export function TransferLotOwnershipPanel({
             </div>
             <input
               id="transfer-effective-date"
-              type="date"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              placeholder="MM/DD/YYYY"
               className={`transfer-date-input ${efCls}`}
-              min={minEffectiveYmd}
-              value={effective}
-              onChange={(e) => setEffective(e.target.value)}
+              value={effectiveInput}
+              onChange={(e) => {
+                setEffectiveInput(e.target.value);
+                setEffectiveParseErr("");
+              }}
+              onBlur={normalizeEffectiveOnBlur}
               style={{ width: "100%", height: 40, marginTop: 6, border: "1px solid #d8dadc", borderRadius: 2, padding: "0 12px" }}
             />
+            {effectiveParseErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{effectiveParseErr}</div>}
             {efErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{efMsg}</div>}
             {!efErr && efMsg && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{efMsg}</div>}
+          </div>
+          <div style={{ flex: "1 1 280px", minWidth: 0 }}>
+            <div className="transfer-cutoff-field-disabled">
+              <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
+                <label htmlFor="transfer-cutoff-date" style={{ fontSize: 14, color: "#86868b", fontWeight: 500 }}>
+                  Cut-off Date of Current Franchise*
+                </label>
+                <Tooltip
+                  title="Filled automatically when you set the effective date: the calendar day before it (MM/DD/YYYY), or the earliest allowed cut-off if that day would be too soon."
+                  enterTouchDelay={0}
+                  slotProps={{
+                    tooltip: {
+                      sx: {
+                        bgcolor: "#000",
+                        color: "#fff",
+                        fontSize: 12,
+                        lineHeight: 1.4,
+                        maxWidth: 320,
+                        p: 1.25,
+                      },
+                    },
+                  }}
+                >
+                  <IconButton
+                    type="button"
+                    size="small"
+                    aria-label="More about cut-off date"
+                    sx={{ p: 0.25, color: "#86868b" }}
+                  >
+                    <InfoOutlined sx={{ fontSize: 16 }} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <input
+                id="transfer-cutoff-date"
+                type="text"
+                readOnly
+                disabled
+                aria-disabled="true"
+                className={`transfer-date-input transfer-cutoff-date-input--disabled ${coCls}`}
+                value={formatYmdAsMmDdYyyy(cutoff)}
+                style={{
+                  width: "100%",
+                  height: 40,
+                  marginTop: 8,
+                  borderRadius: 6,
+                  padding: "0 12px",
+                  cursor: "not-allowed",
+                  boxSizing: "border-box",
+                }}
+              />
+              {coErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 8 }}>{coMsg}</div>}
+            </div>
           </div>
         </div>
 

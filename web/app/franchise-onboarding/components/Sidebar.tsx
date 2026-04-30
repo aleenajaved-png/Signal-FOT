@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined";
+import KeyboardArrowUpOutlined from "@mui/icons-material/KeyboardArrowUpOutlined";
 import { Badge } from "./Badge";
 
 type SectionStatus = "not-started" | "in-progress" | "completed";
@@ -114,7 +115,7 @@ export function Sidebar({
       >
         <div className="p-4 border-b border-gray-200 bg-white">
           <h2 className="text-sm font-semibold text-gray-800 leading-snug">
-            Andre Martin - IL-033, 038, 039
+            0026 - Nebraska
           </h2>
           <p className="text-xs text-gray-400 mt-0.5">Deal ID: 46786371719</p>
 
@@ -151,7 +152,7 @@ export function Sidebar({
                   }`}
                 >
                   <span className="mt-0.5 text-gray-400 shrink-0">
-                    {isExpanded ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+                    {isExpanded ? <KeyboardArrowDownOutlined sx={{ fontSize: 16 }} /> : <KeyboardArrowUpOutlined sx={{ fontSize: 16 }} />}
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">

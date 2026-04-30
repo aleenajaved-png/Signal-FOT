@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import AddOutlined from "@mui/icons-material/AddOutlined";
 import AppsOutlined from "@mui/icons-material/AppsOutlined";
+import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
 import EditOutlined from "@mui/icons-material/EditOutlined";
 import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import LinkOffOutlined from "@mui/icons-material/LinkOffOutlined";
@@ -172,7 +174,9 @@ type Props = { listRowId: number };
 export function FranchiseDetailView({ listRowId }: Props) {
   const [selected, setSelected] = useState(() => getDetailIndexForRow(listRowId));
   const [assignOpen, setAssignOpen] = useState(false);
-  const [assigned, setAssigned] = useState<Assigned[]>([{ no: "NB-001", state: "Nebraska", effectiveDate: "Apr 1, 26" }]);
+  const [assigned, setAssigned] = useState<Assigned[]>([
+    { no: "NB-001", state: "Nebraska", effectiveDate: "Apr 1, 26" },
+  ]);
   const [previousAssigned] = useState<PreviousAssigned[]>([
     { no: "NB-007", state: "Nebraska", transitionedAt: "Mar 12, 26" },
     { no: "NB-004", state: "Nebraska", transitionedAt: "Apr 02, 26" },
@@ -262,6 +266,14 @@ export function FranchiseDetailView({ listRowId }: Props) {
           )}
           <OwnerInfobarCell cellId="owner-infobar-cell" ownerInit={f.ownerInit} owner={f.owner} />
 
+          <div className="d-infobar-cell">
+            <span className="d-cell-label">Operations</span>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#eff8ef", borderRadius: 16, padding: "2px 8px 2px 6px", width: "fit-content" }}>
+              <CheckCircleOutlineOutlined sx={oIcon(12, { color: "#2e964b" })} aria-hidden />
+              <span style={{ fontFamily: "var(--fk), sans-serif", fontSize: 12, color: "#2e964b", lineHeight: "18px" }}>Active</span>
+            </div>
+          </div>
+
           <div className="d-infobar-cell" style={{ borderRight: "none" }}>
             <span className="d-cell-label">Status</span>
             <DetailStatusPill status={f.status} />
@@ -294,11 +306,19 @@ export function FranchiseDetailView({ listRowId }: Props) {
                 <div className="d-col">
                   <div className="d-field">
                     <span className="d-flabel">Franchise Name</span>
-                    <span className="d-fvalue">Wichita, KS</span>
+                    <span className="d-fvalue">Omaha, NE</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Franchise ID</span>
+                    <span className="d-fvalue">1234</span>
+                  </div>
+                  <div className="d-field">
+                    <span className="d-flabel">Functional Date</span>
+                    <span className="d-fvalue">May 2009</span>
                   </div>
                   <div className="d-field">
                     <span className="d-flabel">Owner&apos;s Name</span>
-                    <span className="d-fvalue">Traci Withrow and Kris Withrow</span>
+                    <span className="d-fvalue">Aleena Javed</span>
                   </div>
                   <div className="d-field">
                     <span className="d-flabel">Email</span>
@@ -345,14 +365,6 @@ export function FranchiseDetailView({ listRowId }: Props) {
               <div className="d-stats-grid">
                 <div className="d-stats-col">
                   <div className="d-field">
-                    <span className="d-flabel">Franchise ID</span>
-                    <span className="d-fvalue">1234</span>
-                  </div>
-                  <div className="d-field">
-                    <span className="d-flabel">Functional Date</span>
-                    <span className="d-fvalue">May 2009</span>
-                  </div>
-                  <div className="d-field">
                     <span className="d-flabel">No. of Customers</span>
                     <span className="d-fvalue">400</span>
                   </div>
@@ -390,7 +402,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
 
           <div className="d-bottom-grid">
             <div className="d-bottom-section">
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "flex-start", gap: 20 }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "flex-start", gap: 20, marginLeft: 50 }}>
                 <div className="d-bottom-title">Associated Lots</div>
                 <button
                   type="button"
@@ -408,6 +420,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
                     display: "inline-flex",
                     alignItems: "center",
                     gap: 6,
+                    marginLeft: 60,
                   }}
                 >
                   <AddOutlined sx={oIcon(16, { color: "currentColor" })} aria-hidden />
@@ -423,7 +436,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                       {assigned.map((a, i) => {
                         const isNew = a.isNewFromTransfer === true;
-                        return (
+                        const badge = (
                           <div
                             key={a.no + i}
                             className={isNew ? "lot-assigned-badge lot-assigned-badge--new" : "lot-assigned-badge"}
@@ -436,28 +449,21 @@ export function FranchiseDetailView({ listRowId }: Props) {
                             )}
                           </div>
                         );
+                        return isNew ? (
+                          <Link
+                            key={a.no + i}
+                            href="/franchise-dashboard"
+                            style={{ textDecoration: "none" }}
+                            title={`Open ${a.no} dashboard`}
+                          >
+                            {badge}
+                          </Link>
+                        ) : badge;
                       })}
                     </div>
                   )}
                 </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "rgba(102, 102, 102, 1)" }}>Previous lots</div>
-                  {previousAssigned.length === 0 ? (
-                    <div style={{ fontSize: 13, color: "#86868b" }}>No previous lots.</div>
-                  ) : (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                      {previousAssigned.map((a, i) => (
-                        <div key={a.no + i} className="lot-assigned-badge is-disabled" aria-disabled="true">
-                          <span className="lab-no">{a.no}</span>
-                          <span className="lab-edd">
-                            Transitioned {formatFranchiseEffectiveFromDisplayString(a.transitionedAt)}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
 
               </div>
             </div>
@@ -510,17 +516,34 @@ export function FranchiseDetailView({ listRowId }: Props) {
         <AssignLotsModal
           onClose={() => setAssignOpen(false)}
           newFranchiseName={f.name}
-          onAssignLots={() => {}}
-          onConfirmTransfer={(lotIndex, effectiveValue) => {
+          onAssignLots={(lotIndices) => {
+            const newLots = lotIndices
+              .map((i) => LOTS_FOR_MODAL[i])
+              .filter(Boolean)
+              .filter((lot) => !assigned.some((a) => a.no === lot.no))
+              .map((lot) => ({
+                no: lot.no,
+                state: lot.state,
+                effectiveDate: formatFranchiseEffectiveDateLabel(new Date()),
+                isNewFromTransfer: true,
+              }));
+            if (newLots.length > 0) setAssigned((prev) => [...prev, ...newLots]);
+          }}
+          onConfirmTransfer={(lotIndex, effectiveValue, _transferAllUsers, allSelectedIndices) => {
             const d = new Date(`${effectiveValue}T12:00:00`);
             const formatted = formatFranchiseEffectiveDateLabel(d);
-            const lot = LOTS_FOR_MODAL[lotIndex];
-            if (lot) {
-              setAssigned((prev) => [
-                ...prev,
-                { no: lot.no, state: lot.state, effectiveDate: formatted, isNewFromTransfer: true },
-              ]);
-            }
+            const indicesToAdd = allSelectedIndices.length > 0 ? allSelectedIndices : [lotIndex];
+            const newLots = indicesToAdd
+              .map((i) => LOTS_FOR_MODAL[i])
+              .filter(Boolean)
+              .filter((lot) => !assigned.some((a) => a.no === lot.no))
+              .map((lot) => ({
+                no: lot.no,
+                state: lot.state,
+                effectiveDate: formatted,
+                isNewFromTransfer: true,
+              }));
+            if (newLots.length > 0) setAssigned((prev) => [...prev, ...newLots]);
           }}
         />
       )}

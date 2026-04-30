@@ -1,7 +1,11 @@
 "use client";
 
 import React from "react";
-import { CheckCircle, XCircle, AlertTriangle, Info, X } from "lucide-react";
+import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
+import HighlightOffOutlined from "@mui/icons-material/HighlightOffOutlined";
+import WarningAmberOutlined from "@mui/icons-material/WarningAmberOutlined";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
 interface ConfirmationMessageProps {
   type: "success" | "error" | "warning" | "info";
@@ -22,7 +26,7 @@ export function ConfirmationMessage({
 
   const config = {
     success: {
-      icon: <CheckCircle size={20} />,
+      icon: <CheckCircleOutlineOutlined sx={{ fontSize: 20 }} />,
       bg: "bg-green-50",
       border: "border-green-200",
       iconColor: "text-green-500",
@@ -30,7 +34,7 @@ export function ConfirmationMessage({
       textColor: "text-green-700",
     },
     error: {
-      icon: <XCircle size={20} />,
+      icon: <HighlightOffOutlined sx={{ fontSize: 20 }} />,
       bg: "bg-red-50",
       border: "border-red-200",
       iconColor: "text-red-500",
@@ -38,7 +42,7 @@ export function ConfirmationMessage({
       textColor: "text-red-700",
     },
     warning: {
-      icon: <AlertTriangle size={20} />,
+      icon: <WarningAmberOutlined sx={{ fontSize: 20 }} />,
       bg: "bg-yellow-50",
       border: "border-yellow-200",
       iconColor: "text-yellow-500",
@@ -46,7 +50,7 @@ export function ConfirmationMessage({
       textColor: "text-yellow-700",
     },
     info: {
-      icon: <Info size={20} />,
+      icon: <InfoOutlined sx={{ fontSize: 20 }} />,
       bg: "bg-blue-50",
       border: "border-blue-200",
       iconColor: "text-blue-500",
@@ -70,7 +74,7 @@ export function ConfirmationMessage({
           className={`shrink-0 ${c.iconColor} hover:opacity-70 transition-opacity`}
           aria-label="Dismiss"
         >
-          <X size={16} />
+          <CloseOutlined sx={{ fontSize: 16 }} />
         </button>
       )}
     </div>

@@ -10,7 +10,13 @@ import { FleetServicesContent } from "./components/FleetServicesContent";
 import { BasicInfoContent } from "./components/BasicInfoContent";
 import { CreateFranchiseForm, FranchiseInitialData } from "./components/CreateFranchiseForm";
 import { Modal } from "./components/Modal";
-import { Menu, Building2, Hash, Calendar, X, AlertTriangle } from "lucide-react";
+import MenuOutlined from "@mui/icons-material/MenuOutlined";
+import BusinessOutlined from "@mui/icons-material/BusinessOutlined";
+import TagOutlined from "@mui/icons-material/TagOutlined";
+import CalendarTodayOutlined from "@mui/icons-material/CalendarTodayOutlined";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import WarningAmberOutlined from "@mui/icons-material/WarningAmberOutlined";
+import NorthEastOutlined from "@mui/icons-material/NorthEastOutlined";
 
 type SectionStatus = "not-started" | "in-progress" | "completed";
 type SectionId = "owner-info" | "fleet-services" | "basic-info" | "franchise-creation";
@@ -24,23 +30,24 @@ const sectionToSidebarId: Record<string, SectionId> = {
 };
 
 const DEAL_INITIAL_DATA: FranchiseInitialData = {
-  franchiseName: "Andre Martin - IL-033, 038, 039",
+  franchiseName: "0026 - Nebraska",
+  franchiseNumber: "NB-009",
   dbaName: "Andre Martin",
   businessEmail: "andre.martin@example.com",
-  businessPhone: "(312) 555-0101",
+  businessPhone: "(402) 555-0101",
   primaryLegalOwnerName: "Andre Martin",
   primaryPreferredOwnerName: "Andre Martin",
   allPreferredOwners: "Andre Martin",
-  region: "Greater Chicago Area",
+  region: "Greater Omaha Area",
   territoryType: "suburban",
-  zips: "60601, 60602, 60611",
+  zips: "68101, 68102, 68111",
   officeStreet: "1234 North Ave",
-  officeCity: "Chicago",
-  officeState: "IL",
+  officeCity: "Omaha",
+  officeState: "NE",
   officeCountry: "US",
 };
 
-const FRANCHISE_LOTS = ["NB-001", "NB-002", "NB-003", "NB-004"];
+const FRANCHISE_LOTS = ["NB-009"];
 
 function formatLotList(lots: string[]) {
   if (lots.length === 0) return "";
@@ -171,7 +178,7 @@ export default function FranchiseOnboardingPage() {
           onClick={() => setSidebarOpen(true)}
           aria-label="Open sidebar"
         >
-          <Menu size={18} />
+          <MenuOutlined sx={{ fontSize: 18 }} />
         </button>
 
         <main className="flex-1 overflow-y-auto">{renderMain()}</main>
@@ -201,7 +208,7 @@ export default function FranchiseOnboardingPage() {
       >
         <div className="flex flex-col items-center text-center gap-4 py-2">
           <div className="w-14 h-14 rounded-full bg-amber-50 border-2 border-amber-100 flex items-center justify-center">
-            <AlertTriangle size={28} className="text-amber-500" strokeWidth={1.8} />
+            <WarningAmberOutlined sx={{ fontSize: 28 }} className="text-amber-500" />
           </div>
           <div>
             <h2 className="text-base font-bold text-gray-900">Confirmation</h2>
@@ -219,7 +226,7 @@ export default function FranchiseOnboardingPage() {
           onClick={handleDone}
           className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
         >
-          <X size={18} />
+          <CloseOutlined sx={{ fontSize: 18 }} />
         </button>
 
         <div className="flex flex-col items-center text-center py-4 gap-5">
@@ -233,31 +240,31 @@ export default function FranchiseOnboardingPage() {
 
           <div className="w-full bg-gray-50 border border-gray-200 rounded-xl overflow-hidden">
             <div className="bg-[#6B2D8B]/5 border-b border-gray-200 px-4 py-2.5 flex items-center gap-2">
-              <Building2 size={14} className="text-[#6B2D8B]" />
+              <BusinessOutlined sx={{ fontSize: 14 }} className="text-[#6B2D8B]" />
               <span className="text-xs font-semibold text-[#6B2D8B] uppercase tracking-wide">Franchise Details</span>
             </div>
             <div className="divide-y divide-gray-100">
               <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <Building2 size={13} className="text-gray-400" />
+                  <BusinessOutlined sx={{ fontSize: 13 }} className="text-gray-400" />
                   Franchise Name
                 </div>
                 <span className="text-xs font-semibold text-gray-800 text-right max-w-[55%] truncate">
-                  {createdFranchise.franchiseName || "Andre Martin - IL-033"}
+                  {createdFranchise.franchiseName || "0026 - Nebraska"}
                 </span>
               </div>
               <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <Hash size={13} className="text-gray-400" />
+                  <TagOutlined sx={{ fontSize: 13 }} className="text-gray-400" />
                   Deal / Lot Number
                 </div>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                  IL-033
+                  NB-009
                 </span>
               </div>
               <div className="flex items-center justify-between px-4 py-3">
                 <div className="flex items-center gap-2 text-xs text-gray-500">
-                  <Calendar size={13} className="text-gray-400" />
+                  <CalendarTodayOutlined sx={{ fontSize: 13 }} className="text-gray-400" />
                   Created On
                 </div>
                 <span className="text-xs font-medium text-gray-700">
@@ -267,15 +274,24 @@ export default function FranchiseOnboardingPage() {
             </div>
           </div>
 
-          <Link
-            href="/franchises"
-            className="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full hover:bg-green-100 transition-colors cursor-pointer"
-          >
+          <div className="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             <span className="text-xs font-medium text-green-700">Active &amp; Ready for Onboarding</span>
-          </Link>
+          </div>
         </div>
       </Modal>
+
+      {/* Floating CTA — shown after franchise is created */}
+      {showSuccessModal && (
+        <Link
+          href="/franchises"
+          className="fixed bottom-6 right-6 z-[60] flex items-center gap-3 px-5 py-3.5 rounded-xl text-white no-underline"
+          style={{ backgroundColor: "#173b65", boxShadow: "0px 4px 40px -2px rgba(16,24,40,0.36)" }}
+        >
+          <span className="text-sm leading-[22px]">Lets switch to Lots Platform</span>
+          <NorthEastOutlined sx={{ fontSize: 20, color: "white", flexShrink: 0 }} />
+        </Link>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ShoppingBag } from "lucide-react";
+import ShoppingBagOutlined from "@mui/icons-material/ShoppingBagOutlined";
 
 interface SubHeaderProps {
   dealName?: string;
@@ -9,7 +9,7 @@ interface SubHeaderProps {
 }
 
 export function SubHeader({
-  dealName = "Andre Martin - IL-033, 038, 039",
+  dealName = "0026 - Nebraska",
   dealPath = "Deal Onboarding",
 }: SubHeaderProps) {
   return (
@@ -28,7 +28,7 @@ export function SubHeader({
 
         {/* Icon */}
         <div className="w-7 h-7 bg-gray-100 rounded flex items-center justify-center">
-          <ShoppingBag size={15} className="text-gray-600" />
+          <ShoppingBagOutlined sx={{ fontSize: 16 }} className="text-gray-600" />
         </div>
 
         {/* Breadcrumb */}

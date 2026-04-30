@@ -1,11 +1,15 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Save, Shield, ChevronDown, Calendar } from "lucide-react";
+import SaveOutlined from "@mui/icons-material/SaveOutlined";
+import ShieldOutlined from "@mui/icons-material/ShieldOutlined";
+import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined";
+import CalendarTodayOutlined from "@mui/icons-material/CalendarTodayOutlined";
 import { Badge } from "./Badge";
 
 export interface FranchiseInitialData {
   franchiseName?: string;
+  franchiseNumber?: string;
   dbaName?: string;
   businessEmail?: string;
   businessPhone?: string;
@@ -89,7 +93,7 @@ function FInput({ label, required, type = "text", value, onChange, disabled, err
             onClick={openPicker}
             className="absolute right-0 top-0 h-full w-11 flex items-center justify-center text-gray-400 hover:text-[#6B2D8B] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <Calendar size={16} />
+            <CalendarTodayOutlined sx={{ fontSize: 16 }} />
           </button>
         </div>
         {error && <p className="text-xs text-red-500 pl-1">{error}</p>}
@@ -150,7 +154,7 @@ function FSelect({ label, required, value, onChange, options, disabled, error }:
             </option>
           ))}
         </select>
-        <ChevronDown size={15} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+        <KeyboardArrowDownOutlined sx={{ fontSize: 16 }} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
       </div>
       {error && <p className="text-xs text-red-500 pl-1">{error}</p>}
     </div>
@@ -275,7 +279,7 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
   const buildInitial = (): Record<FieldKey, string> => ({
     franchiseName: initialData.franchiseName ?? "",
     franchiseAgreementStatus: "",
-    franchiseNumber: "",
+    franchiseNumber: initialData.franchiseNumber ?? "",
     dbaName: initialData.dbaName ?? "",
     agreementSignedDate: "",
     agreementTerminationDate: "",
@@ -375,7 +379,7 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
             onClick={handleSubmit}
             className="flex items-center gap-1.5 px-5 py-2 text-sm text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors shadow-sm"
           >
-            <Save size={14} /> Approve &amp; Create Franchise
+            <SaveOutlined sx={{ fontSize: 14 }} /> Approve &amp; Create Franchise
           </button>
         </div>
       </div>
@@ -383,7 +387,7 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
       {/* Validation banner */}
       {submitted && Object.keys(errors).length > 0 && (
         <div className="mx-6 mt-4 shrink-0 flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-          <Shield size={15} className="text-red-400 shrink-0" />
+          <ShieldOutlined sx={{ fontSize: 15 }} className="text-red-400 shrink-0" />
           Please fill in all required fields before submitting.
         </div>
       )}

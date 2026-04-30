@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ChevronDown } from "lucide-react";
+import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined";
 
 interface DropdownFieldProps {
   placeholder?: string;
@@ -56,8 +56,8 @@ export function DropdownField({
             </option>
           ))}
         </select>
-        <ChevronDown
-          size={14}
+        <KeyboardArrowDownOutlined
+          sx={{ fontSize: 16 }}
           className="absolute right-3 text-gray-400 pointer-events-none"
         />
       </div>

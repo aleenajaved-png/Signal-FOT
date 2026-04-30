@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { X } from "lucide-react";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
 interface ModalProps {
   isOpen: boolean;
@@ -47,7 +47,7 @@ export function Modal({ isOpen, onClose, title, children, footer, size = "md" }:
               className="p-1 rounded-md hover:bg-gray-100 text-gray-500 hover:text-gray-700 transition-colors"
               aria-label="Close"
             >
-              <X size={18} />
+              <CloseOutlined sx={{ fontSize: 18 }} />
             </button>
           </div>
         )}

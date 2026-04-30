@@ -52,7 +52,7 @@ const slides = [
         </div>
 
         <a className={styles.workflowCta} href="/franchise-onboarding">
-          <span>Work flow at FOT Power App</span>
+          <span>Work flow at FLC Power App</span>
           <span className={styles.ctaArrow}>›|</span>
         </a>
       </div>

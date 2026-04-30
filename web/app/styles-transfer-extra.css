@@ -60,3 +60,33 @@
 .transfer-date-input.input-ok {
   border-color: #2e964b !important;
 }
+
+/* Cut-off field: read-only / disabled appearance */
+.transfer-cutoff-field-disabled {
+  padding: 14px 16px;
+  background: #f2f3f5;
+  border: 1px solid #e6e6e7;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.transfer-cutoff-date-input--disabled:disabled {
+  cursor: not-allowed !important;
+  background: #e8eaed !important;
+  border-color: #d2d6dc !important;
+  color: #6b7280 !important;
+  -webkit-text-fill-color: #6b7280 !important;
+  opacity: 1 !important;
+}
+
+.transfer-cutoff-date-input--disabled:disabled:focus {
+  outline: none;
+  border-color: #d2d6dc !important;
+  box-shadow: none !important;
+}
+
+.transfer-cutoff-date-input--disabled:disabled.input-ok,
+.transfer-cutoff-date-input--disabled:disabled.input-error {
+  border-color: #d2d6dc !important;
+  box-shadow: none !important;
+}

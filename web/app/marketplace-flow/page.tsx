@@ -1,3 +1,9 @@
+import LocationOnOutlined from "@mui/icons-material/LocationOnOutlined";
+import LockOutlined from "@mui/icons-material/LockOutlined";
+import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined";
+import PersonOutlined from "@mui/icons-material/PersonOutlined";
+import EmailOutlined from "@mui/icons-material/EmailOutlined";
+import PhoneOutlined from "@mui/icons-material/PhoneOutlined";
 import styles from "./page.module.css";
 
 /* ── Figma asset URLs ─────────────────────────────────────────────── */
@@ -31,13 +37,13 @@ export default function MarketplaceFlowPage() {
         </div>
         <div className={styles.topLinks}>
           <span className={styles.topLink}>
-            <img src={imgLocationOn} alt="" className={styles.topLinkIcon} aria-hidden="true" />
+            <LocationOnOutlined style={{ fontSize: 16 }} className={styles.topLinkIcon} aria-hidden="true" />
             Find a Location
           </span>
           <span className={styles.topLink}>
-            <img src={imgLock} alt="" className={styles.topLinkIcon} aria-hidden="true" />
+            <LockOutlined style={{ fontSize: 16 }} className={styles.topLinkIcon} aria-hidden="true" />
             Login
-            <img src={imgChevronDown} alt="" className={styles.topLinkChevron} aria-hidden="true" />
+            <KeyboardArrowDownOutlined style={{ fontSize: 16 }} className={styles.topLinkChevron} aria-hidden="true" />
           </span>
         </div>
       </header>
@@ -48,29 +54,29 @@ export default function MarketplaceFlowPage() {
           <li>
             <a href="/own-a-franchise" className={styles.navItem}>
               OWN A FRANCHISE
-              <img src={imgChevronDown} alt="" className={styles.navChevron} aria-hidden="true" />
+              <KeyboardArrowDownOutlined style={{ fontSize: 16 }} className={styles.navChevron} aria-hidden="true" />
             </a>
           </li>
           <li>
             <span className={styles.navItem}>
               EXPLORE SECURITY SOLUTIONS
-              <img src={imgChevronDown} alt="" className={styles.navChevron} aria-hidden="true" />
+              <KeyboardArrowDownOutlined style={{ fontSize: 16 }} className={styles.navChevron} aria-hidden="true" />
             </span>
           </li>
           <li>
             <span className={styles.navItem}>
               JOIN OUR TEAM
-              <img src={imgChevronDown} alt="" className={styles.navChevron} aria-hidden="true" />
+              <KeyboardArrowDownOutlined style={{ fontSize: 16 }} className={styles.navChevron} aria-hidden="true" />
             </span>
           </li>
         </ul>
         <div className={styles.contactMeta}>
           <span className={styles.contactRow}>
-            <img src={imgEmailIcon} alt="" className={styles.contactIcon} aria-hidden="true" />
+            <EmailOutlined style={{ fontSize: 16 }} className={styles.contactIcon} aria-hidden="true" />
             lots@teamsignal.com
           </span>
           <span className={styles.contactRow}>
-            <img src={imgPhoneIcon} alt="" className={styles.contactIcon} aria-hidden="true" />
+            <PhoneOutlined style={{ fontSize: 16 }} className={styles.contactIcon} aria-hidden="true" />
             877.498.8494
           </span>
         </div>
@@ -103,20 +109,20 @@ export default function MarketplaceFlowPage() {
         <form className={styles.form}>
           <div className={styles.inputRow}>
             <label className={styles.inputWrap}>
-              <img src={imgPersonIcon} alt="" className={styles.inputIcon} aria-hidden="true" />
+              <PersonOutlined style={{ fontSize: 16 }} className={styles.inputIcon} aria-hidden="true" />
               <input type="text" placeholder="Name" aria-label="Name" className={styles.input} />
             </label>
             <label className={styles.inputWrap}>
-              <img src={imgPersonIcon} alt="" className={styles.inputIcon} aria-hidden="true" />
+              <PersonOutlined style={{ fontSize: 16 }} className={styles.inputIcon} aria-hidden="true" />
               <input type="email" placeholder="Email" aria-label="Email" className={styles.input} />
             </label>
             <label className={styles.inputWrap}>
-              <img src={imgPersonIcon} alt="" className={styles.inputIcon} aria-hidden="true" />
+              <PersonOutlined style={{ fontSize: 16 }} className={styles.inputIcon} aria-hidden="true" />
               <input type="text" placeholder="Job Title" aria-label="Job Title" className={styles.input} />
             </label>
           </div>
           <label className={styles.inputWrap}>
-            <img src={imgPersonIcon} alt="" className={styles.inputIcon} aria-hidden="true" />
+            <PersonOutlined style={{ fontSize: 16 }} className={styles.inputIcon} aria-hidden="true" />
             <input type="text" placeholder="Query" aria-label="Query" className={styles.input} />
           </label>
           <button type="submit" className={styles.submitBtn}>Email</button>

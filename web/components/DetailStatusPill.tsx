@@ -11,7 +11,7 @@ const sm = 12;
 export function DetailStatusPill({ status }: { status: FranchiseStatus }) {
   if (status === "nonfunc") {
     return (
-      <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#fef0c7", borderRadius: 16, padding: "2px 8px 2px 6px" }}>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#fef0c7", borderRadius: 16, padding: "2px 8px 2px 6px", width: "fit-content" }}>
         <BlockOutlined sx={oIcon(sm, { color: "#f4780b" })} aria-hidden />
         <span style={{ fontFamily: "var(--fk), sans-serif", fontSize: 12, color: "#f4780b", lineHeight: "18px", whiteSpace: "nowrap" }}>
           Non-Functional
@@ -21,14 +21,14 @@ export function DetailStatusPill({ status }: { status: FranchiseStatus }) {
   }
   if (status === "attention") {
     return (
-      <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#fbeeed", borderRadius: 16, padding: "2px 8px 2px 6px" }}>
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#fbeeed", borderRadius: 16, padding: "2px 8px 2px 6px", width: "fit-content" }}>
         <ErrorOutlineOutlined sx={oIcon(sm, { color: "#b32318" })} aria-hidden />
         <span style={{ fontFamily: "var(--fk), sans-serif", fontSize: 12, color: "#b32318", lineHeight: "18px" }}>Requires Attention</span>
       </div>
     );
   }
   return (
-    <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#eff8ef", borderRadius: 16, padding: "2px 8px 2px 6px" }}>
+    <div style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#eff8ef", borderRadius: 16, padding: "2px 8px 2px 6px", width: "fit-content" }}>
       <CheckCircleOutlineOutlined sx={oIcon(sm, { color: "#2e964b" })} aria-hidden />
       <span style={{ fontFamily: "var(--fk), sans-serif", fontSize: 12, color: "#2e964b", lineHeight: "18px" }}>Functional</span>
     </div>

@@ -20,10 +20,10 @@ export function priceHistoryForRow(): { price: string; date: string } {
 export type NearbyLotCard = { id: string; opp: string };
 
 export const lotDetailsNearby: NearbyLotCard[] = [
-  { id: "KA - 05", opp: "591,700/ year" },
-  { id: "SA - 12", opp: "267,790/ year" },
-  { id: "NB - 14", opp: "289,700/ year" },
-  { id: "KA - 18", opp: "998,700/ year" },
+  { id: "NB - 05", opp: "591,700/ year" },
+  { id: "NB - 06", opp: "267,790/ year" },
+  { id: "NB - 07", opp: "289,700/ year" },
+  { id: "NB - 08", opp: "998,700/ year" },
 ];
 
 export type FranchiseAssociationStatus = "inactive" | "upcoming" | "active";
@@ -65,6 +65,6 @@ export function formatFranchiseAssociationCell(r: FranchiseAssociationRow): stri
 }
 
 export const franchiseAssociationHistoryRows: FranchiseAssociationRow[] = [
-  { franchise: "0502, New Jersey", effectiveDate: null, endsDate: "2026-04-24", startsDate: null, status: "active" },
-  { franchise: "4500, Wichita, KS", effectiveDate: null, endsDate: null, startsDate: "2026-04-27", status: "inactive" },
+  { franchise: "0502, Omaha, NE", effectiveDate: null, endsDate: "2026-04-24", startsDate: null, status: "active" },
+  { franchise: "4500, Fremont, NE", effectiveDate: null, endsDate: null, startsDate: "2026-04-27", status: "inactive" },
 ];
