@@ -1,42 +1,64 @@
+/* ─── Design tokens (FK Display Regular unless noted) ──────────────
+   H4  24px / 28px lh   H5  20px / 24px lh
+   Body/md 14px / 16px  Body/sm 12px / 14px
+   gray/900 #272d37  gray/700 #414c5c  gray/400 #7d899b
+   primary-blue/500 #146dff  primary-blue/900 #0032a0
+   border/subtle #e6e6e7  gray/50 #eff0f3
+─────────────────────────────────────────────────────────────────── */
+
+/* ─── Page shell ──────────────────────────────────────────────────── */
 .page {
   min-height: 100vh;
   background: #fff;
-  color: #031b57;
-  font-family: var(--inter);
+  color: #272d37;
+  font-family: "FK Display", var(--inter);
+  font-size: 14px;
 }
 
+/* ─── Top blue navigation bar ─────────────────────────────────────── */
 .topHeader {
   background: #0032a0;
   color: #fff;
-  min-height: 76px;
+  height: 106px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 20px;
+  padding: 0 20px;
   position: relative;
+  z-index: 10;
+  border-bottom: 1px solid #eff0f3;
 }
 
 .logo {
   width: 190px;
-  height: auto;
+  height: 54px;
+  object-fit: contain;
+  display: block;
 }
 
 .topLinks {
   position: absolute;
   right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
-  gap: 22px;
+  align-items: center;
+  gap: 20px;
   font-size: 14px;
+  line-height: 16px;
 }
 
+/* ─── White secondary navigation bar ─────────────────────────────── */
 .mainNav {
-  min-height: 74px;
+  height: 76px;
   border-bottom: 1px solid #eff0f3;
-  padding: 0 32px;
+  padding: 0 40px;
   background: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+  z-index: 10;
 }
 
 .mainNav ul {
@@ -44,127 +66,235 @@
   margin: 0;
   padding: 0;
   display: flex;
-  gap: 22px;
   align-items: center;
-  font-size: 14px;
+  gap: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .mainNav li {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  color: #111;
+  gap: 7px;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 16px;
+  color: #000;
+  white-space: nowrap;
 }
 
 .mainNav li span {
-  color: #f4780b;
+  font-size: 18px;
+  line-height: 1;
 }
 
 .activeLink {
   color: inherit;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .contactMeta {
   font-size: 12px;
-  color: #111;
-  line-height: 1.3;
+  line-height: 14px;
+  color: #000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-left: auto;
 }
 
 .contactMeta p {
   margin: 0;
 }
 
+/* ─── Marketplace layout ──────────────────────────────────────────── */
 .marketWrap {
   display: grid;
-  grid-template-columns: 360px minmax(0, 1fr);
-  min-height: calc(100vh - 150px);
+  grid-template-columns: 506px minmax(0, 1fr);
+  height: calc(100vh - 182px);
+  overflow: hidden;
 }
 
+/* ─── Left sidebar ────────────────────────────────────────────────── */
 .sidebar {
   border-right: 1px solid #e6e6e7;
   background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .sidebarHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 18px 6px;
+  padding: 16px 24px 6px;
+  flex-shrink: 0;
 }
 
+/* H4: 24px / 28px */
 .sidebarHead h1 {
   margin: 0;
   color: #414c5c;
-  font-size: 36px;
+  font-size: 24px;
   font-weight: 400;
-  line-height: 1.05;
+  line-height: 28px;
 }
 
-.sidebarHead button {
+.howItWorks {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   border: 0;
   background: transparent;
   color: #146dff;
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 18px;
   cursor: pointer;
+  white-space: nowrap;
+  font-family: inherit;
 }
 
+.howItWorksIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* Body/md: 14px */
 .subhead {
   margin: 0;
-  padding: 0 18px 12px;
+  padding: 0 24px 12px;
   color: #7d899b;
   font-size: 14px;
+  line-height: 22px;
+  flex-shrink: 0;
 }
 
+/* ─── Filter row ──────────────────────────────────────────────────── */
 .filters {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 96px;
-  gap: 10px;
-  padding: 0 18px 14px;
+  grid-template-columns: minmax(0, 1fr) 100px;
+  gap: 12px;
+  padding: 0 24px 18px;
+  flex-shrink: 0;
 }
 
-.filters input,
-.filters button {
+.searchWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   height: 40px;
   border: 1px solid #ccd1d8;
+  border-radius: 2px;
+  background: #fff;
+  padding: 0 12px;
+}
+
+.searchIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #7d899b;
+  font-family: inherit;
+  background: transparent;
+}
+
+.priceBtn {
+  height: 40px;
+  border: 1px solid #ccd1d8;
+  border-radius: 2px;
   background: #fff;
   font-size: 14px;
-}
-
-.filters input {
-  padding: 0 10px;
-}
-
-.filters button {
+  font-family: inherit;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
+.priceChevron {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+/* ─── Stats tabs ──────────────────────────────────────────────────── */
 .stats {
   display: flex;
-  gap: 14px;
-  padding: 0 18px 10px;
-  border-bottom: 1px solid #e6e6e7;
+  border-bottom: 1px solid #f3f6fc;
+  flex-shrink: 0;
+}
+
+.tab {
+  flex: 1;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  line-height: 20px;
   color: #7d899b;
-  font-size: 13px;
-  flex-wrap: wrap;
+  font-family: inherit;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.statActive {
-  color: #262527;
+.tabActive {
+  color: #333b48;
   border-bottom: 2px solid #146dff;
-  padding-bottom: 6px;
+  box-shadow: 0px 1px 1.5px rgba(16, 24, 40, 0.04);
 }
 
+.tabDot {
+  width: 4px;
+  height: 4px;
+  flex-shrink: 0;
+  object-fit: contain;
+  display: block;
+}
+
+/* ─── Lot card list ───────────────────────────────────────────────── */
 .cardList {
-  max-height: calc(100vh - 340px);
-  overflow: auto;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .lotCard {
-  padding: 18px;
+  padding: 24px;
   border-bottom: 1px solid #e6e6e7;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background 0.15s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #fff;
+  width: 100%;
+  text-align: left;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
 }
 
 .lotCard:hover {
@@ -176,60 +306,125 @@
   outline-offset: -2px;
 }
 
+/* Card title row: lot name + close icon */
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* H4: 24px / 28px */
 .lotCard h2 {
-  margin: 0 0 6px;
-  font-size: 38px;
+  margin: 0;
+  font-size: 24px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 28px;
   color: #272d37;
 }
 
+.cardCloseIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+/* Price row */
 .priceLine {
-  margin: 0 0 10px;
-  color: #7d899b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 24px;
+  margin-bottom: 12px;
+}
+
+.priceText {
+  margin: 0;
   font-size: 14px;
+  line-height: 16px;
+  color: #7d899b;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
 }
 
-.priceLine strong {
+.priceLabel {
+  font-size: 14px;
+  line-height: 16px;
+  color: #7d899b;
+}
+
+/* H5: 20px / 24px */
+.priceAmount {
+  font-size: 20px;
+  line-height: 24px;
   color: #146dff;
-  font-size: 32px;
   font-weight: 400;
-  line-height: 1.1;
 }
 
-.badgeBlue,
+.priceAmountSold {
+  color: #272d37;
+}
+
+/* ─── Stat rows with icons ────────────────────────────────────────── */
+.statRows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.statRow span {
+  font-size: 14px;
+  line-height: 16px;
+  color: #414c5c;
+  white-space: nowrap;
+}
+
+/* ─── Badges ──────────────────────────────────────────────────────── */
+.badgeBlue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 14px;
+  color: #146dff;
+  background: #e5f6ff;
+  white-space: nowrap;
+}
+
 .badgeOrange {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 2px;
-  padding: 2px 8px;
-  margin-left: 8px;
+  padding: 4px 8px;
   font-size: 12px;
-}
-
-.badgeBlue {
-  color: #146dff;
-  background: #e5f6ff;
-}
-
-.badgeOrange {
-  color: #ff9332;
+  line-height: 14px;
+  color: #f4780b;
   background: #fff7ed;
+  white-space: nowrap;
 }
 
-.lotCard ul {
-  margin: 0;
-  padding-left: 18px;
-  color: #414c5c;
-  font-size: 14px;
-  line-height: 1.65;
-}
-
+/* ─── Map area ────────────────────────────────────────────────────── */
 .mapArea {
   position: relative;
   overflow: hidden;
-  min-height: 620px;
   background: #d9e6f7;
 }
 
@@ -239,69 +434,102 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+  pointer-events: none;
 }
 
+/* Second map layer — extends outside container bounds like Figma */
+.mapOverlayLayer {
+  position: absolute;
+  inset: -23.73% -70.01% -4.45% -46.28%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.mapOverlayImg {
+  position: absolute;
+  width: 100%;
+  height: 101.88%;
+  top: -0.94%;
+  left: 0;
+  object-fit: cover;
+  display: block;
+}
+
+/* ─── Map top bar ─────────────────────────────────────────────────── */
 .mapTopBar {
   position: absolute;
   top: 24px;
-  left: 24px;
-  right: 24px;
+  left: 32px;
+  right: 32px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
+  z-index: 2;
 }
 
-.mapTopBar button {
+/* Full View button: 97px × 40px, shadow, icon + label */
+.fullViewBtn {
   height: 40px;
-  min-width: 98px;
+  width: 97px;
   border: 0;
   border-radius: 2px;
   background: #fff;
   box-shadow: 0 4px 7px rgba(0, 0, 0, 0.1);
   font-size: 12px;
+  line-height: 14px;
+  color: #000;
+  font-family: inherit;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 0 12px;
+  white-space: nowrap;
 }
 
+.fullViewIcon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  object-fit: contain;
+  display: block;
+}
+
+/* Legend bar */
 .legend {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   height: 40px;
-  padding: 8px;
   border-radius: 2px;
   background: #fff;
   box-shadow: 0 4px 7px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  gap: 0;
 }
 
-.legend span {
+.legendItem {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   padding: 6px 8px;
   font-size: 12px;
+  line-height: 14px;
   color: #272d37;
+  white-space: nowrap;
 }
 
-.dotAvailable,
-.dotPending,
-.dotSold {
+.legendDot {
   width: 10px;
   height: 10px;
-  border-radius: 999px;
+  flex-shrink: 0;
+  object-fit: contain;
+  display: block;
 }
 
-.dotAvailable {
-  background: #19867f;
-}
-
-.dotPending {
-  background: #ff9332;
-}
-
-.dotSold {
-  background: #8c95a6;
-}
-
+/* ─── Map markers ─────────────────────────────────────────────────── */
 .marker {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -312,50 +540,118 @@
   background: #19867f;
   color: #fff;
   font-size: 12px;
+  font-weight: 400;
+  font-family: "FK Display", var(--inter);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 10px;
+  z-index: 1;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
+/* ─── Interest card (map overlay) ────────────────────────────────── */
 .interestCard {
   position: absolute;
-  right: 16px;
-  bottom: 16px;
+  right: 32px;
+  bottom: 11px;
   width: 218px;
   border-radius: 4px;
   background: #f9f9fa;
   padding: 12px 24px;
-  box-sizing: border-box;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
 .closeBtn {
-  display: block;
-  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
   border: 0;
   background: transparent;
-  font-size: 20px;
-  line-height: 1;
   cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  margin-bottom: 4px;
 }
 
-.interestCard img {
-  width: 100%;
+.closeBtnIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
+}
+
+.interestMapThumb {
+  width: 170px;
   height: 85px;
   object-fit: cover;
+  display: block;
+  margin-bottom: 8px;
 }
 
+/* H5: 20px / 24px */
 .interestCard h3 {
-  margin: 12px 0 6px;
+  margin: 0 0 4px;
   font-size: 20px;
   font-weight: 400;
-  line-height: 1.2;
+  line-height: 24px;
   color: #272d37;
 }
 
+/* Body/md: 14px */
 .interestCard p {
-  margin: 0 0 12px;
+  margin: 0 0 16px;
   color: #272d37;
   font-size: 14px;
+  line-height: normal;
+}
+
+/* ─── Zoom controls ───────────────────────────────────────────────── */
+.zoomControls {
+  position: absolute;
+  left: 32px;
+  bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 4px 7px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  z-index: 2;
+}
+
+.zoomBtn {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.zoomIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  display: block;
+}
+
+.zoomDivider {
+  width: 14px;
+  height: 1px;
+  background: #e6e6e7;
+  flex-shrink: 0;
 }
 
 .fillBtn {
@@ -365,14 +661,16 @@
   border-radius: 4px;
   background: #0032a0;
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
+  font-family: inherit;
   cursor: pointer;
 }
 
+/* ─── Lot detail modal ────────────────────────────────────────────── */
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 200;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -382,317 +680,591 @@
 
 .lotModal {
   width: min(1240px, 100%);
-  height: min(760px, calc(100vh - 40px));
-  border-radius: 8px;
+  height: min(846px, calc(100vh - 40px));
+  border-radius: 0;
   background: #fff;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
+/* ── Modal header ─────────────────────────────────────────────────── */
 .modalHeader {
-  height: 58px;
-  border-bottom: 1px solid #e6e6e7;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 18px;
+  padding: 12px 32px;
+  border-bottom: 1px solid #e6e6e7;
+  flex-shrink: 0;
+  gap: 16px;
 }
 
-.backLink,
-.modalClose {
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   border: 0;
   background: transparent;
   color: #7d899b;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 14px;
+  font-family: inherit;
+  white-space: nowrap;
 }
 
-.modalClose {
-  font-size: 32px;
-  line-height: 1;
-  color: #111;
+.backChevron {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .modalHeaderLinks {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 18px;
 }
 
-.modalHeaderLinks a {
+.modalHeaderLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: #0032a0;
   text-decoration: none;
   font-size: 14px;
+  line-height: 16px;
 }
 
+.openInNewIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.modalCloseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* ── Modal body layout ────────────────────────────────────────────── */
 .modalBody {
-  display: grid;
-  grid-template-columns: 272px minmax(0, 1fr);
+  display: flex;
   min-height: 0;
   flex: 1;
+  overflow: hidden;
 }
 
+/* ── Left sidebar ─────────────────────────────────────────────────── */
 .modalSidebar {
+  width: 272px;
+  flex-shrink: 0;
   border-right: 1px solid #e6e6e7;
-  padding: 24px 20px;
-  overflow: auto;
+  overflow-y: auto;
+  padding: 0 32px;
 }
 
-.modalTitleRow {
+/* Section 1: title, price, CTA */
+.mSec1 {
+  padding: 32px 0;
+  border-bottom: 1px solid #e6e6e7;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.mTitleRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
 }
 
-.modalTitleRow h2 {
-  margin: 0;
-  font-size: 40px;
-  color: #272d37;
+.mLotName {
+  font-size: 24px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 28px;
+  color: #272d37;
+  white-space: nowrap;
 }
 
-.modalPrice {
-  margin: 10px 0 18px;
+/* H4 24px price in navy */
+.mPrice {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 28px;
   color: #0032a0;
-  font-size: 42px;
-  line-height: 1;
 }
 
-.modalQuestion {
-  margin: 0 0 12px;
+.mCtaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mInterested {
+  margin: 0;
+  font-size: 16px;
+  line-height: 16px;
   color: #0032a0;
-  font-size: 32px;
-  line-height: 1.05;
 }
 
 .submitInterestBtn {
   width: 100%;
-  height: 52px;
+  height: 44px;
   border: 0;
   border-radius: 4px;
   background: #0032a0;
   color: #fff;
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 20px;
+  font-family: inherit;
   cursor: pointer;
 }
 
-.modalInfoSection {
-  border-top: 1px solid #e6e6e7;
-  margin-top: 20px;
-  padding-top: 20px;
-}
-
-.modalInfoSection h3 {
-  margin: 0 0 12px;
-  font-size: 36px;
-  font-weight: 400;
-  line-height: 1;
-  color: #272d37;
-}
-
-.modalInfoSection p,
-.modalInfoSection li {
-  margin: 0;
-  color: #414c5c;
-  font-size: 14px;
-  line-height: 1.35;
-}
-
-.modalInfoSection ul {
-  margin: 0;
-  padding-left: 18px;
-}
-
-.modalMain {
-  padding: 14px 22px 18px;
-  overflow: auto;
-}
-
-.heatMapWrap {
-  border: 1px solid #e6e6e7;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.heatMapTop {
-  padding: 10px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.showLeads {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #262527;
-  font-size: 14px;
-}
-
-.modalLegend {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  color: #262527;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.modalLegend i {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  display: inline-block;
-  margin-right: 4px;
-}
-
-.dotHousing {
-  background: #ff0101;
-}
-
-.dotDistribution {
-  background: #ff7900;
-}
-
-.dotIndustrial {
-  background: #146dff;
-}
-
-.dotCommercial {
-  background: #00c220;
-}
-
-.modalHeatMapImage {
-  width: 100%;
-  height: 218px;
-  object-fit: cover;
-  display: block;
-}
-
-.detailSection {
-  margin-top: 14px;
-}
-
-.detailSection h3 {
-  margin: 0 0 10px;
-  font-size: 36px;
-  font-weight: 400;
-  color: #272d37;
-  line-height: 1;
-}
-
-.detailGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px 18px;
-}
-
-.detailGrid div {
-  border: 1px solid #f2f2f2;
-  border-radius: 8px;
-  padding: 10px 12px;
+/* Section 2: Why this Market */
+.mSec2 {
+  padding: 32px 0;
+  border-bottom: 1px solid #e6e6e7;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-}
-
-.detailGrid span {
-  color: #7d899b;
-  font-size: 14px;
-}
-
-.detailGrid strong {
-  color: #262527;
-  font-size: 34px;
-  font-weight: 400;
-  line-height: 1.05;
-}
-
-.opportunityCard {
-  border: 1px solid #f2f2f2;
-  border-radius: 8px;
-  padding: 12px;
-}
-
-.opportunityHead {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-  color: #272d37;
-  font-size: 14px;
-}
-
-.opportunityHead div {
-  display: flex;
-  gap: 66px;
-}
-
-.opportunityBar {
-  height: 40px;
-  display: grid;
-  grid-template-columns: 15fr 36fr 20fr 3fr;
-  gap: 2px;
-}
-
-.opportunityBar span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 18px;
-}
-
-.housingBand {
-  background: #ef4732;
-}
-
-.distributionBand {
-  background: #ff9f39;
-}
-
-.industrialBand {
-  background: #146dff;
-}
-
-.commercialBand {
-  background: #31b44b;
-}
-
-.similarGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
 }
 
-.similarCard {
+.mSecHeading {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #272d37;
+}
+
+.mSecBody {
+  margin: 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6a6a70;
+}
+
+/* Section 3: Price History */
+.mSec3 {
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mPriceHistoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mPriceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mBullet {
+  width: 4px;
+  height: 4px;
+  flex-shrink: 0;
+}
+
+.mPriceRow p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.mPHMuted { color: #7d899b; }
+.mPHDark  { color: #272d37; }
+
+/* ── Modal main panel ─────────────────────────────────────────────── */
+.modalMain {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+/* Heatmap */
+.mHeatmapWrap {
+  padding: 32px 32px 0;
+}
+
+.mMapContainer {
+  position: relative;
+  background: #f5f0e4;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 298px;
+}
+
+.mToggleBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  height: 36px;
+  background: #fff;
+  border-bottom: 1px solid #e6e6e7;
+  border-left: 1px solid #e6e6e7;
+  border-right: 1px solid #e6e6e7;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.mShowLeads {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mShowLeadsLabel {
+  font-size: 12px;
+  line-height: 18px;
+  color: #000;
+}
+
+.mToggleSwitch {
+  width: 24px;
+  height: 13.333px;
+  background: #146dff;
+  border-radius: 12px;
+  position: relative;
+  padding: 1.333px;
+  cursor: pointer;
+}
+
+.mToggleKnob {
+  position: absolute;
+  right: 1.333px;
+  top: 1.333px;
+  width: 10.667px;
+  height: 10.667px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+.mMapLegend {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.mLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #272d37;
+  white-space: nowrap;
+}
+
+.mLegendDot {
+  width: 10px;
+  height: 10px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.mHeatmapImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin-top: 36px;
+  height: calc(298px - 36px);
+}
+
+/* Lot Details */
+.mLotDetails {
+  padding: 12px 32px 32px;
+}
+
+.mSectionTitle {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+  color: #272d37;
+}
+
+.mDetailGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 24px;
+}
+
+.mDetailItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 249px;
+}
+
+.mDetailIconWrap {
+  width: 32px;
+  height: 32px;
+  background: rgba(0, 50, 160, 0.07);
+  border-radius: 5.091px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.mDetailIcon {
+  width: 18.36px;
+  height: 18.36px;
+  object-fit: contain;
+}
+
+.mDetailText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.mDetailLabel {
+  font-size: 12px;
+  line-height: 16px;
+  color: #6a6a70;
+  white-space: nowrap;
+}
+
+.mDetailLabelRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #6a6a70;
+}
+
+.mInfoIcon {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+}
+
+.mDetailValue {
+  font-size: 16px;
+  line-height: normal;
+  color: #000;
+}
+
+/* Where the Opportunity Is */
+.mOpportunity {
+  padding: 0 32px;
+  margin-bottom: 0;
+}
+
+.mOpportunityCard {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 0;
+}
+
+/* Numbers above bars */
+.mOpportunityNums {
+  display: flex;
+  gap: 4px;
+  font-size: 12px;
+  line-height: normal;
+  color: #262527;
+  letter-spacing: 0.24px;
+}
+
+.mOpportunityNums span {
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Bar row */
+.mOpportunityBarRow {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.mOppLabel {
+  font-size: 14px;
+  line-height: normal;
+  color: #272d37;
+  letter-spacing: 0.28px;
+  width: 64px;
+  flex-shrink: 0;
+}
+
+.mBars {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+  min-width: 0;
+}
+
+.mBar {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 12px;
+  line-height: normal;
+  letter-spacing: 0.24px;
+  border-radius: 4px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Legend below bars */
+.mOpportunityLegend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+
+/* Similar Lots */
+.mSimilarLots {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mSimilarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mSimilarTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #272d37;
+}
+
+.mCarouselBtns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mCarouselBtn {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mCarouselCircle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mCarouselChevron {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  z-index: 1;
+}
+
+.mSimilarCards {
+  display: flex;
+  gap: 24px;
+  overflow: hidden;
+}
+
+.mSimilarCard {
+  width: 281px;
+  flex-shrink: 0;
   border: 1px solid #e6e6e7;
   border-radius: 8px;
-  padding: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.similarCard h4 {
-  margin: 0 0 6px;
-  color: #272d37;
-  font-size: 28px;
+.mSimilarCardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.mSimilarName {
+  font-size: 16px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 24px;
+  color: #272d37;
+  white-space: nowrap;
 }
 
-.similarCard p {
+.mSimilarClose {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.mSimilarStats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mSimilarSub {
   margin: 0;
-  color: #414c5c;
   font-size: 14px;
+  line-height: 16px;
+  color: #146dff;
 }
 
+/* ─── Interest / EOI form modal ──────────────────────────────────── */
 .formModalBackdrop {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 210;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -705,9 +1277,9 @@
   max-height: calc(100vh - 28px);
   background: #fff;
   border-radius: 8px;
-  overflow: auto;
+  overflow-y: auto;
   box-shadow: 0 20px 70px rgba(0, 0, 0, 0.2);
-  padding: 18px 22px 22px;
+  padding: 24px;
 }
 
 .interestFormHeader {
@@ -715,37 +1287,41 @@
   justify-content: space-between;
   gap: 16px;
   align-items: flex-start;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
+/* H4: 24px */
 .interestFormHeader h2 {
   margin: 0;
   color: #272d37;
-  font-size: 42px;
+  font-size: 24px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 28px;
 }
 
+/* Body/md: 14px */
 .interestFormHeader p {
-  margin: 4px 0 0;
-  color: #8d9cbc;
-  font-size: 34px;
-  line-height: 1.05;
+  margin: 6px 0 0;
+  color: #7d899b;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .interestFormClose {
   border: 0;
   background: transparent;
-  color: #111;
-  font-size: 48px;
-  line-height: 0.9;
+  color: #272d37;
+  font-size: 24px;
+  line-height: 1;
   cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
 }
 
 .interestFormBody {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px 14px;
+  gap: 14px;
 }
 
 .formField {
@@ -754,10 +1330,11 @@
   gap: 6px;
 }
 
+/* Body/md: 14px */
 .formField label {
   color: #262527;
-  font-size: 24px;
-  line-height: 1.1;
+  font-size: 14px;
+  line-height: 16px;
 }
 
 .formField label span {
@@ -765,17 +1342,18 @@
 }
 
 .formField input {
-  height: 38px;
+  height: 40px;
   border: 1px solid #d0cfd2;
   border-radius: 4px;
   padding: 0 12px;
-  font-size: 32px;
+  font-size: 14px;
+  line-height: 16px;
   color: #272d37;
   font-family: inherit;
 }
 
 .formField input::placeholder {
-  color: #8d9cbc;
+  color: #7d899b;
 }
 
 .fullWidthField {
@@ -785,7 +1363,7 @@
 .choiceList {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .choiceRow {
@@ -793,8 +1371,9 @@
   align-items: center;
   gap: 8px;
   color: #414c5c;
-  font-size: 28px;
-  line-height: 1.1;
+  font-size: 14px;
+  line-height: 16px;
+  cursor: pointer;
 }
 
 .choiceRow input {
@@ -802,6 +1381,7 @@
   height: 16px;
   margin: 0;
   accent-color: #146dff;
+  flex-shrink: 0;
 }
 
 .submitFormBtn {
@@ -810,15 +1390,16 @@
   border-radius: 4px;
   background: #0032a0;
   color: #fff;
-  height: 40px;
-  font-size: 36px;
+  height: 44px;
+  font-size: 16px;
+  font-family: inherit;
   cursor: pointer;
+  margin-top: 4px;
 }
 
+/* ─── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 1200px) {
-  .marketWrap {
-    grid-template-columns: 330px minmax(0, 1fr);
-  }
+  .marketWrap { grid-template-columns: 320px minmax(0, 1fr); }
 }
 
 @media (max-width: 900px) {
@@ -827,39 +1408,21 @@
     align-items: flex-start;
     gap: 10px;
     padding: 12px 16px;
-  }
-
-  .topHeader {
-    justify-content: flex-start;
-  }
-
-  .topLinks {
-    position: static;
-    margin-left: auto;
-    font-size: 12px;
-    gap: 12px;
+    height: auto;
   }
 
   .marketWrap {
     grid-template-columns: 1fr;
+    height: auto;
   }
 
   .sidebar {
     border-right: 0;
     border-bottom: 1px solid #e6e6e7;
+    max-height: 60vh;
   }
 
-  .lotCard h2 {
-    font-size: 28px;
-  }
-
-  .priceLine strong {
-    font-size: 24px;
-  }
-
-  .mapArea {
-    min-height: 540px;
-  }
+  .mapArea { min-height: 540px; }
 
   .mapTopBar {
     left: 12px;
@@ -868,98 +1431,11 @@
     align-items: flex-start;
   }
 
-  .legend {
-    width: 100%;
-    overflow-x: auto;
-  }
+  .legend { width: 100%; overflow-x: auto; }
 
-  .lotModal {
-    height: calc(100vh - 24px);
-  }
+  .modalBody { grid-template-columns: 1fr; }
+  .modalSidebar { border-right: 0; border-bottom: 1px solid #e6e6e7; }
+  .detailGrid, .similarGrid { grid-template-columns: 1fr; }
 
-  .modalHeader {
-    padding: 0 12px;
-    gap: 10px;
-  }
-
-  .modalHeaderLinks {
-    display: none;
-  }
-
-  .modalBody {
-    grid-template-columns: 1fr;
-  }
-
-  .modalSidebar {
-    border-right: 0;
-    border-bottom: 1px solid #e6e6e7;
-  }
-
-  .modalMain {
-    padding: 12px;
-  }
-
-  .detailGrid,
-  .similarGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .detailGrid strong {
-    font-size: 24px;
-  }
-
-  .modalTitleRow h2,
-  .modalPrice,
-  .modalQuestion,
-  .detailSection h3,
-  .modalInfoSection h3 {
-    font-size: 26px;
-  }
-
-  .opportunityHead div {
-    gap: 14px;
-  }
-
-  .opportunityBar span {
-    font-size: 14px;
-  }
-
-  .interestFormModal {
-    padding: 14px;
-  }
-
-  .interestFormHeader h2 {
-    font-size: 30px;
-  }
-
-  .interestFormHeader p {
-    font-size: 16px;
-    line-height: 1.2;
-  }
-
-  .interestFormClose {
-    font-size: 34px;
-  }
-
-  .interestFormBody {
-    grid-template-columns: 1fr;
-  }
-
-  .formField label {
-    font-size: 16px;
-  }
-
-  .formField input {
-    font-size: 18px;
-    height: 42px;
-  }
-
-  .choiceRow {
-    font-size: 16px;
-  }
-
-  .submitFormBtn {
-    font-size: 28px;
-    height: 46px;
-  }
+  .interestFormBody { grid-template-columns: 1fr; }
 }

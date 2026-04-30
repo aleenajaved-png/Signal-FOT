@@ -1,88 +1,115 @@
+/* ─── Page shell ──────────────────────────────────────── */
 .page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 44px 130px 48px;
   color: #fff;
   font-family: var(--inter);
-  background-image: radial-gradient(circle at 58% 28%, #0054f1 0%, #00295a 30%, #00040b 72%);
+  /* Exact Figma gradient: -57.99° from #00295a → #00040b */
+  background-image: linear-gradient(-57.99deg, rgb(0, 41, 90) 0%, rgb(0, 4, 11) 100%);
   position: relative;
   overflow-x: hidden;
 }
 
+/* ─── Header ──────────────────────────────────────────── */
 .header {
-  margin-bottom: 56px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 45px 130px;
+  flex-shrink: 0;
 }
 
 .logo {
   width: 190px;
-  height: auto;
+  height: 54px;
+  object-fit: contain;
   display: block;
 }
 
+/* ─── Main content ────────────────────────────────────── */
 .content {
-  max-width: 1100px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 32px 130px 0;
+  max-width: 100%;
 }
 
+/* Title: "Use Case" (bold) + " - Franchise Onboarding " (medium) */
 .title {
-  margin: 0 0 15px;
-  font-size: clamp(2rem, 2.4vw + 1rem, 3.15rem);
+  margin: 0 0 0;
+  font-size: 48px;
   line-height: 1.2;
-  letter-spacing: -0.02em;
-  font-weight: 500;
+  letter-spacing: -1px;
+  font-weight: 400;
+  white-space: nowrap;
 }
 
 .title strong {
   font-weight: 700;
 }
 
+/* Problem Statement — has border-bottom */
+.blockBordered {
+  padding-bottom: 12px;
+  border-bottom: 1px solid #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Solution — no border-bottom */
 .block {
   padding-bottom: 12px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid rgba(203, 213, 225, 0.85);
-  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.block:last-child {
-  margin-bottom: 0;
-}
-
-.block h2 {
-  margin: 0 0 6px;
-  font-size: 1.25rem;
+.sectionHeading {
+  margin: 0;
+  font-size: 20px;
   font-weight: 700;
-  line-height: 1.3;
+  line-height: 24px;
 }
 
-.block p {
-  margin: 0 0 12px;
-  font-size: 0.875rem;
-  line-height: 1.45;
+.bodyText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 24px;
   max-width: 1090px;
 }
 
-.block p:last-child {
-  margin-bottom: 0;
-}
-
+/* ─── Meta section ────────────────────────────────────── */
 .meta {
   margin-top: auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  column-gap: 40px;
-  row-gap: 14px;
-  max-width: 700px;
-  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 40px 130px 80px;
 }
 
-.group {
-  min-width: 0;
+.metaRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.metaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .groupLabel {
-  margin: 0 0 8px;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
 }
 
 .badges {
@@ -91,31 +118,23 @@
   gap: 8px;
 }
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #3b82f6;
-  border-radius: 999px;
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.5;
-  padding: 2px 8px;
-  white-space: nowrap;
+.badgeRows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .updated {
-  grid-column: 1 / span 2;
   margin: 0;
-  font-size: 0.875rem;
-  line-height: 1.4;
+  font-size: 14px;
+  line-height: 20px;
 }
 
+/* ─── CTA button ──────────────────────────────────────── */
 .cta {
-  position: absolute;
-  right: clamp(18px, 4vw, 32px);
-  bottom: clamp(18px, 4vw, 36px);
+  position: fixed;
+  right: 32px;
+  bottom: 36px;
   display: inline-flex;
   align-items: center;
   gap: 12px;
@@ -123,21 +142,23 @@
   border-radius: 8px;
   text-decoration: none;
   color: #fff;
-  background: #173b65;
-  box-shadow: 0 4px 40px -2px rgba(16, 24, 40, 0.28);
-  font-size: 1.5rem;
+  background-color: #173b65;
+  box-shadow: 0px 4px 40px -2px rgba(16, 24, 40, 0.28);
   transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
-.cta span:first-child {
-  font-size: 1rem;
+.ctaLabel {
+  font-size: 16px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 24px;
+  white-space: nowrap;
 }
 
-.arrow {
-  font-size: 1.8rem;
-  line-height: 1;
+.ctaIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -147,47 +168,47 @@
   }
 }
 
+/* ─── Responsive ──────────────────────────────────────── */
 @media (max-width: 1100px) {
-  .page {
-    padding: 36px 48px 40px;
+  .header {
+    padding: 36px 48px;
+  }
+
+  .content {
+    padding: 28px 48px 0;
   }
 
   .meta {
-    max-width: 100%;
+    padding: 32px 48px 80px;
   }
 }
 
 @media (max-width: 800px) {
-  .page {
-    padding: 28px 20px 100px;
-  }
-
   .header {
-    margin-bottom: 28px;
+    padding: 28px 20px;
   }
 
   .logo {
     width: 150px;
+    height: auto;
   }
 
-  .block h2 {
-    font-size: 1.1rem;
+  .content {
+    padding: 24px 20px 0;
+  }
+
+  .title {
+    font-size: 32px;
+    white-space: normal;
   }
 
   .meta {
-    grid-template-columns: 1fr;
-    row-gap: 18px;
-    padding-top: 26px;
-  }
-
-  .updated {
-    grid-column: auto;
+    padding: 28px 20px 100px;
   }
 
   .cta {
     left: 20px;
     right: 20px;
-    width: auto;
     justify-content: space-between;
   }
 }

@@ -1,10 +1,13 @@
+/* ─── Page shell ──────────────────────────────────────────────────── */
 .page {
   min-height: 100vh;
   background: #ffffff;
   color: #031b57;
-  font-family: var(--inter);
+  font-family: "FK Display", var(--inter);
+  font-size: 14px;
 }
 
+/* ─── Top blue navigation ─────────────────────────────────────────── */
 .topHeader {
   background: #0032a0;
   color: #fff;
@@ -12,104 +15,168 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px 20px;
+  padding: 0 20px;
   position: relative;
+  border-bottom: 1px solid #eff0f3;
+}
+
+.logoWrap {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .logo {
   width: 190px;
-  height: 60px;
+  height: 54px;
+  object-fit: contain;
+  display: block;
 }
 
 .topLinks {
   position: absolute;
   right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 20px;
   font-size: 14px;
+  line-height: 16px;
 }
 
+.topLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.topLinkIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  opacity: 1;
+}
+
+.topLinkChevron {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+/* ─── White secondary navigation ─────────────────────────────────── */
 .mainNav {
-  min-height: 74px;
+  height: 76px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #eff0f3;
-  padding: 0 32px;
+  padding: 0 40px;
   background: #fff;
 }
 
-.mainNav ul {
+.navList {
   list-style: none;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
   display: flex;
   align-items: center;
-  gap: 22px;
-  font-size: 14px;
+  gap: 0;
 }
 
-.mainNav li {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #111;
-  white-space: nowrap;
-}
-
-.mainNav li span {
-  color: #f4780b;
-}
-
-.navCta {
-  color: inherit;
-  text-decoration: none;
+.navItem {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 16px;
+  color: #000;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.navChevron {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
 
 .contactMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   font-size: 12px;
-  line-height: 1.3;
-  color: #111;
+  line-height: 14px;
+  color: #000;
 }
 
-.contactMeta p {
-  margin: 0;
+.contactRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px;
+  margin-bottom: -15px;
+  white-space: nowrap;
 }
 
+.contactRow:last-child {
+  margin-bottom: 0;
+}
+
+.contactIcon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  opacity: 0.85;
+  /* invert to match dark icon on white bg */
+  filter: brightness(0);
+}
+
+/* ─── Hero banner ─────────────────────────────────────────────────── */
 .hero {
   position: relative;
-  height: min(420px, 52vw);
-  min-height: 280px;
+  height: 420px;
   overflow: hidden;
   background: #0f2c66;
 }
 
 .heroImage {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  pointer-events: none;
 }
 
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(2, 21, 61, 0.58), rgba(2, 21, 61, 0.18));
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
 }
 
-.hero h1 {
+.heroTitle {
   position: absolute;
-  left: clamp(16px, 5vw, 74px);
-  bottom: clamp(44px, 8vw, 104px);
+  left: 74px;
+  bottom: 104px;
   margin: 0;
   color: #fff;
-  font-size: clamp(1.9rem, 4.2vw, 3.22rem);
+  font-size: 51.5px;
   font-weight: 400;
+  line-height: 1;
   letter-spacing: 0.02em;
+  white-space: nowrap;
+  z-index: 2;
 }
 
 .carouselArrow {
@@ -120,9 +187,11 @@
   border: 0;
   background: transparent;
   color: #fff;
-  font-size: 34px;
+  font-size: 40px;
   cursor: pointer;
-  padding: 8px;
+  padding: 8px 12px;
+  z-index: 2;
+  line-height: 1;
 }
 
 .carouselArrowRight {
@@ -134,42 +203,49 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 12px;
+  bottom: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
+  z-index: 2;
 }
 
 .carouselDots span {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.5);
+  display: block;
 }
 
 .carouselDots .activeDot {
   background: #f4780b;
 }
 
+/* ─── Security partner section ────────────────────────────────────── */
 .partnerSection {
-  padding: 46px clamp(20px, 8vw, 184px) 56px;
+  background: #e8e8e8;
+  padding: 46px clamp(20px, 12vw, 184px) 56px;
 }
 
-.partnerSection h2 {
+.partnerHeading {
   margin: 0 0 8px;
-  font-size: clamp(1.6rem, 2.5vw, 2.75rem);
+  font-size: 27px;
   font-weight: 500;
   line-height: 1.1;
+  color: #031b57;
 }
 
-.partnerSection p {
+.partnerBody {
   margin: 0;
-  max-width: 1220px;
+  max-width: 1090px;
   color: #0d2b66;
-  font-size: 24px;
-  line-height: 1.38;
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 400;
 }
 
+/* ─── Contact section ─────────────────────────────────────────────── */
 .contactSection {
   position: relative;
   padding: 84px clamp(20px, 8vw, 125px) 90px;
@@ -183,6 +259,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .contactOverlay {
@@ -191,81 +268,117 @@
   background: rgba(0, 0, 0, 0.9);
 }
 
-.contactSection h3,
+.contactHeading {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 70px;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1;
+  text-align: center;
+}
+
+/* ─── Form ────────────────────────────────────────────────────────── */
 .form {
   position: relative;
   z-index: 1;
+  max-width: 930px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.contactSection h3 {
-  margin: 0 0 36px;
-  font-size: clamp(2rem, 3vw, 2.5rem);
-  font-weight: 400;
+.inputRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 300px));
+  gap: 14px;
 }
 
-.form {
+.inputWrap {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  height: 50px;
+  padding: 0 16px;
+  gap: 6px;
+  overflow: hidden;
+}
+
+/* Query field — full width */
+.form > .inputWrap {
   max-width: 930px;
 }
 
-.row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 14px;
+.inputIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  opacity: 0.5;
+  flex-shrink: 0;
 }
 
-.form input,
-.form textarea {
-  width: 100%;
-  border: 0;
-  border-radius: 0;
-  padding: 14px 16px;
-  font-family: inherit;
+.input {
+  border: none;
+  outline: none;
+  background: transparent;
   font-size: 16px;
-  box-sizing: border-box;
+  font-family: inherit;
+  color: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  white-space: nowrap;
 }
 
-.form textarea {
-  resize: vertical;
-  min-height: 120px;
-  margin-bottom: 14px;
+.input::placeholder {
+  color: rgba(0, 0, 0, 0.5);
 }
 
-.form button {
+.submitBtn {
   height: 50px;
-  min-width: 272px;
-  border: 0;
+  width: 272px;
+  border: none;
   background: #146dff;
   color: #fff;
   font-size: 16px;
+  font-family: inherit;
   cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
+.submitBtn:hover {
+  background: #0f5ce0;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 1160px) {
+  .navList {
+    margin-left: 0;
+  }
+
   .mainNav {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 14px 20px;
-  }
-
-  .mainNav ul {
     flex-wrap: wrap;
+    height: auto;
+    padding: 14px 20px;
+    gap: 8px;
   }
 
-  .partnerSection p {
-    font-size: 20px;
+  .partnerBody {
+    font-size: 18px;
   }
 }
 
 @media (max-width: 800px) {
   .topHeader {
     justify-content: flex-start;
-    padding-right: 12px;
+  }
+
+  .logoWrap {
+    position: static;
+    transform: none;
   }
 
   .topLinks {
     position: static;
+    transform: none;
     margin-left: auto;
     gap: 12px;
     font-size: 12px;
@@ -275,8 +388,14 @@
     height: 280px;
   }
 
-  .hero h1 {
-    bottom: 62px;
+  .heroTitle {
+    font-size: 32px;
+    left: 20px;
+    bottom: 68px;
+  }
+
+  .orangeBand {
+    height: 54px;
   }
 
   .partnerSection {
@@ -284,7 +403,7 @@
     padding-bottom: 40px;
   }
 
-  .partnerSection p {
+  .partnerBody {
     font-size: 17px;
   }
 
@@ -293,12 +412,11 @@
     padding-bottom: 56px;
   }
 
-  .row {
+  .inputRow {
     grid-template-columns: 1fr;
   }
 
-  .form button {
+  .submitBtn {
     width: 100%;
-    min-width: 0;
   }
 }

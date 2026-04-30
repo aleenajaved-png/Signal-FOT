@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { Header } from "./components/Header";
 import { SubHeader } from "./components/SubHeader";
 import { Sidebar } from "./components/Sidebar";
@@ -266,13 +267,13 @@ export default function FranchiseOnboardingPage() {
             </div>
           </div>
 
-          <a
+          <Link
             href="/franchises"
             className="flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full hover:bg-green-100 transition-colors cursor-pointer"
           >
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             <span className="text-xs font-medium text-green-700">Active &amp; Ready for Onboarding</span>
-          </a>
+          </Link>
         </div>
       </Modal>
     </div>

@@ -17,28 +17,12 @@ export function SubHeader({
       {/* Left: Logo + Breadcrumb */}
       <div className="flex items-center gap-3">
         {/* Signal Logo */}
-        <div className="flex items-center gap-1.5">
-          <div className="w-8 h-8 flex items-center justify-center">
-            <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
-              <circle cx="20" cy="20" r="18" fill="#FF6B00" />
-              <path
-                d="M14 20 C14 16, 18 12, 22 14 C26 16, 28 14, 28 10"
-                stroke="white"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M12 26 C12 22, 17 17, 22 19 C27 21, 30 18, 30 13"
-                stroke="white"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                fill="none"
-              />
-            </svg>
-          </div>
-          <span className="text-orange-500 font-bold text-sm hidden sm:inline">Signal</span>
-        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/signal-logo.svg"
+          alt="Signal"
+          style={{ height: 29, width: 90, objectFit: "contain" }}
+        />
 
         <div className="text-gray-300 text-lg font-light">|</div>
 
@@ -50,7 +34,7 @@ export function SubHeader({
         {/* Breadcrumb */}
         <div className="flex items-center gap-1.5 text-sm">
           <span className="text-gray-700 font-medium">{dealPath}</span>
-          <span className="text-gray-400">//</span>
+          <span className="text-gray-400">{"//"}</span>
           <span className="text-gray-600">{dealName}</span>
         </div>
       </div>

@@ -99,7 +99,7 @@ export function TransferLotOwnershipPanel({
         efCls: effective ? "input-error" : "",
       };
     }
-    if (endOfLocalDayFromYmd(cutoff).getTime() < Date.now() + 24 * 60 * 60 * 1000) {
+    if (cutoff < minCutYmd) {
       return {
         valid: false,
         showTimeline: false,
@@ -136,7 +136,7 @@ export function TransferLotOwnershipPanel({
       };
     }
     return { valid: true, showTimeline: true, coErr: false, coMsg: "", efErr: false, efMsg: "", coCls: "input-ok", efCls: "input-ok" };
-  }, [cutoff, effective]);
+  }, [cutoff, effective, minCutYmd]);
 
   if (!lot) return null;
 

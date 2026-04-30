@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Badge } from "./Badge";
 
@@ -75,18 +75,9 @@ export function Sidebar({
 }: SidebarProps) {
   const [expandedItems, setExpandedItems] = useState<string[]>(["background-check"]);
 
-  useEffect(() => {
-    if (activeItem) {
-      const parentItem = sidebarItems.find((item) =>
-        item.children?.some((child) => child.id === activeItem)
-      );
-      if (parentItem) {
-        setExpandedItems((prev) =>
-          prev.includes(parentItem.id) ? prev : [...prev, parentItem.id]
-        );
-      }
-    }
-  }, [activeItem]);
+  const autoExpandedItemId = activeItem
+    ? sidebarItems.find((item) => item.children?.some((child) => child.id === activeItem))?.id
+    : undefined;
 
   const toggleExpand = (id: string) => {
     setExpandedItems((prev) =>
@@ -143,7 +134,7 @@ export function Sidebar({
 
         <div className="flex-1 overflow-y-auto">
           {sidebarItems.map((item) => {
-            const isExpanded = expandedItems.includes(item.id);
+            const isExpanded = expandedItems.includes(item.id) || item.id === autoExpandedItemId;
             const itemStatus = getSectionStatus(item.sectionKey);
 
             return (

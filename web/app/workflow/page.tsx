@@ -86,7 +86,7 @@ export default function WorkflowPage() {
           <span className={styles.subGridIcon}>⊞</span>
           <nav className={styles.breadcrumb} aria-label="breadcrumb">
             <span className={styles.breadcrumbStep}>Deal Onboarding</span>
-            <span className={styles.breadcrumbSep}>//</span>
+            <span className={styles.breadcrumbSep}>{"//"}</span>
             <span className={styles.breadcrumbCurrent}>Andre Martin - IL-033, 038, 039</span>
           </nav>
         </div>

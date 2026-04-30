@@ -1,64 +1,92 @@
-import Link from "next/link";
 import styles from "./page.module.css";
 
-const signalLogo = "https://www.figma.com/api/mcp/asset/697c9607-2cbc-4bde-bc65-66099d6b8fc5";
-const heroImage = "https://www.figma.com/api/mcp/asset/e7d37978-31d0-4a2a-a6b9-b837968d498f";
-const contactBackground =
-  "https://www.figma.com/api/mcp/asset/244b11b3-f689-48a5-9ae1-2c98028d3f5d";
-
-const menuItems = ["EXPLORE SECURITY SOLUTIONS", "JOIN OUR TEAM"];
+/* ── Figma asset URLs ─────────────────────────────────────────────── */
+const imgSignalLogo =
+  "https://www.figma.com/api/mcp/asset/8afb0407-c9e9-4397-98bb-46f73341ae8b";
+const imgHero = "/franchise-hero.png";
+const imgHeroOverlay = "/franchise-hero-overlay.png";
+const imgContactBg =
+  "https://www.figma.com/api/mcp/asset/a588ccac-e015-444b-b1f9-be37fda80f71";
+const imgLocationOn =
+  "https://www.figma.com/api/mcp/asset/6d55c9dc-a4fc-4c71-b317-8c5f33829fe3";
+const imgLock =
+  "https://www.figma.com/api/mcp/asset/6d55c9dc-a4fc-4c71-b317-8c5f33829fe3";
+const imgChevronDown =
+  "https://www.figma.com/api/mcp/asset/5cb85d28-5a10-45ac-a01b-1928a3a499c4";
+const imgPersonIcon =
+  "https://www.figma.com/api/mcp/asset/b835423e-b731-4e1d-9be1-ee6644c3b759";
+const imgEmailIcon =
+  "https://www.figma.com/api/mcp/asset/995f9a22-7df9-4ee1-bde6-817761acfc2f";
+const imgPhoneIcon =
+  "https://www.figma.com/api/mcp/asset/d997fe72-8f14-4315-9ed2-efe265182340";
 
 export default function MarketplaceFlowPage() {
   return (
     <main className={styles.page}>
+
+      {/* ── Top blue navigation bar ───────────────────────────────── */}
       <header className={styles.topHeader}>
-        <img src={signalLogo} alt="Signal" className={styles.logo} />
+        <div className={styles.logoWrap}>
+          <img src={imgSignalLogo} alt="Signal" className={styles.logo} />
+        </div>
         <div className={styles.topLinks}>
-          <span>Find a Location</span>
-          <span>Login</span>
+          <span className={styles.topLink}>
+            <img src={imgLocationOn} alt="" className={styles.topLinkIcon} aria-hidden="true" />
+            Find a Location
+          </span>
+          <span className={styles.topLink}>
+            <img src={imgLock} alt="" className={styles.topLinkIcon} aria-hidden="true" />
+            Login
+            <img src={imgChevronDown} alt="" className={styles.topLinkChevron} aria-hidden="true" />
+          </span>
         </div>
       </header>
 
+      {/* ── White secondary navigation bar ───────────────────────── */}
       <nav className={styles.mainNav} aria-label="Primary">
-        <ul>
+        <ul className={styles.navList}>
           <li>
-            <Link href="/own-a-franchise" className={styles.navCta}>
-              OWN A FRANCHISE <span aria-hidden="true">▾</span>
-            </Link>
+            <a href="/own-a-franchise" className={styles.navItem}>
+              OWN A FRANCHISE
+              <img src={imgChevronDown} alt="" className={styles.navChevron} aria-hidden="true" />
+            </a>
           </li>
-          {menuItems.map((item) => (
-            <li key={item}>
-              {item} <span aria-hidden="true">▾</span>
-            </li>
-          ))}
+          <li>
+            <span className={styles.navItem}>
+              EXPLORE SECURITY SOLUTIONS
+              <img src={imgChevronDown} alt="" className={styles.navChevron} aria-hidden="true" />
+            </span>
+          </li>
+          <li>
+            <span className={styles.navItem}>
+              JOIN OUR TEAM
+              <img src={imgChevronDown} alt="" className={styles.navChevron} aria-hidden="true" />
+            </span>
+          </li>
         </ul>
         <div className={styles.contactMeta}>
-          <p>lots@teamsignal.com</p>
-          <p>877.498.8494</p>
+          <span className={styles.contactRow}>
+            <img src={imgEmailIcon} alt="" className={styles.contactIcon} aria-hidden="true" />
+            lots@teamsignal.com
+          </span>
+          <span className={styles.contactRow}>
+            <img src={imgPhoneIcon} alt="" className={styles.contactIcon} aria-hidden="true" />
+            877.498.8494
+          </span>
         </div>
       </nav>
 
+      {/* ── Hero banner ───────────────────────────────────────────── */}
       <section className={styles.hero}>
-        <img src={heroImage} alt="Start a security franchise" className={styles.heroImage} />
-        <div className={styles.heroOverlay} />
-        <h1>START A SECURITY FRANCHISE</h1>
-        <button className={styles.carouselArrow} aria-label="Previous slide">
-          ‹
-        </button>
-        <button className={`${styles.carouselArrow} ${styles.carouselArrowRight}`} aria-label="Next slide">
-          ›
-        </button>
-        <div className={styles.carouselDots} aria-hidden="true">
-          <span />
-          <span className={styles.activeDot} />
-          <span />
-        </div>
+        <img src={imgHero} alt="Start a security franchise" className={styles.heroImage} />
+        <img src={imgHeroOverlay} alt="" className={styles.heroOverlay} aria-hidden="true" />
       </section>
 
+      {/* ── Security partner section ──────────────────────────────── */}
       <section className={styles.partnerSection}>
-        <h2>A Security Partner You Can Trust</h2>
-        <p>
-          At Signal, having security that goes beyond just service is an opportunity to
+        <h2 className={styles.partnerHeading}>A Security Partner You Can Trust</h2>
+        <p className={styles.partnerBody}>
+          At Signal, providing security goes beyond just service; it&apos;s an opportunity to
           make a lasting difference in your community. Whether you&apos;re looking to build a
           business, protect the spaces that matter most, or start a meaningful career, our
           approach is built on trust, respect, and proactive solutions. With Signal, you
@@ -67,20 +95,34 @@ export default function MarketplaceFlowPage() {
         </p>
       </section>
 
+      {/* ── Contact / "Let's talk business" section ───────────────── */}
       <section className={styles.contactSection}>
-        <img src={contactBackground} alt="" aria-hidden="true" className={styles.contactBgImage} />
+        <img src={imgContactBg} alt="" aria-hidden="true" className={styles.contactBgImage} />
         <div className={styles.contactOverlay} />
-        <h3>Lets talk business</h3>
+        <h3 className={styles.contactHeading}>Lets talk business</h3>
         <form className={styles.form}>
-          <div className={styles.row}>
-            <input type="text" placeholder="Name" aria-label="Name" />
-            <input type="email" placeholder="Email" aria-label="Email" />
-            <input type="text" placeholder="Job Title" aria-label="Job Title" />
+          <div className={styles.inputRow}>
+            <label className={styles.inputWrap}>
+              <img src={imgPersonIcon} alt="" className={styles.inputIcon} aria-hidden="true" />
+              <input type="text" placeholder="Name" aria-label="Name" className={styles.input} />
+            </label>
+            <label className={styles.inputWrap}>
+              <img src={imgPersonIcon} alt="" className={styles.inputIcon} aria-hidden="true" />
+              <input type="email" placeholder="Email" aria-label="Email" className={styles.input} />
+            </label>
+            <label className={styles.inputWrap}>
+              <img src={imgPersonIcon} alt="" className={styles.inputIcon} aria-hidden="true" />
+              <input type="text" placeholder="Job Title" aria-label="Job Title" className={styles.input} />
+            </label>
           </div>
-          <textarea placeholder="Query" aria-label="Query" rows={4} />
-          <button type="submit">Email</button>
+          <label className={styles.inputWrap}>
+            <img src={imgPersonIcon} alt="" className={styles.inputIcon} aria-hidden="true" />
+            <input type="text" placeholder="Query" aria-label="Query" className={styles.input} />
+          </label>
+          <button type="submit" className={styles.submitBtn}>Email</button>
         </form>
       </section>
+
     </main>
   );
 }
