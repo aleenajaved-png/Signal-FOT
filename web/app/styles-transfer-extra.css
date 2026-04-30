@@ -49,6 +49,21 @@
   white-space: nowrap;
 }
 
+/* Matches DetailStatusPill "Requires Attention" styling */
+.lot-assigned-badge.lot-assigned-badge--attention {
+  gap: 4px;
+  background: #fbeeed;
+  border: none;
+  border-radius: 16px;
+  padding: 2px 8px 2px 6px;
+}
+.lot-assigned-badge.lot-assigned-badge--attention .lab-no {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+  color: #b32318;
+}
+
 .transfer-date-input:focus {
   border-color: #146dff;
   box-shadow: 0 0 0 3px rgba(20, 109, 255, 0.1);

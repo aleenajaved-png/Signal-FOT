@@ -47,7 +47,7 @@ const DEAL_INITIAL_DATA: FranchiseInitialData = {
   officeCountry: "US",
 };
 
-const FRANCHISE_LOTS = ["NB-002"];
+const FRANCHISE_LOTS = ["NB-009"];
 
 function formatLotList(lots: string[]) {
   if (lots.length === 0) return "";

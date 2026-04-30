@@ -275,9 +275,8 @@ export function TransferLotOwnershipPanel({
                   textField: {
                     id: "transfer-effective-date",
                     size: "small",
-                    placeholder: "MM/DD/YYYY",
                     slotProps: {
-                      htmlInput: { autoComplete: "off" as const },
+                      htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
                     },
                     error: efErr,
                     className: `transfer-date-input ${efCls}`,

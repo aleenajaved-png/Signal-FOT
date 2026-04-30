@@ -67,6 +67,47 @@
   backdrop-filter:blur(4px);
   -webkit-backdrop-filter:blur(4px);
 }
+.d-infobar-alert-strip {
+  position: sticky;
+  top: 160px; /* right under .d-infobar (84px) and app header offset */
+  z-index: 20;
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 32px;
+  background: #df372b;
+  color: #fff;
+}
+.d-infobar-alert-strip__text {
+  font-family: 'FK Display', sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.d-infobar-alert-strip__action {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'FK Display', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.d-infobar-alert-strip__action:hover { opacity: 0.9; }
+.d-infobar-alert-strip__action:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
 .d-infobar-franchise {
   flex:1; min-width:0;
   display:flex; align-items:center;

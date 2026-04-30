@@ -79,7 +79,7 @@ function FInput({ label, required, type = "text", value, onChange, disabled, err
             value={value}
             onChange={onChange}
             disabled={disabled}
-            className={`absolute inset-0 w-full h-full pl-4 pr-11 text-sm bg-transparent outline-none disabled:opacity-60 disabled:cursor-not-allowed ${value ? "text-gray-700" : "text-transparent"}`}
+            className={`absolute inset-0 w-full h-full pl-4 pr-11 text-sm bg-transparent outline-none appearance-none disabled:opacity-60 disabled:cursor-not-allowed [&::-webkit-calendar-picker-indicator]:hidden [&::-moz-calendar-picker-indicator]:hidden ${value ? "text-gray-700" : "text-transparent"}`}
           />
           {!value && (
             <span className="absolute left-4 right-11 text-sm text-gray-400 pointer-events-none select-none truncate">
