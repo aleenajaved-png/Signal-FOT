@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import ThemeRegistry from "@/lib/theme-registry";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,9 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body style={{ margin: 0 }}>
-        {children}
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body style={{ margin: 0 }} suppressHydrationWarning>
+        <ThemeRegistry>{children}</ThemeRegistry>
       </body>
     </html>
   );

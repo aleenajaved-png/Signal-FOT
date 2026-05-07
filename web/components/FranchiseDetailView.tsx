@@ -23,7 +23,14 @@ import { DetailStatusPill } from "./DetailStatusPill";
 import { TableStatusBadge } from "./TableStatusBadge";
 import { TransferLotOwnershipPanel } from "./TransferModal";
 
-type Assigned = { no: string; state: string; effectiveDate: string; isNewFromTransfer?: boolean };
+type Assigned = {
+  no: string;
+  state: string;
+  effectiveDate: string;
+  isNewFromTransfer?: boolean;
+  /** When false, badge can use “new” ribbon without yellow map highlight (e.g. NB-009 effective date from infobar). */
+  mapHighlightFromTransfer?: boolean;
+};
 type PreviousAssigned = { no: string; state: string; transitionedAt: string };
 
 const DEFAULT_EFFECTIVE_AT = new Date(2026, 3, 1, 12, 0, 0);
@@ -214,7 +221,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
   /** True when transfer modal was opened from Kearney’s “Add Effective Date” CTA (NB-009). */
   const pendingKearneyNb009TransferRef = useRef(false);
   const [assigned, setAssigned] = useState<Assigned[]>([
-    { no: "NB-009", state: "Nebraska", effectiveDate: "Apr 1, 26" },
+    { no: "NB-009", state: "Nebraska", effectiveDate: "Apr 1, 26", mapHighlightFromTransfer: false },
   ]);
   const [previousAssigned] = useState<PreviousAssigned[]>([]);
   const f = FRANCHISES_DETAIL[selected];
@@ -227,6 +234,13 @@ export function FranchiseDetailView({ listRowId }: Props) {
     isKearney && kearneyTransferResolved ? "nonfunc" : f.status;
 
   const openAssign = useCallback(() => setAssignOpen(true), []);
+  const openTransferForLotNo = useCallback((no: string) => {
+    pendingKearneyNb009TransferRef.current = false;
+    const idx = findLotIndexByNo(no);
+    if (idx == null) return;
+    setTransferLotIndex(idx);
+    setTransferOpen(true);
+  }, []);
   const openEffectiveDateTransfer = useCallback(() => {
     const idx = findLotIndexByNo(KEARNEY_NB_NO);
     if (idx == null) return;
@@ -258,7 +272,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
         no: a.no,
         state: a.state,
         kind: "active",
-        isNew: a.isNewFromTransfer === true,
+        isNew: a.isNewFromTransfer === true && a.mapHighlightFromTransfer !== false,
       });
     }
     for (const p of previousAssigned) {
@@ -270,8 +284,17 @@ export function FranchiseDetailView({ listRowId }: Props) {
   const lotNosOnMap = useMemo(() => new Set(mapLots.map((l) => l.no)), [mapLots]);
 
   const newlyAddedLotNos = useMemo(
-    () => new Set(assigned.filter((a) => a.isNewFromTransfer === true).map((a) => a.no)),
+    () =>
+      new Set(
+        assigned.filter((a) => a.isNewFromTransfer === true && a.mapHighlightFromTransfer !== false).map((a) => a.no),
+      ),
     [assigned],
+  );
+
+  /** Kearney, NE detail only: omit NB-002 from the Associated Lots row (map still reflects full assignment). */
+  const associatedLotsForList = useMemo(
+    () => (isKearney ? assigned.filter((a) => a.no !== "NB-002") : assigned),
+    [assigned, isKearney],
   );
 
   return (
@@ -396,16 +419,8 @@ export function FranchiseDetailView({ listRowId }: Props) {
                     <span className="d-fvalue">{franchiseDisplayName}</span>
                   </div>
                   <div className="d-field">
-                    <span className="d-flabel">Franchise ID</span>
-                    <span className="d-fvalue">{getFranchiseDisplayId(f).replace(/^#/, "")}</span>
-                  </div>
-                  <div className="d-field">
                     <span className="d-flabel">Functional Date</span>
                     <span className="d-fvalue">Dec 2026</span>
-                  </div>
-                  <div className="d-field">
-                    <span className="d-flabel">Owner&apos;s Name</span>
-                    <span className="d-fvalue">{f.owner}</span>
                   </div>
                   <div className="d-field">
                     <span className="d-flabel">Email</span>
@@ -455,10 +470,15 @@ export function FranchiseDetailView({ listRowId }: Props) {
                 <div className="d-cname-row">
                   <span className="d-cname">Augustus Waters</span>
                 </div>
-                <div className="d-cdetails">
+                <Link
+                  href="/onboarding?slide=3"
+                  className="d-cdetails"
+                  style={{ textDecoration: "none", color: "inherit", cursor: "pointer" }}
+                  title="Open onboarding slide 3"
+                >
                   <span className="d-cemail">augustus@teamsignal.com</span>
                   <span className="d-cphone">+1-843-225-7754</span>
-                </div>
+                </Link>
               </div>
             </div>
 
@@ -488,11 +508,11 @@ export function FranchiseDetailView({ listRowId }: Props) {
                 </button>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                {assigned.length === 0 ? (
+                {associatedLotsForList.length === 0 ? (
                   <div style={{ fontSize: 13, color: "#86868b" }}>No active lots.</div>
                 ) : (
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {assigned.map((a, i) => {
+                    {associatedLotsForList.map((a, i) => {
                       const isNew = a.isNewFromTransfer === true;
                       const attentionLotStyle = !isNew && displayOperationalStatus === "attention";
                       const badgeClass = [
@@ -502,8 +522,8 @@ export function FranchiseDetailView({ listRowId }: Props) {
                       ]
                         .filter(Boolean)
                         .join(" ");
-                      const badge = (
-                        <div className={badgeClass}>
+                      const badgeChildren = (
+                        <>
                           {attentionLotStyle && (
                             <Tooltip
                               title="Please add an effective transfer date for this lot NB-009 to make this franchise Active"
@@ -532,20 +552,48 @@ export function FranchiseDetailView({ listRowId }: Props) {
                               Effective from {formatFranchiseEffectiveFromDisplayString(a.effectiveDate)}
                             </span>
                           )}
-                        </div>
+                        </>
                       );
-                        return isNew ? (
+                      const badge = <div className={badgeClass}>{badgeChildren}</div>;
+                      if (a.no === "NB-002") {
+                        return (
+                          <button
+                            key={a.no + i}
+                            type="button"
+                            onClick={() => openTransferForLotNo(a.no)}
+                            style={{
+                              border: "none",
+                              background: "transparent",
+                              padding: 0,
+                              margin: 0,
+                              cursor: "pointer",
+                              textDecoration: "none",
+                              font: "inherit",
+                              textAlign: "inherit",
+                            }}
+                            title={`Transfer lot ownership — ${a.no}`}
+                          >
+                            {badge}
+                          </button>
+                        );
+                      }
+                      if (isNew) {
+                        return (
                           <Link
                             key={a.no + i}
-                            href={a.no === "NB-002" ? "/onboarding?slide=3" : "/franchise-dashboard"}
+                            href="/franchise-dashboard"
                             style={{ textDecoration: "none" }}
-                            title={a.no === "NB-002" ? `Open onboarding slide for ${a.no}` : `Open ${a.no} dashboard`}
+                            title={`Open ${a.no} dashboard`}
                           >
                             {badge}
                           </Link>
-                        ) : (
-                          badge
                         );
+                      }
+                      return (
+                        <div key={a.no + i} className={badgeClass}>
+                          {badgeChildren}
+                        </div>
+                      );
                     })}
                   </div>
                 )}
@@ -642,6 +690,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
                 state: lot.state,
                 effectiveDate: formatted,
                 isNewFromTransfer: true,
+                mapHighlightFromTransfer: true,
               }));
             if (newLots.length > 0) setAssigned((prev) => [...prev, ...newLots]);
           }}
@@ -691,19 +740,39 @@ export function FranchiseDetailView({ listRowId }: Props) {
                 }}
                 lotIndex={transferLotIndex}
                 newFranchiseName={franchiseDisplayName}
-                onConfirm={(effectiveYmd) => {
+                newFranchiseId={f.id}
+                onConfirm={(effectiveYmd, _transferAllUsers) => {
                   const d = new Date(`${effectiveYmd}T12:00:00`);
                   const formatted = formatFranchiseEffectiveDateLabel(d);
                   const lot = LOTS_FOR_MODAL[transferLotIndex];
                   if (!lot) return;
+                  const fromKearneyCta = pendingKearneyNb009TransferRef.current && lot.no === KEARNEY_NB_NO;
                   setAssigned((prev) => {
                     const i = prev.findIndex((p) => p.no === lot.no);
                     if (i >= 0) {
                       const next = [...prev];
-                      next[i] = { ...next[i], effectiveDate: formatted };
+                      next[i] = {
+                        ...next[i],
+                        effectiveDate: formatted,
+                        ...(fromKearneyCta
+                          ? {
+                              isNewFromTransfer: true,
+                              mapHighlightFromTransfer: false,
+                            }
+                          : {}),
+                      };
                       return next;
                     }
-                    return [...prev, { no: lot.no, state: lot.state, effectiveDate: formatted, isNewFromTransfer: true }];
+                    return [
+                      ...prev,
+                      {
+                        no: lot.no,
+                        state: lot.state,
+                        effectiveDate: formatted,
+                        isNewFromTransfer: true,
+                        mapHighlightFromTransfer: fromKearneyCta ? false : true,
+                      },
+                    ];
                   });
                   if (pendingKearneyNb009TransferRef.current && lot.no === KEARNEY_NB_NO) {
                     setKearneyTransferResolved(true);

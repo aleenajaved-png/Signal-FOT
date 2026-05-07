@@ -104,6 +104,11 @@ export function FranchiseListMain() {
                       onClick={() => go(i)}
                     >
                       <span className="td-txt">{row.name}</span>
+                      {row.isNew ? (
+                        <span className="badge-new" aria-label="New franchise">
+                          <span className="badge-new-txt">New</span>
+                        </span>
+                      ) : null}
                     </div>
                     <div className="div" />
                   </div>

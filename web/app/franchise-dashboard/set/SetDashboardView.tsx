@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 const imgIcon = "https://www.figma.com/api/mcp/asset/ba5715cb-519e-40d9-8c91-51d4fd573d21";
@@ -826,9 +827,14 @@ export default function Dashboard() {
           Breakdown by Location type
         </p>
         <div className="absolute contents left-[356px] top-[285px]" data-node-id="429:20792">
-          <div className="absolute left-[356px] size-[140px] top-[285px]" data-node-id="429:20793">
-            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup289284} />
-          </div>
+          <Link
+            href="/franchise-dashboard"
+            className="absolute left-[356px] block size-[140px] cursor-pointer top-[285px]"
+            aria-label="Open franchise dashboard"
+            data-node-id="429:20793"
+          >
+            <img alt="" className="absolute block inset-0 max-w-none size-full pointer-events-none" src={imgGroup289284} />
+          </Link>
         </div>
         <div className="absolute flex h-[280px] items-center justify-center left-[530px] top-[172px] w-0">
           <div className="-rotate-90 flex-none">

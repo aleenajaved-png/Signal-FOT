@@ -108,6 +108,12 @@ export default function FranchiseOnboardingPage() {
     setActiveSection("owner-info");
   };
 
+  const confirmModalFranchiseName = (
+    pendingData?.franchiseName ??
+    DEAL_INITIAL_DATA.franchiseName ??
+    ""
+  ).trim();
+
   const renderMain = () => {
     if (activeSection === "fleet-services") {
       return (
@@ -213,7 +219,16 @@ export default function FranchiseOnboardingPage() {
           <div>
             <h2 className="text-base font-bold text-gray-900">Confirmation</h2>
             <p className="text-sm text-gray-500 mt-2 leading-relaxed">
-              Are you sure you want to create this franchise? It will be created for{" "}
+              Are you sure you want to create{" "}
+              {confirmModalFranchiseName ? (
+                <>
+                  the franchise{" "}
+                  <span className="font-semibold text-gray-800">{confirmModalFranchiseName}</span>
+                </>
+              ) : (
+                "this franchise"
+              )}
+              ? It will be created for{" "}
               <span className="font-semibold text-gray-800">{formatLotList(FRANCHISE_LOTS)}</span>.
             </p>
           </div>

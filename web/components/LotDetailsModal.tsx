@@ -10,7 +10,6 @@ import ExpandMoreOutlined from "@mui/icons-material/ExpandMoreOutlined";
 import MapOutlined from "@mui/icons-material/MapOutlined";
 import MoreVertOutlined from "@mui/icons-material/MoreVertOutlined";
 import OpenInFullOutlined from "@mui/icons-material/OpenInFullOutlined";
-import OpenInNewOutlined from "@mui/icons-material/OpenInNewOutlined";
 import PeopleOutlineOutlined from "@mui/icons-material/PeopleOutlineOutlined";
 import PlaceOutlined from "@mui/icons-material/PlaceOutlined";
 import RemoveOutlined from "@mui/icons-material/RemoveOutlined";
@@ -324,7 +323,7 @@ function FranchiseAssociationTable() {
   const rows = franchiseAssociationHistoryRows;
 
   return (
-    <div className="lot-details-fa-acc">
+    <>
       <button
         type="button"
         className="lot-details-fa-acc__header"
@@ -333,53 +332,49 @@ function FranchiseAssociationTable() {
         id={`${faPanelId}-label`}
         onClick={() => setExpanded((v) => !v)}
       >
+        <span className="lot-details-fa-acc__header-title">
+          <span className="lot-details-fa-acc__header-label">Associations</span>
+          <span className="lot-details-fa-acc__header-dot" aria-hidden>
+            •
+          </span>
+          <span className="lot-details-fa-acc__header-count">{String(rows.length).padStart(2, "0")}</span>
+        </span>
         <span className="lot-details-fa-acc__chevron-disk" aria-hidden>
           {expanded ? (
-            <ExpandLessOutlined sx={oIcon(18, { color: "#fff" })} />
+            <ExpandLessOutlined sx={oIcon(18, { color: "#444446" })} />
           ) : (
-            <ExpandMoreOutlined sx={oIcon(18, { color: "#fff" })} />
+            <ExpandMoreOutlined sx={oIcon(18, { color: "#444446" })} />
           )}
-        </span>
-        <span className="lot-details-fa-acc__header-title">
-          Associations<span className="lot-details-fa-acc__header-dot"> • </span>
-          <span className="lot-details-fa-acc__header-count">{String(rows.length).padStart(2, "0")}</span>
         </span>
       </button>
 
       {expanded ? (
-        <div className="lot-details-fa-acc__panel" id={faPanelId} role="region" aria-labelledby={`${faPanelId}-label`}>
-          <ul className="lot-details-fa-acc__list">
-            {rows.map((r) => (
-              <li key={r.franchise} className="lot-details-fa-acc__item">
-                <div className="lot-details-fa-acc__item-main">
-                  <div className="lot-details-fa-acc__item-title">{r.franchise}</div>
-                  <div className="lot-details-fa-acc__item-line2">
-                    {franchiseAssociationDateColumnLabel(r)}: {formatFranchiseAssociationCell(r)}
-                  </div>
-                  <div className="lot-details-fa-acc__item-meta">
-                    <span
-                      className={
-                        r.status === "active"
-                          ? "lot-details-fa__status lot-details-fa__status--active"
-                          : r.status === "inactive"
-                            ? "lot-details-fa__status lot-details-fa__status--inactive"
-                            : "lot-details-fa__status lot-details-fa__status--upcoming"
-                      }
-                    >
-                      <span className="lot-details-fa__dot" aria-hidden />
-                      Status: {franchiseAssociationStatusLabelRow(r.status)}
-                    </span>
-                  </div>
-                </div>
-                <button type="button" className="lot-details-fa-acc__link-btn" aria-label={`Open ${r.franchise}`} onClick={() => {}}>
-                  <OpenInNewOutlined sx={oIcon(18, { color: "#146dff" })} />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul className="lot-details-fa-acc__list" id={faPanelId} aria-labelledby={`${faPanelId}-label`}>
+          {rows.map((r) => (
+            <li key={r.franchise} className="lot-details-fa-acc__item">
+              <div className="lot-details-fa-acc__item-title">{r.franchise}</div>
+              <div className="lot-details-fa-acc__item-line2">
+                {franchiseAssociationDateColumnLabel(r)}: {formatFranchiseAssociationCell(r)}
+              </div>
+              <div className="lot-details-fa-acc__item-meta">
+                <span
+                  className={
+                    r.status === "active"
+                      ? "lot-details-fa__status lot-details-fa__status--active"
+                      : r.status === "inactive"
+                        ? "lot-details-fa__status lot-details-fa__status--inactive"
+                        : "lot-details-fa__status lot-details-fa__status--upcoming"
+                  }
+                >
+                  <span className="lot-details-fa__dot" aria-hidden />
+                  Status: {franchiseAssociationStatusLabelRow(r.status)}
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
       ) : null}
-    </div>
+    </>
   );
 }
 

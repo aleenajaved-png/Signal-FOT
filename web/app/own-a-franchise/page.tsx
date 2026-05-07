@@ -27,14 +27,11 @@ import NorthEastOutlined from "@mui/icons-material/NorthEastOutlined";
 import styles from "./page.module.css";
 
 /* Figma asset URLs */
-const imgSignalLogo =
-  "https://www.figma.com/api/mcp/asset/1c95e57a-1a8f-4631-9692-53a6e0ebdda4";
+const imgSignalLogo = "/signal-logo.svg";
 const imgMapBase =
-  "https://www.figma.com/api/mcp/asset/3704c350-2fb7-4f5c-8ffb-c91aa11f030b";
-const imgMapOverlay =
-  "https://www.figma.com/api/mcp/asset/3cfcb968-a192-468d-bfe3-640351653743";
-const imgMiniMap =
-  "https://www.figma.com/api/mcp/asset/ee45c541-405d-4712-89d0-a82a5cdc3afd";
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Blank_US_Map_%28states_only%29.svg/1280px-Blank_US_Map_%28states_only%29.svg.png";
+const imgMapOverlay = "";
+const imgMiniMap = imgMapBase;
 // Map top-bar assets
 const imgFullViewIcon =
   "https://www.figma.com/api/mcp/asset/e13233b8-fcc9-4b93-af97-cff2f7903621";
@@ -394,9 +391,11 @@ export default function OwnAFranchisePage() {
         <div className={styles.mapArea}>
           {/* Map background layers */}
           <img src={imgMapBase} alt="Lots map" className={styles.mapImage} />
-          <div className={styles.mapOverlayLayer}>
-            <img src={imgMapOverlay} alt="" className={styles.mapOverlayImg} aria-hidden="true" />
-          </div>
+          {imgMapOverlay && (
+            <div className={styles.mapOverlayLayer}>
+              <img src={imgMapOverlay} alt="" className={styles.mapOverlayImg} aria-hidden="true" />
+            </div>
+          )}
 
           {/* Top bar: Full View + legend */}
           <div className={styles.mapTopBar}>

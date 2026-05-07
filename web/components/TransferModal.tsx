@@ -81,6 +81,10 @@ function newFranchiseDisplay(id: string | undefined, name: string): string {
   return noid ? `${noid} - ${name}` : name;
 }
 
+/** Franchise detail overlay: NB-002 + no back — preset timeline-only “revert” summary */
+const NB002_REVERT_SUMMARY_EFFECTIVE_YMD = "2026-05-08";
+const NB002_REVERT_SUMMARY_CUTOFF_YMD = "2026-05-07";
+
 type Props = {
   onClose: () => void;
   lotIndex: number;
@@ -151,12 +155,18 @@ export function TransferLotOwnershipPanel({
 
   if (!lot) return null;
 
+  const revertSummaryUi = lot.no === "NB-002" && !showBack;
+  const cutoffForTimeline = revertSummaryUi ? NB002_REVERT_SUMMARY_CUTOFF_YMD : cutoffYmd;
+  const effectiveForTimeline = revertSummaryUi ? NB002_REVERT_SUMMARY_EFFECTIVE_YMD : effective;
+  const showTimelineSection = revertSummaryUi || showTimeline;
+  const formConfirmValid = revertSummaryUi ? true : valid;
+
   const oldFrLabel = `${oldFr.id ? `${oldFr.id} - ` : ""}${oldFr.name}`;
   const newFrLabel = newFranchiseDisplay(newFranchiseId, newFranchiseName);
 
-  /** Same Y-M-D as cut-off MM/DD/YYYY input + effective DatePicker → timeline + status. */
-  const cutoffTimelineLine = cutoffYmd ? `${formatDateLong(cutoffYmd)} (11:59 PM)` : "";
-  const effectiveTimelineLine = effective ? `Effective ${formatDateLong(effective)} (12:00 AM)` : "";
+  /** Same Y-M-D as cut-off MM/DD/YYYY input + effective DatePicker → timeline + status (or presets in revert summary). */
+  const cutoffTimelineLine = cutoffForTimeline ? `${formatDateLong(cutoffForTimeline)} (11:59 PM)` : "";
+  const effectiveTimelineLine = effectiveForTimeline ? `Effective ${formatDateLong(effectiveForTimeline)} (12:00 AM)` : "";
 
   return (
     <div style={{ minHeight: 0, display: "flex", flexDirection: "column", flex: 1, fontFamily: "var(--fk), sans-serif" }}>
@@ -173,7 +183,7 @@ export function TransferLotOwnershipPanel({
             </button>
           )}
           <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <span style={{ fontFamily: "var(--fk), sans-serif", fontSize: 16, color: "#272d37" }}>Transfer Lot Ownership</span>
+            <span style={{ fontFamily: "var(--fk), sans-serif", fontSize: 16, color: "#272d37" }}>Transfer lot ownership</span>
             <span style={{ fontFamily: "var(--fk), sans-serif", fontSize: 12, color: "#86868b" }}>This lot is already assigned to another franchise</span>
           </div>
         </div>
@@ -182,6 +192,7 @@ export function TransferLotOwnershipPanel({
         </button>
       </div>
 
+      {!revertSummaryUi ? (
       <div style={{ margin: "20px 24px 0", background: "#f5f5f6", borderRadius: 4, padding: "12px 16px", display: "flex", alignItems: "center", gap: 16 }}>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 12, color: "#86868b" }}>Lot</div>
@@ -221,8 +232,10 @@ export function TransferLotOwnershipPanel({
           </div>
         </div>
       </div>
+      ) : null}
 
-      <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ padding: revertSummaryUi ? "24px 24px 20px" : "20px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
+        {!revertSummaryUi ? (
         <div
           style={{
             display: "flex",
@@ -390,7 +403,9 @@ export function TransferLotOwnershipPanel({
             </div>
           </div>
         </div>
+        ) : null}
 
+        {!revertSummaryUi ? (
         <label
           style={{
             display: "flex",
@@ -411,8 +426,9 @@ export function TransferLotOwnershipPanel({
           />
           <span>Migrate all users from the previous franchise to the new one</span>
         </label>
+        ) : null}
 
-        {showTimeline && (
+        {showTimelineSection ? (
           <div
             aria-label="Transfer timeline"
             style={{
@@ -483,31 +499,43 @@ export function TransferLotOwnershipPanel({
                 lineHeight: 1.5,
               }}
             >
-              After <strong>11:59 PM</strong> on {formatDateLong(cutoffYmd)} this lot will transition to <strong>{newFrLabel}</strong>. The new franchise is effective at <strong>12:00 AM</strong> on {formatDateLong(effective)}.
+              After <strong>11:59 PM</strong> on {formatDateLong(cutoffForTimeline)} this lot will transition to <strong>{newFrLabel}</strong>. The new franchise is effective at <strong>12:00 AM</strong> on{" "}
+              {formatDateLong(effectiveForTimeline)}.
             </div>
           </div>
-        )}
+        ) : null}
       </div>
 
       <div style={{ padding: "16px 24px", display: "flex", justifyContent: "flex-end", gap: 8, borderTop: "1px solid #e6e6e7" }}>
         <button type="button" onClick={onClose} style={{ border: "1px solid #e6e6e7", borderRadius: 2, padding: "8px 14px", background: "#fff", cursor: "pointer" }}>
-          Cancel
+          {revertSummaryUi ? "Edit" : "Cancel"}
         </button>
         <button
           type="button"
-          disabled={!valid}
-          onClick={() => onConfirm(effective, transferAllUsers)}
+          disabled={!formConfirmValid}
+          onClick={() =>
+            onConfirm(
+              revertSummaryUi ? NB002_REVERT_SUMMARY_EFFECTIVE_YMD : effective,
+              revertSummaryUi ? false : transferAllUsers,
+            )
+          }
           style={{
-            border: "1px solid #0032a0",
+            border: `1px solid ${revertSummaryUi ? (formConfirmValid ? "#b32318" : "#9ca3af") : formConfirmValid ? "#0032a0" : "#9ca3af"}`,
             borderRadius: 2,
-            background: valid ? "#0032a0" : "#9ca3af",
+            background: revertSummaryUi
+              ? formConfirmValid
+                ? "#b32318"
+                : "#9ca3af"
+              : formConfirmValid
+                ? "#0032a0"
+                : "#9ca3af",
             color: "#fff",
             padding: "8px 20px",
-            cursor: valid ? "pointer" : "not-allowed",
-            opacity: valid ? 1 : 0.5,
+            cursor: formConfirmValid ? "pointer" : "not-allowed",
+            opacity: formConfirmValid ? 1 : 0.5,
           }}
         >
-          Confirm Transfer
+          {revertSummaryUi ? "Revert decision" : "Confirm Transfer"}
         </button>
       </div>
     </div>
