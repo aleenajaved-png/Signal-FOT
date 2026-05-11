@@ -30,6 +30,8 @@ export type FranchiseAssociationStatus = "inactive" | "upcoming" | "active";
 
 export type FranchiseAssociationRow = {
   franchise: string;
+  /** Sale price for this lot-franchise association. */
+  soldPrice: string;
   /** Plain date in Association column when `endsDate` and `startsDate` are null. */
   effectiveDate: string | null;
   /** When set, Association column shows that date (typically ends / effective for the row). */
@@ -65,6 +67,20 @@ export function formatFranchiseAssociationCell(r: FranchiseAssociationRow): stri
 }
 
 export const franchiseAssociationHistoryRows: FranchiseAssociationRow[] = [
-  { franchise: "0205 - Omaha, Nebraska", effectiveDate: null, endsDate: "2026-04-24", startsDate: null, status: "active" },
-  { franchise: "0026 - Nebraska", effectiveDate: null, endsDate: null, startsDate: "2026-04-27", status: "inactive" },
+  {
+    franchise: "0205 - Omaha, Nebraska",
+    soldPrice: "$98,000",
+    effectiveDate: null,
+    endsDate: "2026-04-24",
+    startsDate: null,
+    status: "active",
+  },
+  {
+    franchise: "0026 - Nebraska",
+    soldPrice: "$102,500",
+    effectiveDate: null,
+    endsDate: null,
+    startsDate: "2026-04-27",
+    status: "inactive",
+  },
 ];

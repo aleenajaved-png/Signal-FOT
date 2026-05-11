@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { Header } from "./components/Header";
 import { SubHeader } from "./components/SubHeader";
@@ -17,6 +17,8 @@ import CalendarTodayOutlined from "@mui/icons-material/CalendarTodayOutlined";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
 import WarningAmberOutlined from "@mui/icons-material/WarningAmberOutlined";
 import NorthEastOutlined from "@mui/icons-material/NorthEastOutlined";
+import { LOTS_FOR_MODAL } from "@/lib/data";
+import { TransferLotOwnershipPanel } from "@/components/TransferModal";
 
 type SectionStatus = "not-started" | "in-progress" | "completed";
 type SectionId = "owner-info" | "fleet-services" | "basic-info" | "franchise-creation";
@@ -47,8 +49,6 @@ const DEAL_INITIAL_DATA: FranchiseInitialData = {
   officeCountry: "US",
 };
 
-const FRANCHISE_LOTS = ["NB-009"];
-
 function formatLotList(lots: string[]) {
   if (lots.length === 0) return "";
   if (lots.length === 1) return lots[0];
@@ -58,11 +58,15 @@ function formatLotList(lots: string[]) {
 export default function FranchiseOnboardingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<SectionId>("owner-info");
+  const [franchiseLots, setFranchiseLots] = useState<string[]>(["NB-001", "NB-002"]);
 
   const [pendingData, setPendingData] = useState<Record<string, string> | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdFranchise, setCreatedFranchise] = useState<Record<string, string>>({});
+  const [effectiveDateByLot, setEffectiveDateByLot] = useState<Record<string, string>>({});
+  const [confirmError, setConfirmError] = useState<string | null>(null);
+  const [activeTransferLotIndex, setActiveTransferLotIndex] = useState<number | null>(null);
 
   const [sectionStatuses, setSectionStatuses] = useState<Record<SectionId, SectionStatus>>({
     "owner-info": "not-started",
@@ -86,12 +90,19 @@ export default function FranchiseOnboardingPage() {
   };
 
   const handleFranchiseSubmit = (data: Record<string, string>) => {
+    setConfirmError(null);
     setPendingData(data);
     setShowConfirmModal(true);
   };
 
   const handleConfirm = () => {
     if (!pendingData) return;
+    const missingSoldLots = selectedLotsWithMeta
+      .filter((lot) => lot.status === "sold" && !effectiveDateByLot[lot.no]);
+    if (missingSoldLots.length > 0) {
+      setConfirmError(`Add effective date for ${formatLotList(missingSoldLots.map((lot) => lot.no))} before creating.`);
+      return;
+    }
     setCreatedFranchise(pendingData);
     updateSectionStatus("franchise-creation", "completed");
     setShowConfirmModal(false);
@@ -101,6 +112,8 @@ export default function FranchiseOnboardingPage() {
   const handleCancelConfirm = () => {
     setShowConfirmModal(false);
     setPendingData(null);
+    setConfirmError(null);
+    setActiveTransferLotIndex(null);
   };
 
   const handleDone = () => {
@@ -113,6 +126,18 @@ export default function FranchiseOnboardingPage() {
     DEAL_INITIAL_DATA.franchiseName ??
     ""
   ).trim();
+
+  const selectedLotsWithMeta = useMemo(
+    () =>
+      franchiseLots.map((lotId) => {
+        const lot = LOTS_FOR_MODAL.find((item) => item.no === lotId);
+        return {
+          no: lotId,
+          status: lot?.status ?? "available",
+        } as const;
+      }),
+    [franchiseLots],
+  );
 
   const renderMain = () => {
     if (activeSection === "fleet-services") {
@@ -144,6 +169,8 @@ export default function FranchiseOnboardingPage() {
       <BackgroundCheckContent
         status={sectionStatuses["owner-info"]}
         onStatusChange={(s) => updateSectionStatus("owner-info", s)}
+        selectedLots={franchiseLots}
+        onSelectedLotsChange={setFranchiseLots}
       />
     );
   };
@@ -194,7 +221,7 @@ export default function FranchiseOnboardingPage() {
       <Modal
         isOpen={showConfirmModal}
         onClose={handleCancelConfirm}
-        size="sm"
+        size="md"
         footer={
           <div className="flex items-center gap-2 w-full">
             <button
@@ -212,11 +239,11 @@ export default function FranchiseOnboardingPage() {
           </div>
         }
       >
-        <div className="flex flex-col items-center text-center gap-4 py-2">
+        <div className="flex flex-col gap-4 py-2">
           <div className="w-14 h-14 rounded-full bg-amber-50 border-2 border-amber-100 flex items-center justify-center">
             <WarningAmberOutlined sx={{ fontSize: 28 }} className="text-amber-500" />
           </div>
-          <div>
+          <div className="text-left">
             <h2 className="text-base font-bold text-gray-900">Confirmation</h2>
             <p className="text-sm text-gray-500 mt-2 leading-relaxed">
               Are you sure you want to create{" "}
@@ -229,11 +256,97 @@ export default function FranchiseOnboardingPage() {
                 "this franchise"
               )}
               ? It will be created for{" "}
-              <span className="font-semibold text-gray-800">{formatLotList(FRANCHISE_LOTS)}</span>.
+              <span className="font-semibold text-gray-800">{formatLotList(franchiseLots)}</span>.
             </p>
           </div>
+          <div className="border border-gray-100 rounded-sm overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 text-gray-700">
+                <tr>
+                  <th className="text-left font-semibold px-4 py-2">Lot ID</th>
+                  <th className="text-left font-semibold px-4 py-2">Status</th>
+                  <th className="text-left font-semibold px-4 py-2">Effective Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedLotsWithMeta.map((lot) => (
+                  <tr key={lot.no} className="border-t border-gray-100 text-gray-700">
+                    <td className="px-4 py-2 text-sky-600">{lot.no}</td>
+                    <td className="px-4 py-2">
+                      {lot.status === "sold" ? (
+                        <span className="inline-flex rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">Sold</span>
+                      ) : (
+                        <span className="inline-flex rounded-full bg-sky-50 px-2 py-0.5 text-xs font-medium text-sky-700">Available</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-2">
+                      {lot.status === "sold" ? (
+                        effectiveDateByLot[lot.no] ? (
+                          <button
+                            type="button"
+                            onClick={() => setActiveTransferLotIndex(LOTS_FOR_MODAL.findIndex((item) => item.no === lot.no))}
+                            className="text-sm font-semibold text-sky-700 underline underline-offset-2 hover:text-sky-800 whitespace-nowrap"
+                          >
+                            {new Date(`${effectiveDateByLot[lot.no]}T12:00:00`).toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "2-digit",
+                              year: "numeric",
+                            })}
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setActiveTransferLotIndex(LOTS_FOR_MODAL.findIndex((item) => item.no === lot.no))}
+                            className="text-sm font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-800 whitespace-nowrap"
+                          >
+                            Add effective date
+                          </button>
+                        )
+                      ) : (
+                        <span className="text-gray-500">NA</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {confirmError && (
+            <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+              {confirmError}
+            </div>
+          )}
         </div>
       </Modal>
+
+      {showConfirmModal && activeTransferLotIndex != null && activeTransferLotIndex >= 0 && (
+        <div className="fixed inset-0 z-[60] bg-black/45 flex items-center justify-center px-4" role="presentation">
+          <section
+            className="w-full max-w-5xl bg-white rounded-md shadow-2xl overflow-hidden"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Transfer lot ownership"
+          >
+            <TransferLotOwnershipPanel
+              onClose={() => setActiveTransferLotIndex(null)}
+              showBack
+              onBack={() => setActiveTransferLotIndex(null)}
+              lotIndex={activeTransferLotIndex}
+              newFranchiseName="Omaha, NE"
+              newFranchiseId="#0205"
+              forceFormMode
+              onConfirm={(effectiveYmd) => {
+                const lotNo = LOTS_FOR_MODAL[activeTransferLotIndex]?.no;
+                if (lotNo) {
+                  setEffectiveDateByLot((prev) => ({ ...prev, [lotNo]: effectiveYmd }));
+                }
+                setConfirmError(null);
+                setActiveTransferLotIndex(null);
+              }}
+            />
+          </section>
+        </div>
+      )}
 
       {/* Step 2: Success Modal */}
       <Modal isOpen={showSuccessModal} onClose={handleDone} size="md">
@@ -274,7 +387,7 @@ export default function FranchiseOnboardingPage() {
                   Deal / Lot Number
                 </div>
                 <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-                  {formatLotList(FRANCHISE_LOTS)}
+                  {formatLotList(franchiseLots)}
                 </span>
               </div>
               <div className="flex items-center justify-between px-4 py-3">

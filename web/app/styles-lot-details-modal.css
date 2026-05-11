@@ -268,6 +268,7 @@
   margin: 0;
   padding: 0 0 20px 0;
   border: none;
+  text-align: left;
 }
 .lot-details-fa-acc__item:last-child {
   padding-bottom: 0;
@@ -283,15 +284,21 @@
   line-height: 20px;
   font-weight: 500;
   color: #272d37;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 .lot-details-fa-acc__item-meta {
   font-size: 12px;
   line-height: 18px;
   color: #7d899b;
-  margin-top: 8px;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 .lot-details-fa-acc__item-meta .lot-details-fa__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
   color: inherit;
   font-weight: 500;

@@ -353,6 +353,7 @@ function FranchiseAssociationTable() {
           {rows.map((r) => (
             <li key={r.franchise} className="lot-details-fa-acc__item">
               <div className="lot-details-fa-acc__item-title">{r.franchise}</div>
+              <div className="lot-details-fa-acc__item-line2">Sold Price: {r.soldPrice}</div>
               <div className="lot-details-fa-acc__item-line2">
                 {franchiseAssociationDateColumnLabel(r)}: {formatFranchiseAssociationCell(r)}
               </div>

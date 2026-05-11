@@ -1,21 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Badge } from "./Badge";
 import { OwnerInformationForm } from "./OwnerInformationForm";
 import { LotsContactsPanel } from "./LotsContactsPanel";
 import EditOutlined from "@mui/icons-material/EditOutlined";
-import Popover from "@mui/material/Popover";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import dayjs, { Dayjs } from "dayjs";
 
 type SectionStatus = "not-started" | "in-progress" | "completed";
 
 interface BackgroundCheckContentProps {
   onStatusChange?: (status: SectionStatus) => void;
   status?: SectionStatus;
+  selectedLots?: string[];
+  onSelectedLotsChange?: (lots: string[]) => void;
 }
 
 const statusLabel: Record<SectionStatus, string> = {
@@ -31,18 +28,17 @@ const statusVariant: Record<SectionStatus, "not-started" | "in-progress" | "comp
 };
 
 const lotOptions = ["NB-001", "NB-002", "NB-003", "AB-003", "AB-004", "KA-005"];
-
 export function BackgroundCheckContent({
   onStatusChange,
   status = "not-started",
+  selectedLots: selectedLotsProp,
+  onSelectedLotsChange,
 }: BackgroundCheckContentProps) {
   const [activeTab, setActiveTab] = useState<"contacts" | null>(null);
   const [isLotsModalOpen, setIsLotsModalOpen] = useState(false);
   const [isEditLotsOpen, setIsEditLotsOpen] = useState(false);
   const [isLotsDropdownOpen, setIsLotsDropdownOpen] = useState(false);
-  const [selectedLots, setSelectedLots] = useState<string[]>(["AB-003", "AB-004"]);
-  const [soldLotEffectiveDate, setSoldLotEffectiveDate] = useState<Dayjs | null>(null);
-  const [effectiveDateAnchor, setEffectiveDateAnchor] = useState<HTMLElement | null>(null);
+  const [selectedLots, setSelectedLots] = useState<string[]>(selectedLotsProp ?? ["NB-001", "NB-002"]);
 
   const handleTabToggle = (tab: "contacts") => {
     setActiveTab((prev) => (prev === tab ? null : tab));
@@ -54,13 +50,15 @@ export function BackgroundCheckContent({
     );
   };
 
-  const openEffectiveDatePicker = (anchorEl: HTMLElement) => {
-    setEffectiveDateAnchor(anchorEl);
-  };
+  useEffect(() => {
+    if (selectedLotsProp) {
+      setSelectedLots(selectedLotsProp);
+    }
+  }, [selectedLotsProp]);
 
-  const closeEffectiveDatePicker = () => {
-    setEffectiveDateAnchor(null);
-  };
+  useEffect(() => {
+    onSelectedLotsChange?.(selectedLots);
+  }, [onSelectedLotsChange, selectedLots]);
 
   return (
     <div className="flex-1 overflow-y-auto bg-gray-50">
@@ -138,29 +136,6 @@ export function BackgroundCheckContent({
               </div>
 
               <div className="p-6">
-                <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <p className="text-sm font-semibold text-amber-900">
-                        Sold lot requires an effective date
-                      </p>
-                      <p className="text-xs text-amber-800">
-                        Lot AB-004 is marked as Sold. Add its effective date before closing this
-                        step.
-                      </p>
-                    </div>
-                    {!soldLotEffectiveDate && (
-                      <button
-                        type="button"
-                        onClick={(e) => openEffectiveDatePicker(e.currentTarget)}
-                        className="inline-flex items-center rounded-md bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 whitespace-nowrap"
-                      >
-                        Add Effective Date
-                      </button>
-                    )}
-                  </div>
-                </div>
-
                 <div className="border border-gray-100 rounded-sm overflow-hidden">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 text-gray-700">
@@ -172,54 +147,33 @@ export function BackgroundCheckContent({
                         <th className="text-right font-semibold px-4 py-2">Population</th>
                         <th className="text-right font-semibold px-4 py-2">Price</th>
                         <th className="text-left font-semibold px-4 py-2">Status</th>
-                        <th className="text-left font-semibold px-4 py-2">Effective Date</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr className="border-t border-gray-100 text-gray-700">
-                        <td className="px-4 py-2 text-sky-600">AB-003</td>
+                        <td className="px-4 py-2 text-sky-600">NB-001</td>
                         <td className="px-4 py-2">Weald</td>
                         <td className="px-4 py-2">Alberta</td>
                         <td className="px-4 py-2">Weald, Alberta, Canada</td>
                         <td className="px-4 py-2 text-right">185,290</td>
                         <td className="px-4 py-2 text-right text-emerald-700">$277,835</td>
                         <td className="px-4 py-2">
-                          <span className="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                          <span className="inline-flex rounded-full bg-sky-50 px-2 py-0.5 text-xs font-medium text-sky-700">
                             Available
                           </span>
                         </td>
-                        <td className="px-4 py-2 text-gray-500">-</td>
                       </tr>
                       <tr className="border-t border-gray-100 text-gray-700">
-                        <td className="px-4 py-2 text-sky-600">AB-004</td>
+                        <td className="px-4 py-2 text-sky-600">NB-002</td>
                         <td className="px-4 py-2">Edmonton</td>
                         <td className="px-4 py-2">Alberta</td>
                         <td className="px-4 py-2">Edmonton, Alberta, Canada</td>
                         <td className="px-4 py-2 text-right">223,068</td>
                         <td className="px-4 py-2 text-right text-emerald-700">$334,602</td>
                         <td className="px-4 py-2">
-                          <span className="inline-flex rounded-full bg-rose-50 px-2 py-0.5 text-xs font-medium text-rose-700">
+                          <span className="inline-flex rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
                             Sold
                           </span>
-                        </td>
-                        <td className="px-4 py-2">
-                          {soldLotEffectiveDate ? (
-                            <button
-                              type="button"
-                              onClick={(e) => openEffectiveDatePicker(e.currentTarget)}
-                              className="text-sm font-semibold text-sky-700 underline underline-offset-2 hover:text-sky-800 whitespace-nowrap"
-                            >
-                              {soldLotEffectiveDate.format("MMM DD, YYYY")}
-                            </button>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={(e) => openEffectiveDatePicker(e.currentTarget)}
-                              className="text-sm font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-800 whitespace-nowrap"
-                            >
-                              Add effective date
-                            </button>
-                          )}
                         </td>
                       </tr>
                     </tbody>
@@ -347,23 +301,6 @@ export function BackgroundCheckContent({
           )}
         </div>
       )}
-
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Popover
-          open={Boolean(effectiveDateAnchor)}
-          anchorEl={effectiveDateAnchor}
-          onClose={closeEffectiveDatePicker}
-          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        >
-          <DateCalendar
-            value={soldLotEffectiveDate}
-            onChange={(newValue) => {
-              setSoldLotEffectiveDate(newValue ? dayjs(newValue) : null);
-              closeEffectiveDatePicker();
-            }}
-          />
-        </Popover>
-      </LocalizationProvider>
 
       <div className="px-6 py-4">
         <OwnerInformationForm onStatusChange={onStatusChange} status={status} />

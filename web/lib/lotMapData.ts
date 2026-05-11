@@ -5,7 +5,7 @@
  * Map coordinate space matches a 900×644 reference frame; positions use % for responsiveness.
  */
 export const FRANCHISE_MAP_BASE_SRC =
-  "https://www.figma.com/api/mcp/asset/dd61b294-499a-48ff-90ed-d3d5b1981e2c";
+  "/usa-map.svg";
 
 export type MapPolygonLayer = {
   lotNo: string;

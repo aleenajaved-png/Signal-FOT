@@ -137,6 +137,7 @@ function OwnerInfobarCell({
   defaultEffectiveDate?: string;
   "aria-label"?: string;
 }) {
+  const [avatarLoadFailed, setAvatarLoadFailed] = useState(false);
   const latestEffective = assigned.length > 0 ? assigned[assigned.length - 1].effectiveDate : null;
   const badgeDate = formatFranchiseEffectiveFromDisplayString(latestEffective ?? defaultEffectiveDate);
   const titleLong = (() => {
@@ -166,7 +167,7 @@ function OwnerInfobarCell({
       <span className="d-cell-label">{label}</span>
       <div className="d-owner-row">
         {showAvatar &&
-          (ownerImageUrl ? (
+          (ownerImageUrl && !avatarLoadFailed ? (
             <Image
               src={ownerImageUrl}
               alt={owner}
@@ -174,6 +175,7 @@ function OwnerInfobarCell({
               height={20}
               unoptimized
               className="d-infobar-owner-avatar"
+              onError={() => setAvatarLoadFailed(true)}
             />
           ) : (
             <div
@@ -216,6 +218,9 @@ export function FranchiseDetailView({ listRowId }: Props) {
   const [assignOpen, setAssignOpen] = useState(false);
   const [transferOpen, setTransferOpen] = useState(false);
   const [transferLotIndex, setTransferLotIndex] = useState<number | null>(null);
+  const [editLotIndex, setEditLotIndex] = useState<number | null>(null);
+  const [editEffectiveYmd, setEditEffectiveYmd] = useState("");
+  const [mapBaseLoadFailed, setMapBaseLoadFailed] = useState(false);
   /** After Confirm Transfer (NB-009) on Kearney: operational → Non-Functional, hide attention UI. */
   const [kearneyTransferResolved, setKearneyTransferResolved] = useState(false);
   /** True when transfer modal was opened from Kearney’s “Add Effective Date” CTA (NB-009). */
@@ -241,6 +246,20 @@ export function FranchiseDetailView({ listRowId }: Props) {
     setTransferLotIndex(idx);
     setTransferOpen(true);
   }, []);
+  const openEditForLotNo = useCallback(
+    (no: string, currentEffectiveDisplay: string) => {
+      const i = findLotIndexByNo(no);
+      if (i == null) return;
+      const parsed = parseFranchiseEffectiveString(currentEffectiveDisplay);
+      const ymd =
+        parsed == null
+          ? ""
+          : `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, "0")}-${String(parsed.getDate()).padStart(2, "0")}`;
+      setEditLotIndex(i);
+      setEditEffectiveYmd(ymd);
+    },
+    [],
+  );
   const openEffectiveDateTransfer = useCallback(() => {
     const idx = findLotIndexByNo(KEARNEY_NB_NO);
     if (idx == null) return;
@@ -258,11 +277,11 @@ export function FranchiseDetailView({ listRowId }: Props) {
   );
 
   useEffect(() => {
-    document.body.style.overflow = assignOpen || transferOpen ? "hidden" : "";
+    document.body.style.overflow = assignOpen || transferOpen || editLotIndex !== null ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [assignOpen, transferOpen]);
+  }, [assignOpen, transferOpen, editLotIndex]);
 
   /** Active + previous lots, deduped (active wins) — same set drives Associated Lots and the map. */
   const mapLots = useMemo(() => {
@@ -376,18 +395,6 @@ export function FranchiseDetailView({ listRowId }: Props) {
             <DetailStatusPill status={displayOperationalStatus} />
           </div>
         </div>
-        {showKearneyAttentionStrip && (
-          <div className="d-infobar-alert-strip" role="status" aria-live="polite">
-            <WarningAmberOutlined sx={oIcon(18, { color: "currentColor" })} aria-hidden />
-            <span className="d-infobar-alert-strip__text">
-              Please add an effective transfer date for this lot NB-009 to make this franchise Active
-            </span>
-            <button type="button" className="d-infobar-alert-strip__action" onClick={openEffectiveDateTransfer}>
-              Add Effective Date
-            </button>
-          </div>
-        )}
-
         <div className="d-tabs-bar">
           <button type="button" className="d-tab active">
             General Information
@@ -514,7 +521,8 @@ export function FranchiseDetailView({ listRowId }: Props) {
                   <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                     {associatedLotsForList.map((a, i) => {
                       const isNew = a.isNewFromTransfer === true;
-                      const attentionLotStyle = !isNew && displayOperationalStatus === "attention";
+                      const hasEffectiveDate = Boolean(a.effectiveDate?.trim());
+                      const attentionLotStyle = !isNew && !hasEffectiveDate && displayOperationalStatus === "attention";
                       const badgeClass = [
                         "lot-assigned-badge",
                         isNew && "lot-assigned-badge--new",
@@ -548,14 +556,38 @@ export function FranchiseDetailView({ listRowId }: Props) {
                           )}
                           <span className="lab-no">{a.no}</span>
                           {isNew && (
-                            <span className="lab-edd">
-                              Effective from {formatFranchiseEffectiveFromDisplayString(a.effectiveDate)}
-                            </span>
+                            <>
+                              <span className="lab-edd">
+                                Effective from {formatFranchiseEffectiveFromDisplayString(a.effectiveDate)}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openEditForLotNo(a.no, a.effectiveDate);
+                                }}
+                                style={{
+                                  border: "none",
+                                  background: "transparent",
+                                  padding: 0,
+                                  marginLeft: 6,
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  cursor: "pointer",
+                                  color: "#5c6b82",
+                                }}
+                                aria-label={`Edit ${a.no}`}
+                                title={`Edit ${a.no}`}
+                              >
+                                <EditOutlined sx={oIcon(14, { color: "currentColor" })} aria-hidden />
+                              </button>
+                            </>
                           )}
                         </>
                       );
                       const badge = <div className={badgeClass}>{badgeChildren}</div>;
-                      if (a.no === "NB-002") {
+                      if (a.no === "NB-002" && !isNew) {
                         return (
                           <button
                             key={a.no + i}
@@ -579,14 +611,9 @@ export function FranchiseDetailView({ listRowId }: Props) {
                       }
                       if (isNew) {
                         return (
-                          <Link
-                            key={a.no + i}
-                            href="/franchise-dashboard"
-                            style={{ textDecoration: "none" }}
-                            title={`Open ${a.no} dashboard`}
-                          >
-                            {badge}
-                          </Link>
+                          <div key={a.no + i} className={badgeClass}>
+                            {badgeChildren}
+                          </div>
                         );
                       }
                       return (
@@ -605,6 +632,18 @@ export function FranchiseDetailView({ listRowId }: Props) {
             <div className="d-bottom-section d-bottom-section--full">
               <div className="d-bottom-title">Franchise Lots Map</div>
               <div className="d-map" style={{ position: "relative" }}>
+                {mapBaseLoadFailed && (
+                  <div
+                    aria-hidden
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      zIndex: 0,
+                      background:
+                        "linear-gradient(135deg, #d7e9f7 0%, #c8deef 45%, #e7f0f7 100%)",
+                    }}
+                  />
+                )}
                 <Image
                   className="d-map-base"
                   src={FRANCHISE_MAP_BASE_SRC}
@@ -613,6 +652,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
                   sizes="(max-width: 1200px) 100vw, 918px"
                   style={{ objectFit: "cover" }}
                   unoptimized
+                  onError={() => setMapBaseLoadFailed(true)}
                 />
 
                 <div className="d-map-overlay" aria-hidden>
@@ -720,9 +760,9 @@ export function FranchiseDetailView({ listRowId }: Props) {
             style={{
               background: "#fff",
               borderRadius: 8,
-              width: 1024,
+              width: 814,
               maxWidth: "96vw",
-              maxHeight: "90vh",
+              maxHeight: "min(90vh, 555px)",
               display: "flex",
               flexDirection: "column",
               overflow: "hidden",
@@ -779,6 +819,75 @@ export function FranchiseDetailView({ listRowId }: Props) {
                   }
                   pendingKearneyNb009TransferRef.current = false;
                   setTransferOpen(false);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+      {editLotIndex !== null && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.45)",
+            zIndex: 1100,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 16,
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setEditLotIndex(null);
+            }
+          }}
+          role="presentation"
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: 8,
+              width: 1024,
+              maxWidth: "96vw",
+              maxHeight: "90vh",
+              display: "flex",
+              flexDirection: "column",
+              overflow: "hidden",
+              boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
+              fontFamily: "var(--fk), sans-serif",
+            }}
+            role="dialog"
+            aria-modal
+            aria-label="Edit Lot"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", fontFamily: "var(--fk), sans-serif" }}>
+              <TransferLotOwnershipPanel
+                onClose={() => setEditLotIndex(null)}
+                lotIndex={editLotIndex}
+                newFranchiseName={franchiseDisplayName}
+                newFranchiseId={f.id}
+                showBack={false}
+                forceFormMode
+                compactLayout
+                initialEffectiveYmd={editEffectiveYmd}
+                headerTitle={`Edit Lot ${LOTS_FOR_MODAL[editLotIndex]?.no ?? ""}`}
+                headerSubtitle=""
+                confirmLabel="Confirm"
+                onConfirm={(effectiveYmd, _transferAllUsers) => {
+                  if (!effectiveYmd || editLotIndex == null) {
+                    setEditLotIndex(null);
+                    return;
+                  }
+                  const d = new Date(`${effectiveYmd}T12:00:00`);
+                  const formatted = formatFranchiseEffectiveDateLabel(d);
+                  const lot = LOTS_FOR_MODAL[editLotIndex];
+                  if (!lot) return;
+                  setAssigned((prev) =>
+                    prev.map((p) => (p.no === lot.no ? { ...p, effectiveDate: formatted, isNewFromTransfer: true } : p)),
+                  );
+                  setEditLotIndex(null);
                 }}
               />
             </div>
