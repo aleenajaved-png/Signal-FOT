@@ -34,6 +34,14 @@ function endOfLocalDayFromYmd(ymd: string): Date {
   return new Date(y, m - 1, d, 23, 59, 59, 999);
 }
 
+/** Parse user price input (allows $, commas, spaces). Returns null if empty/invalid. */
+function parseUsdInput(raw: string): number | null {
+  const t = raw.replace(/[$,\s]/g, "");
+  if (!t) return null;
+  const n = Number(t);
+  return Number.isFinite(n) && n >= 0 ? n : null;
+}
+
 /** Add whole days to a YMD (local). */
 function addDaysYmd(ymd: string, days: number): string {
   const [y, m, d] = ymd.split("-").map(Number);
@@ -92,7 +100,8 @@ type Props = {
   newFranchiseName: string;
   /** Optional list/detail id (e.g. `#0205`); shown before name in timeline and status. */
   newFranchiseId?: string;
-  onConfirm: (effectiveYmd: string, transferAllUsers: boolean) => void;
+  /** Third argument is lot sale price in USD when captured in the transfer form. */
+  onConfirm: (effectiveYmd: string, transferAllUsers: boolean, priceUsd?: string) => void;
 };
 
 type PanelProps = Props & {
@@ -102,6 +111,15 @@ type PanelProps = Props & {
   headerTitle?: string;
   headerSubtitle?: string;
   initialEffectiveYmd?: string;
+  /** Pre-filled price (digits / plain number string from parent state). */
+  initialPriceUsd?: string;
+  /** When true, Confirm requires a valid price greater than 0 (e.g. franchise onboarding). */
+  requirePriceForConfirm?: boolean;
+  /**
+   * Franchise onboarding confirm modal: non-sold lots only capture price (no effective/cut-off, checkbox, or timeline).
+   * Status row shows as Available (blue). Default false; only franchise-onboarding passes true.
+   */
+  onboardingAvailablePricingOnly?: boolean;
   compactLayout?: boolean;
   confirmLabel?: string;
 };
@@ -118,6 +136,9 @@ export function TransferLotOwnershipPanel({
   headerTitle,
   headerSubtitle,
   initialEffectiveYmd = "",
+  initialPriceUsd = "",
+  requirePriceForConfirm = false,
+  onboardingAvailablePricingOnly = false,
   compactLayout = false,
   confirmLabel,
 }: PanelProps) {
@@ -129,11 +150,9 @@ export function TransferLotOwnershipPanel({
 
   const [minCutYmd] = useState(computeMinCutoffYmd);
   const [effective, setEffective] = useState(initialEffectiveYmd);
+  const [priceUsd, setPriceUsd] = useState(initialPriceUsd);
   const [transferAllUsers, setTransferAllUsers] = useState(false);
   const [showRevertConfirmModal, setShowRevertConfirmModal] = useState(false);
-  useEffect(() => {
-    setEffective(initialEffectiveYmd);
-  }, [initialEffectiveYmd, lotIndex]);
 
 
   const minEffectiveYmd = useMemo(() => addDaysYmd(minCutYmd, 1), [minCutYmd]);
@@ -176,7 +195,13 @@ export function TransferLotOwnershipPanel({
   const cutoffForTimeline = revertSummaryUi ? NB002_REVERT_SUMMARY_CUTOFF_YMD : cutoffYmd;
   const effectiveForTimeline = revertSummaryUi ? NB002_REVERT_SUMMARY_EFFECTIVE_YMD : effective;
   const showTimelineSection = revertSummaryUi || showTimeline;
-  const formConfirmValid = revertSummaryUi ? true : valid;
+  const parsedPrice = parseUsdInput(priceUsd);
+  const priceOk = !requirePriceForConfirm || (parsedPrice != null && parsedPrice > 0);
+  const formConfirmValid = revertSummaryUi
+    ? true
+    : onboardingAvailablePricingOnly
+      ? priceOk
+      : valid && priceOk;
 
   const oldFrLabel = `${oldFr.id ? `${oldFr.id} - ` : ""}${oldFr.name}`;
   const newFrLabel = newFranchiseDisplay(newFranchiseId, newFranchiseName);
@@ -234,28 +259,36 @@ export function TransferLotOwnershipPanel({
           <div style={{ marginTop: 2 }}>
             <span
               className={
-                lot.status === "sold"
-                  ? "lot-badge-sold"
-                  : lot.status === "available"
-                    ? "lot-badge-available"
+                onboardingAvailablePricingOnly || lot.status === "available"
+                  ? "lot-badge-available"
+                  : lot.status === "sold"
+                    ? "lot-badge-sold"
                     : "lot-badge-pending"
               }
             >
               <span style={{ display: "inline-flex", alignItems: "center" }}>
-                {lot.status === "sold" ? "Sold" : lot.status === "available" ? "Available" : "Pending"}
+                {onboardingAvailablePricingOnly || lot.status === "available"
+                  ? "Available"
+                  : lot.status === "sold"
+                    ? "Sold"
+                    : "Pending"}
               </span>
             </span>
           </div>
         </div>
-        <div style={{ width: 1, height: 32, background: "#e6e6e7" }} />
-        <div style={{ flex: 2 }}>
-          <div style={{ fontSize: 12, color: "#86868b" }}>Current Franchise</div>
-          <div style={{ fontSize: 14, color: "#262527" }}>
-            {oldFr.id
-              ? `${oldFr.id} - ${oldFr.name}${oldFr.owner ? ` - ${oldFr.owner}` : ""}`
-              : `${oldFr.name}${oldFr.owner ? ` - ${oldFr.owner}` : ""}`}
-          </div>
-        </div>
+        {!onboardingAvailablePricingOnly ? (
+          <>
+            <div style={{ width: 1, height: 32, background: "#e6e6e7" }} />
+            <div style={{ flex: 2 }}>
+              <div style={{ fontSize: 12, color: "#86868b" }}>Current Franchise</div>
+              <div style={{ fontSize: 14, color: "#262527" }}>
+                {oldFr.id
+                  ? `${oldFr.id} - ${oldFr.name}${oldFr.owner ? ` - ${oldFr.owner}` : ""}`
+                  : `${oldFr.name}${oldFr.owner ? ` - ${oldFr.owner}` : ""}`}
+              </div>
+            </div>
+          </>
+        ) : null}
       </div>
       ) : null}
 
@@ -382,6 +415,56 @@ export function TransferLotOwnershipPanel({
           </div>
         ) : null}
         {!revertSummaryUi && !compactLayout ? (
+        onboardingAvailablePricingOnly ? (
+          <div style={{ width: "100%" }}>
+            <label htmlFor="transfer-lot-price-onb-av" style={{ fontSize: 14, color: "#272d37", display: "block" }}>
+              Price
+            </label>
+            <div style={{ display: "flex", alignItems: "stretch", marginTop: 6, maxWidth: 400 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "0 12px",
+                  border: "1px solid #d8dadc",
+                  borderRight: "none",
+                  borderRadius: "2px 0 0 2px",
+                  background: "#f5f5f6",
+                  color: "#444446",
+                  fontFamily: "Inter, var(--fk), sans-serif",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  boxSizing: "border-box",
+                  height: 40,
+                }}
+                aria-hidden
+              >
+                $
+              </span>
+              <input
+                id="transfer-lot-price-onb-av"
+                type="text"
+                inputMode="decimal"
+                autoComplete="off"
+                placeholder="0"
+                value={priceUsd}
+                onChange={(e) => setPriceUsd(e.target.value)}
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  height: 40,
+                  border: "1px solid #d8dadc",
+                  borderRadius: "0 2px 2px 0",
+                  padding: "0 12px",
+                  boxSizing: "border-box",
+                  fontFamily: "Inter, var(--fk), sans-serif",
+                  fontSize: 14,
+                  color: "#262527",
+                }}
+              />
+            </div>
+          </div>
+        ) : (
         <div
           style={{
             display: "flex",
@@ -548,10 +631,59 @@ export function TransferLotOwnershipPanel({
               {coErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{coMsg}</div>}
             </div>
           </div>
+          <div style={{ width: "100%", marginTop: 4 }}>
+            <label htmlFor="transfer-lot-price" style={{ fontSize: 14, color: "#272d37", display: "block" }}>
+              Price
+            </label>
+            <div style={{ display: "flex", alignItems: "stretch", marginTop: 6, maxWidth: 400 }}>
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "0 12px",
+                  border: "1px solid #d8dadc",
+                  borderRight: "none",
+                  borderRadius: "2px 0 0 2px",
+                  background: "#f5f5f6",
+                  color: "#444446",
+                  fontFamily: "Inter, var(--fk), sans-serif",
+                  fontSize: 14,
+                  fontWeight: 500,
+                  boxSizing: "border-box",
+                  height: 40,
+                }}
+                aria-hidden
+              >
+                $
+              </span>
+              <input
+                id="transfer-lot-price"
+                type="text"
+                inputMode="decimal"
+                autoComplete="off"
+                placeholder="0"
+                value={priceUsd}
+                onChange={(e) => setPriceUsd(e.target.value)}
+                style={{
+                  flex: 1,
+                  minWidth: 0,
+                  height: 40,
+                  border: "1px solid #d8dadc",
+                  borderRadius: "0 2px 2px 0",
+                  padding: "0 12px",
+                  boxSizing: "border-box",
+                  fontFamily: "Inter, var(--fk), sans-serif",
+                  fontSize: 14,
+                  color: "#262527",
+                }}
+              />
+            </div>
+          </div>
         </div>
+        )
         ) : null}
 
-        {!revertSummaryUi && !compactLayout ? (
+        {!revertSummaryUi && !compactLayout && !onboardingAvailablePricingOnly ? (
         <label
           style={{
             display: "flex",
@@ -574,7 +706,7 @@ export function TransferLotOwnershipPanel({
         </label>
         ) : null}
 
-        {showTimelineSection && !compactLayout ? (
+        {showTimelineSection && !compactLayout && !onboardingAvailablePricingOnly ? (
           <div
             aria-label="Transfer timeline"
             style={{
@@ -705,12 +837,21 @@ export function TransferLotOwnershipPanel({
           <button
             type="button"
             disabled={showRevertConfirmModal ? !effective : !formConfirmValid}
-            onClick={() =>
+            onClick={() => {
+              const priceOut =
+                revertSummaryUi || parsedPrice == null || !Number.isFinite(parsedPrice)
+                  ? undefined
+                  : String(parsedPrice);
               onConfirm(
-                revertSummaryUi ? NB002_REVERT_SUMMARY_EFFECTIVE_YMD : effective,
-                revertSummaryUi ? false : transferAllUsers,
-              )
-            }
+                revertSummaryUi
+                  ? NB002_REVERT_SUMMARY_EFFECTIVE_YMD
+                  : onboardingAvailablePricingOnly
+                    ? ""
+                    : effective,
+                revertSummaryUi ? false : onboardingAvailablePricingOnly ? false : transferAllUsers,
+                priceOut,
+              );
+            }}
             style={{
               border: `1px solid ${
                 showRevertConfirmModal
@@ -772,6 +913,7 @@ export function TransferModal({ onClose, lotIndex, newFranchiseName, newFranchis
         aria-modal
       >
         <TransferLotOwnershipPanel
+          key={`tm-${lotIndex}`}
           onClose={onClose}
           lotIndex={lotIndex}
           newFranchiseName={newFranchiseName}

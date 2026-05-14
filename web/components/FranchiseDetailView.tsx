@@ -799,6 +799,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
           >
             <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", fontFamily: "var(--fk), sans-serif" }}>
               <TransferLotOwnershipPanel
+                key={`fv-transfer-${transferLotIndex}`}
                 onClose={() => {
                   pendingKearneyNb009TransferRef.current = false;
                   setTransferOpen(false);
@@ -898,6 +899,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
           >
             <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden", fontFamily: "var(--fk), sans-serif" }}>
               <TransferLotOwnershipPanel
+                key={`fv-edit-${editLotIndex}-${editEffectiveYmd}`}
                 onClose={() => setEditLotIndex(null)}
                 lotIndex={editLotIndex}
                 newFranchiseName={franchiseDisplayName}

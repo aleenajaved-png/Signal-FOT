@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Header } from "./components/Header";
 import { SubHeader } from "./components/SubHeader";
@@ -17,6 +17,7 @@ import CalendarTodayOutlined from "@mui/icons-material/CalendarTodayOutlined";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
 import WarningAmberOutlined from "@mui/icons-material/WarningAmberOutlined";
 import NorthEastOutlined from "@mui/icons-material/NorthEastOutlined";
+import Add from "@mui/icons-material/Add";
 import { LOTS_FOR_MODAL } from "@/lib/data";
 import { TransferLotOwnershipPanel } from "@/components/TransferModal";
 
@@ -55,6 +56,22 @@ function formatLotList(lots: string[]) {
   return lots.slice(0, -1).join(", ") + " & " + lots[lots.length - 1];
 }
 
+function formatUsdFromStored(raw: string | undefined): string {
+  if (!raw?.trim()) return "";
+  const n = Number(raw.replace(/[$,\s]/g, ""));
+  if (!Number.isFinite(n)) return raw;
+  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(n);
+}
+
+/** e.g. 12/24/26 for table summary line */
+function formatEffectiveShort(ymd: string): string {
+  return new Date(`${ymd}T12:00:00`).toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "2-digit",
+  });
+}
+
 export default function FranchiseOnboardingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<SectionId>("owner-info");
@@ -65,6 +82,7 @@ export default function FranchiseOnboardingPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createdFranchise, setCreatedFranchise] = useState<Record<string, string>>({});
   const [effectiveDateByLot, setEffectiveDateByLot] = useState<Record<string, string>>({});
+  const [priceByLot, setPriceByLot] = useState<Record<string, string>>({});
   const [confirmError, setConfirmError] = useState<string | null>(null);
   const [activeTransferLotIndex, setActiveTransferLotIndex] = useState<number | null>(null);
 
@@ -97,10 +115,18 @@ export default function FranchiseOnboardingPage() {
 
   const handleConfirm = () => {
     if (!pendingData) return;
-    const missingSoldLots = selectedLotsWithMeta
-      .filter((lot) => lot.status === "sold" && !effectiveDateByLot[lot.no]);
+    const missingSoldLots = selectedLotsWithMeta.filter(
+      (lot) => lot.status === "sold" && (!effectiveDateByLot[lot.no] || !priceByLot[lot.no]?.trim()),
+    );
     if (missingSoldLots.length > 0) {
-      setConfirmError(`Add effective date for ${formatLotList(missingSoldLots.map((lot) => lot.no))} before creating.`);
+      setConfirmError(`Add lot details (effective date and price) for ${formatLotList(missingSoldLots.map((lot) => lot.no))} before creating.`);
+      return;
+    }
+    const missingNonSoldLots = selectedLotsWithMeta.filter(
+      (lot) => lot.status !== "sold" && !priceByLot[lot.no]?.trim(),
+    );
+    if (missingNonSoldLots.length > 0) {
+      setConfirmError(`Add pricing for ${formatLotList(missingNonSoldLots.map((lot) => lot.no))} before creating.`);
       return;
     }
     setCreatedFranchise(pendingData);
@@ -127,17 +153,27 @@ export default function FranchiseOnboardingPage() {
     ""
   ).trim();
 
-  const selectedLotsWithMeta = useMemo(
-    () =>
-      franchiseLots.map((lotId) => {
-        const lot = LOTS_FOR_MODAL.find((item) => item.no === lotId);
-        return {
-          no: lotId,
-          status: lot?.status ?? "available",
-        } as const;
-      }),
-    [franchiseLots],
-  );
+  const selectedLotsWithMeta = franchiseLots.map((lotId) => {
+    const lot = LOTS_FOR_MODAL.find((item) => item.no === lotId);
+    return {
+      no: lotId,
+      status: lot?.status ?? "available",
+    } as const;
+  });
+
+  const activeTransferLotNo =
+    activeTransferLotIndex != null && activeTransferLotIndex >= 0
+      ? LOTS_FOR_MODAL[activeTransferLotIndex]?.no
+      : undefined;
+  const activeLotMeta =
+    activeTransferLotIndex != null && activeTransferLotIndex >= 0
+      ? LOTS_FOR_MODAL[activeTransferLotIndex]
+      : undefined;
+  /** Non-sold lots in this flow use price-only modal (NB-001 is `pending` in data but treated like available here). */
+  const activeLotOnboardingPriceOnly = activeLotMeta?.status !== "sold";
+  const transferLotPanelKey = activeTransferLotNo
+    ? `onb-${activeTransferLotNo}-${activeLotOnboardingPriceOnly ? "av" : "sl"}-${effectiveDateByLot[activeTransferLotNo] ?? ""}-${priceByLot[activeTransferLotNo] ?? ""}`
+    : "onb-transfer";
 
   const renderMain = () => {
     if (activeSection === "fleet-services") {
@@ -265,7 +301,7 @@ export default function FranchiseOnboardingPage() {
                 <tr>
                   <th className="text-left font-semibold px-4 py-2">Lot ID</th>
                   <th className="text-left font-semibold px-4 py-2">Status</th>
-                  <th className="text-left font-semibold px-4 py-2">Effective Date</th>
+                  <th className="text-left font-semibold px-4 py-2">Lot Details</th>
                 </tr>
               </thead>
               <tbody>
@@ -281,29 +317,42 @@ export default function FranchiseOnboardingPage() {
                     </td>
                     <td className="px-4 py-2">
                       {lot.status === "sold" ? (
-                        effectiveDateByLot[lot.no] ? (
+                        effectiveDateByLot[lot.no] && priceByLot[lot.no]?.trim() ? (
                           <button
                             type="button"
                             onClick={() => setActiveTransferLotIndex(LOTS_FOR_MODAL.findIndex((item) => item.no === lot.no))}
-                            className="text-sm font-semibold text-sky-700 underline underline-offset-2 hover:text-sky-800 whitespace-nowrap"
+                            className="text-sm font-medium text-gray-800 text-left hover:text-sky-800 underline underline-offset-2 decoration-sky-600/40 hover:decoration-sky-700"
                           >
-                            {new Date(`${effectiveDateByLot[lot.no]}T12:00:00`).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "2-digit",
-                              year: "numeric",
-                            })}
+                            Effective from {formatEffectiveShort(effectiveDateByLot[lot.no])} •{" "}
+                            {formatUsdFromStored(priceByLot[lot.no])}
                           </button>
                         ) : (
                           <button
                             type="button"
                             onClick={() => setActiveTransferLotIndex(LOTS_FOR_MODAL.findIndex((item) => item.no === lot.no))}
-                            className="text-sm font-semibold text-amber-700 underline underline-offset-2 hover:text-amber-800 whitespace-nowrap"
+                            className="inline-flex items-center gap-1 text-sm font-semibold text-sky-700 hover:text-sky-800"
                           >
-                            Add effective date
+                            <Add sx={{ fontSize: 18 }} aria-hidden />
+                            Add
                           </button>
                         )
+                      ) : priceByLot[lot.no]?.trim() ? (
+                        <button
+                          type="button"
+                          onClick={() => setActiveTransferLotIndex(LOTS_FOR_MODAL.findIndex((item) => item.no === lot.no))}
+                          className="text-sm font-medium text-gray-800 text-left hover:text-sky-800 underline underline-offset-2 decoration-sky-600/40 hover:decoration-sky-700"
+                        >
+                          {formatUsdFromStored(priceByLot[lot.no])}
+                        </button>
                       ) : (
-                        <span className="text-gray-500">NA</span>
+                        <button
+                          type="button"
+                          onClick={() => setActiveTransferLotIndex(LOTS_FOR_MODAL.findIndex((item) => item.no === lot.no))}
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-sky-700 hover:text-sky-800"
+                        >
+                          <Add sx={{ fontSize: 18 }} aria-hidden />
+                          Add
+                        </button>
                       )}
                     </td>
                   </tr>
@@ -325,9 +374,10 @@ export default function FranchiseOnboardingPage() {
             className="w-full max-w-5xl bg-white rounded-md shadow-2xl overflow-hidden"
             role="dialog"
             aria-modal="true"
-            aria-label="Transfer lot ownership"
+            aria-label={activeLotOnboardingPriceOnly ? "Lot pricing" : "Transfer lot ownership"}
           >
             <TransferLotOwnershipPanel
+              key={transferLotPanelKey}
               onClose={() => setActiveTransferLotIndex(null)}
               showBack
               onBack={() => setActiveTransferLotIndex(null)}
@@ -335,10 +385,31 @@ export default function FranchiseOnboardingPage() {
               newFranchiseName="Omaha, NE"
               newFranchiseId="#0205"
               forceFormMode
-              onConfirm={(effectiveYmd) => {
+              requirePriceForConfirm
+              onboardingAvailablePricingOnly={activeLotOnboardingPriceOnly}
+              headerTitle={activeLotOnboardingPriceOnly ? "Lot details" : undefined}
+              headerSubtitle={activeLotOnboardingPriceOnly ? "" : undefined}
+              confirmLabel={activeLotOnboardingPriceOnly ? "Save" : undefined}
+              initialEffectiveYmd={
+                LOTS_FOR_MODAL[activeTransferLotIndex]?.no
+                  ? effectiveDateByLot[LOTS_FOR_MODAL[activeTransferLotIndex]!.no] ?? ""
+                  : ""
+              }
+              initialPriceUsd={
+                LOTS_FOR_MODAL[activeTransferLotIndex]?.no
+                  ? priceByLot[LOTS_FOR_MODAL[activeTransferLotIndex]!.no] ?? ""
+                  : ""
+              }
+              onConfirm={(effectiveYmd, _transferAllUsers, priceUsd) => {
                 const lotNo = LOTS_FOR_MODAL[activeTransferLotIndex]?.no;
+                const meta = lotNo ? LOTS_FOR_MODAL.find((l) => l.no === lotNo) : undefined;
                 if (lotNo) {
-                  setEffectiveDateByLot((prev) => ({ ...prev, [lotNo]: effectiveYmd }));
+                  if (meta?.status === "sold" && effectiveYmd) {
+                    setEffectiveDateByLot((prev) => ({ ...prev, [lotNo]: effectiveYmd }));
+                  }
+                  if (priceUsd?.trim()) {
+                    setPriceByLot((prev) => ({ ...prev, [lotNo]: priceUsd }));
+                  }
                 }
                 setConfirmError(null);
                 setActiveTransferLotIndex(null);
