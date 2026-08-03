@@ -899,6 +899,13 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                                     }}
                                   />
                                 </LocalizationProvider>
+                                {effective && (
+                                  <div style={{ fontSize: 12, lineHeight: "19.5px", color: "#6a6a70", marginTop: 6 }}>
+                                    This lot will transition to <span style={{ color: "#262527" }}>{newFrLabel}</span>{" "}
+                                    effective <span style={{ color: "#262527" }}>00:00</span> on{" "}
+                                    <span style={{ color: "#262527" }}>{formatMmDdYyyy(effective)}</span>.
+                                  </div>
+                                )}
                               </div>
                             </div>
 
@@ -916,7 +923,7 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                                   htmlFor={`assign-cutoff-${index}`}
                                   style={{
                                     fontSize: 14,
-                                    color: effective ? "#272d37" : "#86868b",
+                                    color: "#000",
                                     fontWeight: 500,
                                   }}
                                 >
@@ -1046,13 +1053,6 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                               </label>
                             </div>
 
-                            {effective && (
-                              <div style={{ fontSize: 12, lineHeight: "19.5px", color: "#6a6a70" }}>
-                                This lot will transition to <span style={{ color: "#262527" }}>{newFrLabel}</span>{" "}
-                                effective <span style={{ color: "#262527" }}>00:00</span> on{" "}
-                                <span style={{ color: "#262527" }}>{formatMmDdYyyy(effective)}</span>.
-                              </div>
-                            )}
                           </div>
                         </div>
                       </div>
