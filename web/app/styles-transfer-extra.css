@@ -78,27 +78,105 @@
 }
 
 /* MUI DatePicker — match Price field stroke (1px #d8dadc) */
-.transfer-date-input .MuiOutlinedInput-notchedOutline {
+.transfer-date-input .MuiOutlinedInput-notchedOutline,
+.transfer-date-input .MuiPickersOutlinedInput-notchedOutline {
   border-color: #d8dadc !important;
   border-width: 1px !important;
 }
 .transfer-date-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
-.transfer-date-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+.transfer-date-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+.transfer-date-input .MuiPickersOutlinedInput-root:hover .MuiPickersOutlinedInput-notchedOutline,
+.transfer-date-input .MuiPickersOutlinedInput-root.Mui-focused .MuiPickersOutlinedInput-notchedOutline {
   border-color: #d8dadc !important;
   border-width: 1px !important;
 }
-.transfer-date-input .MuiOutlinedInput-root.Mui-focused {
+.transfer-date-input .MuiOutlinedInput-root.Mui-focused,
+.transfer-date-input .MuiPickersOutlinedInput-root.Mui-focused {
   box-shadow: none !important;
 }
-.transfer-date-input .MuiOutlinedInput-root.Mui-disabled {
+.transfer-date-input .MuiOutlinedInput-root.Mui-disabled,
+.transfer-date-input .MuiPickersOutlinedInput-root.Mui-disabled {
   background-color: #f5f5f6 !important;
 }
-.transfer-date-input .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline {
+.transfer-date-input .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline,
+.transfer-date-input .MuiPickersOutlinedInput-root.Mui-disabled .MuiPickersOutlinedInput-notchedOutline {
   border-color: #d8dadc !important;
 }
-.transfer-date-input .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-input {
+.transfer-date-input .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-input,
+.transfer-date-input .MuiPickersOutlinedInput-root.Mui-disabled {
   color: #aeaeb2 !important;
   -webkit-text-fill-color: #aeaeb2 !important;
+}
+
+/* Smaller date field text, placeholders, and calendar icon (project-wide) */
+.transfer-date-input,
+.transfer-date-input .MuiOutlinedInput-root,
+.transfer-date-input .MuiOutlinedInput-input,
+.transfer-date-input .MuiPickersInputBase-root,
+.transfer-date-input .MuiPickersOutlinedInput-root,
+.transfer-date-input .MuiPickersSectionList-root,
+.transfer-date-input .MuiPickersSectionList-section,
+.transfer-date-input .MuiPickersSectionList-sectionContent {
+  font-size: 12px !important;
+  line-height: 18px !important;
+}
+.transfer-date-input .MuiOutlinedInput-input::placeholder,
+.transfer-date-input .MuiPickersSectionList-sectionContent[data-placeholder] {
+  font-size: 12px !important;
+  color: #86868b !important;
+  opacity: 1 !important;
+}
+.transfer-date-input .MuiPickersInputBase-root,
+.transfer-date-input .MuiPickersOutlinedInput-root {
+  justify-content: flex-start !important;
+  letter-spacing: 0 !important;
+  padding: 0 !important;
+}
+.transfer-date-input .MuiPickersSectionList-root,
+.transfer-date-input .MuiPickersInputBase-sectionsContainer {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  letter-spacing: 0 !important;
+  padding: 0 0 0 16px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  height: 100% !important;
+  align-items: center !important;
+}
+.transfer-date-input .MuiPickersSectionList-section,
+.transfer-date-input .MuiPickersInputBase-section,
+.transfer-date-input .MuiPickersSectionList-sectionContent {
+  padding: 0 !important;
+  margin: 0 !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+}
+.transfer-date-input .MuiPickersInputBase-sectionAfter,
+.transfer-date-input .MuiPickersInputBase-sectionBefore,
+.transfer-date-input .MuiPickersSectionList-sectionSeparator {
+  padding: 0 !important;
+  margin: 0 !important;
+  letter-spacing: 0 !important;
+}
+.transfer-date-input .MuiOutlinedInput-input {
+  text-align: left !important;
+  letter-spacing: 0 !important;
+  padding: 0 16px !important;
+}
+.transfer-date-input .MuiInputAdornment-root {
+  margin-left: 0 !important;
+  margin-right: 16px !important;
+}
+.transfer-date-input .MuiInputAdornment-root .MuiSvgIcon-root,
+.transfer-date-input .MuiIconButton-root .MuiSvgIcon-root,
+.transfer-date-input .MuiPickersInputBase-root .MuiSvgIcon-root {
+  width: 16px !important;
+  height: 16px !important;
+  font-size: 16px !important;
+}
+.transfer-date-input .MuiIconButton-root {
+  padding: 4px !important;
 }
 
 /* Cut-off field: same chrome as effective-date column; label + value read disabled via text color only */

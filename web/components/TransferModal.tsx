@@ -78,46 +78,98 @@ function RequiredMark() {
 }
 
 /** Match Price field stroke: 1px #d8dadc, 2px radius, height 40. */
+const transferDatePickerRootSx = {
+  height: 40,
+  fontFamily: "Inter, var(--fk), sans-serif",
+  fontSize: 12,
+  borderRadius: "2px",
+  backgroundColor: "#fff",
+  padding: 0,
+  letterSpacing: 0,
+  "& fieldset": {
+    border: "1px solid #d8dadc",
+    borderRadius: "2px",
+  },
+  "&:hover fieldset": {
+    border: "1px solid #d8dadc",
+  },
+  "&.Mui-focused fieldset": {
+    border: "1px solid #d8dadc",
+  },
+  "&.Mui-error fieldset": {
+    border: "1px solid #df372b",
+  },
+} as const;
+
 const transferDatePickerSx = {
   mt: "6px",
   width: "100%",
-  "& .MuiOutlinedInput-root": {
-    height: 40,
-    fontFamily: "Inter, var(--fk), sans-serif",
-    fontSize: 14,
-    borderRadius: "2px",
-    backgroundColor: "#fff",
-    "& fieldset": {
-      border: "1px solid #d8dadc",
-      borderRadius: "2px",
-    },
-    "&:hover fieldset": {
-      border: "1px solid #d8dadc",
-    },
-    "&.Mui-focused fieldset": {
-      border: "1px solid #d8dadc",
-    },
-    "&.Mui-error fieldset": {
-      border: "1px solid #df372b",
-    },
-  },
-  "& .MuiOutlinedInput-notchedOutline": {
+  fontSize: 12,
+  "& .MuiOutlinedInput-root": transferDatePickerRootSx,
+  "& .MuiPickersOutlinedInput-root": transferDatePickerRootSx,
+  "& .MuiOutlinedInput-notchedOutline, & .MuiPickersOutlinedInput-notchedOutline": {
     border: "1px solid #d8dadc",
     borderRadius: "2px",
   },
   "& .MuiOutlinedInput-input": {
-    padding: "0 12px",
+    padding: "0 16px",
     height: 40,
     boxSizing: "border-box",
+    fontSize: 12,
+    lineHeight: "18px",
+    textAlign: "left",
+    letterSpacing: 0,
     "&::placeholder": {
       color: "#86868b",
       opacity: 1,
+      fontSize: 12,
     },
   },
-  "& .MuiInputAdornment-root .MuiSvgIcon-root": {
-    width: "20px",
-    height: "20px",
+  "& .MuiPickersOutlinedInput-root, & .MuiPickersInputBase-root": {
+    justifyContent: "flex-start",
+    letterSpacing: 0,
+    padding: 0,
+  },
+  "& .MuiPickersSectionList-root, & .MuiPickersInputBase-sectionsContainer": {
+    fontSize: 12,
+    padding: "0 0 0 16px",
+    justifyContent: "flex-start",
+    textAlign: "left",
+    letterSpacing: 0,
+    width: "100%",
+    maxWidth: "100%",
+    boxSizing: "border-box",
+    height: "100%",
+    alignItems: "center",
+  },
+  "& .MuiPickersSectionList-section, & .MuiPickersInputBase-section": {
+    letterSpacing: 0,
+  },
+  "& .MuiPickersSectionList-sectionContent": {
+    fontSize: 12,
+    lineHeight: "18px",
+    padding: 0,
+    margin: 0,
+    letterSpacing: 0,
+    textAlign: "left",
+  },
+  "& .MuiPickersInputBase-sectionAfter, & .MuiPickersInputBase-sectionBefore, & .MuiPickersSectionList-sectionSeparator": {
+    padding: 0,
+    margin: 0,
+    letterSpacing: 0,
+  },
+  "& .MuiInputAdornment-root": {
+    marginLeft: 0,
+    marginRight: "16px",
+  },
+  "& .MuiInputAdornment-root .MuiSvgIcon-root, & .MuiIconButton-root .MuiSvgIcon-root": {
+    width: "16px",
+    height: "16px",
+    fontSize: "16px",
     color: "#86868b",
+  },
+  "& .MuiIconButton-root": {
+    padding: "4px",
   },
 } as const;
 
@@ -508,87 +560,81 @@ export function TransferLotOwnershipPanel({
         ) : null}
         {!revertSummaryUi && !compactLayout ? (
         onboardingAvailablePricingOnly ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 16,
-              width: "100%",
-              alignItems: "flex-start",
-            }}
-          >
-            <div style={{ minWidth: 0 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-                <label htmlFor="transfer-effective-date-onb-av" style={{ fontSize: 14, color: "#272d37" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 20, width: "100%" }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 24,
+                width: "100%",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ minWidth: 0 }}>
+                <label htmlFor="transfer-effective-date-onb-av" style={{ fontSize: 14, color: "#272d37", fontWeight: 500 }}>
                   Effective Date
                   <RequiredMark />
                 </label>
-                <Tooltip
-                  title="On the Effective Date, the franchise becomes operational on this Lot."
-                  enterTouchDelay={0}
-                  slotProps={{
-                    tooltip: {
-                      sx: {
-                        bgcolor: "#000",
-                        color: "#fff",
-                        fontSize: 12,
-                        lineHeight: 1.4,
-                        maxWidth: 320,
-                        p: 1.25,
-                      },
-                    },
-                  }}
-                >
-                  <IconButton
-                    type="button"
-                    size="small"
-                    aria-label="More about effective date"
-                    sx={{ p: 0.25, color: "#146dff" }}
-                  >
-                    <InfoOutlined sx={{ fontSize: 16 }} />
-                  </IconButton>
-                </Tooltip>
+                <div style={{ fontSize: 12, lineHeight: "18px", color: "#6a6a70", marginTop: 6 }}>
+                  On the Effective Date, the franchise becomes operational on this Lot.
+                </div>
               </div>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  format="MM/DD/YYYY"
-                      formatDensity="dense"
-                  value={effective ? dayjsFromYmdLocal(effective) : null}
-                  minDate={minEffectiveDayjs}
-                  onChange={applyEffectiveDayjs}
-                  slotProps={{
-                    popper: { sx: { zIndex: 2000 } },
-                    textField: {
-                      id: "transfer-effective-date-onb-av",
-                      size: "small",
-                      slotProps: {
-                        htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
+              <div style={{ minWidth: 0 }}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    format="MM/DD/YYYY"
+                    formatDensity="dense"
+                    value={effective ? dayjsFromYmdLocal(effective) : null}
+                    minDate={minEffectiveDayjs}
+                    onChange={applyEffectiveDayjs}
+                    slotProps={{
+                      popper: { sx: { zIndex: 2000 } },
+                      textField: {
+                        id: "transfer-effective-date-onb-av",
+                        size: "small",
+                        slotProps: {
+                          htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
+                        },
+                        className: "transfer-date-input",
+                        sx: { ...transferDatePickerSx, mt: 0 },
                       },
-                      className: "transfer-date-input",
-                      sx: transferDatePickerSx,
-                    },
-                  }}
-                />
-              </LocalizationProvider>
+                    }}
+                  />
+                </LocalizationProvider>
+              </div>
             </div>
-            <div style={{ minWidth: 0 }}>
-              <label htmlFor="transfer-lot-price-onb-av" style={{ fontSize: 14, color: "#272d37", display: "block" }}>
-                Price
-                {requirePriceForConfirm ? <RequiredMark /> : null}
-              </label>
-              <div style={{ display: "flex", alignItems: "stretch", marginTop: 6 }}>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 24,
+                width: "100%",
+                alignItems: "center",
+              }}
+            >
+              <div style={{ minWidth: 0 }}>
+                <label htmlFor="transfer-lot-price-onb-av" style={{ fontSize: 14, color: "#272d37", fontWeight: 500 }}>
+                  Price
+                  {requirePriceForConfirm ? <RequiredMark /> : null}
+                </label>
+                <div style={{ fontSize: 12, lineHeight: "18px", color: "#6a6a70", marginTop: 6 }}>
+                  Price at which the lot is sold to the New Franchise
+                </div>
+              </div>
+              <div style={{ display: "flex", alignItems: "stretch", width: "100%", minWidth: 0 }}>
                 <span
                   style={{
                     display: "inline-flex",
                     alignItems: "center",
-                    padding: "0 12px",
+                    padding: "0 16px",
                     border: "1px solid #d8dadc",
                     borderRight: "none",
                     borderRadius: "2px 0 0 2px",
                     background: "#f5f5f6",
                     color: "#444446",
                     fontFamily: "Inter, var(--fk), sans-serif",
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: 500,
                     boxSizing: "border-box",
                     height: 40,
@@ -611,171 +657,156 @@ export function TransferLotOwnershipPanel({
                     height: 40,
                     border: "1px solid #d8dadc",
                     borderRadius: "0 2px 2px 0",
-                    padding: "0 12px",
+                    padding: "0 16px",
                     boxSizing: "border-box",
                     fontFamily: "Inter, var(--fk), sans-serif",
-                    fontSize: 14,
+                    fontSize: 12,
                     color: "#262527",
+                    textAlign: "left",
                   }}
                 />
               </div>
             </div>
           </div>
         ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr",
-            gap: 16,
-            width: "100%",
-            alignItems: "start",
-          }}
-        >
-          <div style={{ minWidth: 0 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", minHeight: 28 }}>
-              <label htmlFor="transfer-effective-date" style={{ fontSize: 14, color: "#272d37" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20, width: "100%" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 24,
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ minWidth: 0 }}>
+              <label htmlFor="transfer-effective-date" style={{ fontSize: 14, color: "#272d37", fontWeight: 500 }}>
                 Effective Date of New Franchise
                 <RequiredMark />
               </label>
-              <Tooltip
-                title="On the Effective Date, the franchise becomes operational on this Lot."
-                enterTouchDelay={0}
-                slotProps={{
-                  tooltip: {
-                    sx: {
-                      bgcolor: "#000",
-                      color: "#fff",
-                      fontSize: 12,
-                      lineHeight: 1.4,
-                      maxWidth: 320,
-                      p: 1.25,
-                    },
-                  },
-                }}
-              >
-                <IconButton
-                  type="button"
-                  size="small"
-                  aria-label="More about effective date"
-                  sx={{ p: 0.25, color: "#146dff" }}
-                >
-                  <InfoOutlined sx={{ fontSize: 16 }} />
-                </IconButton>
-              </Tooltip>
+              <div style={{ fontSize: 12, lineHeight: "18px", color: "#6a6a70", marginTop: 6 }}>
+                On the Effective Date, the franchise becomes operational on this Lot.
+              </div>
             </div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                format="MM/DD/YYYY"
-                      formatDensity="dense"
-                value={effective ? dayjsFromYmdLocal(effective) : null}
-                minDate={minEffectiveDayjs}
-                onChange={applyEffectiveDayjs}
-                slotProps={{
-                  popper: { sx: { zIndex: 2000 } },
-                  textField: {
-                    id: "transfer-effective-date",
-                    size: "small",
-                    slotProps: {
-                      htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
+            <div style={{ minWidth: 0 }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  format="MM/DD/YYYY"
+                  formatDensity="dense"
+                  value={effective ? dayjsFromYmdLocal(effective) : null}
+                  minDate={minEffectiveDayjs}
+                  onChange={applyEffectiveDayjs}
+                  slotProps={{
+                    popper: { sx: { zIndex: 2000 } },
+                    textField: {
+                      id: "transfer-effective-date",
+                      size: "small",
+                      slotProps: {
+                        htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
+                      },
+                      error: efErr,
+                      className: "transfer-date-input",
+                      sx: { ...transferDatePickerSx, mt: 0 },
                     },
-                    error: efErr,
-                    className: "transfer-date-input",
-                    sx: transferDatePickerSx,
-                  },
-                }}
-              />
-            </LocalizationProvider>
-            {efErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{efMsg}</div>}
+                  }}
+                />
+              </LocalizationProvider>
+              {efErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{efMsg}</div>}
+            </div>
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", minHeight: 28 }}>
-              <label htmlFor="transfer-cutoff-date" style={{ fontSize: 14, color: effective ? "#272d37" : "#86868b" }}>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 24,
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ minWidth: 0 }}>
+              <label
+                htmlFor="transfer-cutoff-date"
+                style={{ fontSize: 14, color: effective ? "#272d37" : "#86868b", fontWeight: 500 }}
+              >
                 Cut-off Date of Current Franchise
                 <RequiredMark />
               </label>
-              <Tooltip
-                title="Cut-off Date must be at least 1 day (24 hours) before the Effective Date."
-                enterTouchDelay={0}
-                slotProps={{
-                  tooltip: {
-                    sx: {
-                      bgcolor: "#000",
-                      color: "#fff",
-                      fontSize: 12,
-                      lineHeight: 1.4,
-                      maxWidth: 320,
-                      p: 1.25,
-                    },
-                  },
-                }}
-              >
-                <IconButton
-                  type="button"
-                  size="small"
-                  aria-label="More about cut-off date"
-                  sx={{ p: 0.25, color: "#146dff" }}
-                >
-                  <InfoOutlined sx={{ fontSize: 16 }} />
-                </IconButton>
-              </Tooltip>
+              <div style={{ fontSize: 12, lineHeight: "18px", color: "#6a6a70", marginTop: 6 }}>
+                Cut-off Date must be at least 1 day (24 hours) before the Effective Date.
+                <br />
+                This Lot&apos;s Effective Date and resale can be changed any time before the Cut-off Date. Once the
+                Cut-off Date arrives, the transition begins and rollback can no longer take place.
+              </div>
             </div>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                format="MM/DD/YYYY"
-                      formatDensity="dense"
-                value={cutoffYmd ? dayjsFromYmdLocal(cutoffYmd) : null}
-                minDate={minCutoffDayjs}
-                maxDate={maxCutoffDayjs}
-                onChange={applyCutoffDayjs}
-                disabled={!effective}
-                slotProps={{
-                  popper: { sx: { zIndex: 2000 } },
-                  textField: {
-                    id: "transfer-cutoff-date",
-                    size: "small",
-                    disabled: !effective,
-                    slotProps: {
-                      htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
-                    },
-                    error: coErr,
-                    className: "transfer-date-input",
-                    sx: {
-                      ...transferDatePickerSx,
-                      "& .MuiOutlinedInput-root": {
-                        ...transferDatePickerSx["& .MuiOutlinedInput-root"],
-                        backgroundColor: effective ? "#fff" : "#f5f5f6",
+            <div style={{ minWidth: 0 }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  format="MM/DD/YYYY"
+                  formatDensity="dense"
+                  value={cutoffYmd ? dayjsFromYmdLocal(cutoffYmd) : null}
+                  minDate={minCutoffDayjs}
+                  maxDate={maxCutoffDayjs}
+                  onChange={applyCutoffDayjs}
+                  disabled={!effective}
+                  slotProps={{
+                    popper: { sx: { zIndex: 2000 } },
+                    textField: {
+                      id: "transfer-cutoff-date",
+                      size: "small",
+                      disabled: !effective,
+                      slotProps: {
+                        htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
+                      },
+                      error: coErr,
+                      className: "transfer-date-input",
+                      sx: {
+                        ...transferDatePickerSx,
+                        mt: 0,
+                        "& .MuiOutlinedInput-root": {
+                          ...transferDatePickerSx["& .MuiOutlinedInput-root"],
+                          backgroundColor: effective ? "#fff" : "#f5f5f6",
+                        },
                       },
                     },
-                  },
-                }}
-              />
-            </LocalizationProvider>
-            {coErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{coMsg}</div>}
-            <div style={{ fontSize: 12, lineHeight: "18px", color: "#6a6a70", marginTop: 6 }}>
-              This Lot&apos;s Effective Date and resale can be changed any time before the Cut-off Date. Once the
-              Cut-off Date arrives, the transition begins and rollback can no longer take place.
+                  }}
+                />
+              </LocalizationProvider>
+              {coErr && <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>{coMsg}</div>}
             </div>
           </div>
-          <div style={{ minWidth: 0 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", minHeight: 28 }}>
-              <label htmlFor="transfer-lot-price" style={{ fontSize: 14, color: "#272d37" }}>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 24,
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ minWidth: 0 }}>
+              <label htmlFor="transfer-lot-price" style={{ fontSize: 14, color: "#272d37", fontWeight: 500 }}>
                 Price
                 {requirePriceForConfirm ? <RequiredMark /> : null}
               </label>
+              <div style={{ fontSize: 12, lineHeight: "18px", color: "#6a6a70", marginTop: 6 }}>
+                Price at which the lot is sold to the New Franchise
+              </div>
             </div>
-            <div style={{ display: "flex", alignItems: "stretch", marginTop: 6, width: "100%" }}>
+            <div style={{ display: "flex", alignItems: "stretch", width: "100%", minWidth: 0 }}>
               <span
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
-                  padding: "0 12px",
+                  padding: "0 16px",
                   border: "1px solid #d8dadc",
                   borderRight: "none",
                   borderRadius: "2px 0 0 2px",
                   background: "#f5f5f6",
                   color: "#444446",
                   fontFamily: "Inter, var(--fk), sans-serif",
-                  fontSize: 14,
+                  fontSize: 12,
                   fontWeight: 500,
                   boxSizing: "border-box",
                   height: 40,
@@ -798,40 +829,55 @@ export function TransferLotOwnershipPanel({
                   height: 40,
                   border: "1px solid #d8dadc",
                   borderRadius: "0 2px 2px 0",
-                  padding: "0 12px",
+                  padding: "0 16px",
                   boxSizing: "border-box",
                   fontFamily: "Inter, var(--fk), sans-serif",
-                  fontSize: 14,
+                  fontSize: 12,
                   color: "#262527",
+                  textAlign: "left",
                 }}
               />
             </div>
           </div>
+
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 24,
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ minWidth: 0 }}>
+              <span style={{ fontSize: 14, color: "#272d37", fontWeight: 500 }}>Migrate Users</span>
+              <div style={{ fontSize: 12, lineHeight: "18px", color: "#6a6a70", marginTop: 6 }}>
+                Migrate all the users from previous franchise to the new franchise
+              </div>
+            </div>
+            <label
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                margin: 0,
+                minHeight: 40,
+                cursor: "pointer",
+                fontSize: 14,
+                color: "#272d37",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={transferAllUsers}
+                onChange={(e) => setTransferAllUsers(e.target.checked)}
+                style={{ width: 18, height: 18, margin: 0, cursor: "pointer", accentColor: "#0032a0", flexShrink: 0 }}
+              />
+              <span>Migrate all the users to the New Franchise</span>
+            </label>
+          </div>
         </div>
         )
-        ) : null}
-
-        {!revertSummaryUi && !compactLayout && !onboardingAvailablePricingOnly ? (
-        <label
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            gap: 10,
-            cursor: "pointer",
-            margin: 0,
-            fontSize: 14,
-            color: "#272d37",
-            lineHeight: 1.4,
-          }}
-        >
-          <input
-            type="checkbox"
-            checked={transferAllUsers}
-            onChange={(e) => setTransferAllUsers(e.target.checked)}
-            style={{ width: 18, height: 18, marginTop: 2, flexShrink: 0, cursor: "pointer", accentColor: "#0032a0" }}
-          />
-          <span>Migrate all users from the previous franchise to the new one</span>
-        </label>
         ) : null}
 
         {showTimelineSection && !compactLayout && !onboardingAvailablePricingOnly ? (
