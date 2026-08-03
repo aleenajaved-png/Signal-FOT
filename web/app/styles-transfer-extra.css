@@ -65,15 +65,40 @@
 }
 
 .transfer-date-input:focus {
-  border-color: #146dff;
-  box-shadow: 0 0 0 3px rgba(20, 109, 255, 0.1);
+  border-color: #d8dadc;
+  box-shadow: none;
 }
 .transfer-date-input.input-error {
   border-color: #df372b !important;
-  box-shadow: 0 0 0 3px rgba(223, 55, 43, 0.08) !important;
+  box-shadow: none !important;
 }
 .transfer-date-input.input-ok {
-  border-color: #2e964b !important;
+  border-color: #d8dadc !important;
+  box-shadow: none !important;
+}
+
+/* MUI DatePicker — match Price field stroke (1px #d8dadc) */
+.transfer-date-input .MuiOutlinedInput-notchedOutline {
+  border-color: #d8dadc !important;
+  border-width: 1px !important;
+}
+.transfer-date-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline,
+.transfer-date-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #d8dadc !important;
+  border-width: 1px !important;
+}
+.transfer-date-input .MuiOutlinedInput-root.Mui-focused {
+  box-shadow: none !important;
+}
+.transfer-date-input .MuiOutlinedInput-root.Mui-disabled {
+  background-color: #f5f5f6 !important;
+}
+.transfer-date-input .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline {
+  border-color: #d8dadc !important;
+}
+.transfer-date-input .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-input {
+  color: #aeaeb2 !important;
+  -webkit-text-fill-color: #aeaeb2 !important;
 }
 
 /* Cut-off field: same chrome as effective-date column; label + value read disabled via text color only */

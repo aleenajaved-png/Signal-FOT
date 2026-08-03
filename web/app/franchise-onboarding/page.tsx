@@ -123,10 +123,10 @@ export default function FranchiseOnboardingPage() {
       return;
     }
     const missingNonSoldLots = selectedLotsWithMeta.filter(
-      (lot) => lot.status !== "sold" && !priceByLot[lot.no]?.trim(),
+      (lot) => lot.status !== "sold" && (!effectiveDateByLot[lot.no] || !priceByLot[lot.no]?.trim()),
     );
     if (missingNonSoldLots.length > 0) {
-      setConfirmError(`Add pricing for ${formatLotList(missingNonSoldLots.map((lot) => lot.no))} before creating.`);
+      setConfirmError(`Add lot details (effective date and price) for ${formatLotList(missingNonSoldLots.map((lot) => lot.no))} before creating.`);
       return;
     }
     setCreatedFranchise(pendingData);
@@ -169,7 +169,7 @@ export default function FranchiseOnboardingPage() {
     activeTransferLotIndex != null && activeTransferLotIndex >= 0
       ? LOTS_FOR_MODAL[activeTransferLotIndex]
       : undefined;
-  /** Non-sold lots in this flow use price-only modal (NB-001 is `pending` in data but treated like available here). */
+  /** Non-sold lots capture effective date + price (no cut-off). NB-001 is `pending` in data but treated as available. */
   const activeLotOnboardingPriceOnly = activeLotMeta?.status !== "sold";
   const transferLotPanelKey = activeTransferLotNo
     ? `onb-${activeTransferLotNo}-${activeLotOnboardingPriceOnly ? "av" : "sl"}-${effectiveDateByLot[activeTransferLotNo] ?? ""}-${priceByLot[activeTransferLotNo] ?? ""}`
@@ -316,32 +316,13 @@ export default function FranchiseOnboardingPage() {
                       )}
                     </td>
                     <td className="px-4 py-2">
-                      {lot.status === "sold" ? (
-                        effectiveDateByLot[lot.no] && priceByLot[lot.no]?.trim() ? (
-                          <button
-                            type="button"
-                            onClick={() => setActiveTransferLotIndex(LOTS_FOR_MODAL.findIndex((item) => item.no === lot.no))}
-                            className="text-sm font-medium text-gray-800 text-left hover:text-sky-800 underline underline-offset-2 decoration-sky-600/40 hover:decoration-sky-700"
-                          >
-                            Effective from {formatEffectiveShort(effectiveDateByLot[lot.no])} •{" "}
-                            {formatUsdFromStored(priceByLot[lot.no])}
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => setActiveTransferLotIndex(LOTS_FOR_MODAL.findIndex((item) => item.no === lot.no))}
-                            className="inline-flex items-center gap-1 text-sm font-semibold text-sky-700 hover:text-sky-800"
-                          >
-                            <Add sx={{ fontSize: 18 }} aria-hidden />
-                            Add
-                          </button>
-                        )
-                      ) : priceByLot[lot.no]?.trim() ? (
+                      {effectiveDateByLot[lot.no] && priceByLot[lot.no]?.trim() ? (
                         <button
                           type="button"
                           onClick={() => setActiveTransferLotIndex(LOTS_FOR_MODAL.findIndex((item) => item.no === lot.no))}
                           className="text-sm font-medium text-gray-800 text-left hover:text-sky-800 underline underline-offset-2 decoration-sky-600/40 hover:decoration-sky-700"
                         >
+                          Effective from {formatEffectiveShort(effectiveDateByLot[lot.no])} •{" "}
                           {formatUsdFromStored(priceByLot[lot.no])}
                         </button>
                       ) : (
@@ -374,7 +355,7 @@ export default function FranchiseOnboardingPage() {
             className="w-full max-w-5xl bg-white rounded-md shadow-2xl overflow-hidden"
             role="dialog"
             aria-modal="true"
-            aria-label={activeLotOnboardingPriceOnly ? "Lot pricing" : "Transfer lot ownership"}
+            aria-label={activeLotOnboardingPriceOnly ? "Lot details" : "Transfer lot ownership"}
           >
             <TransferLotOwnershipPanel
               key={transferLotPanelKey}
@@ -402,9 +383,8 @@ export default function FranchiseOnboardingPage() {
               }
               onConfirm={(effectiveYmd, _transferAllUsers, priceUsd) => {
                 const lotNo = LOTS_FOR_MODAL[activeTransferLotIndex]?.no;
-                const meta = lotNo ? LOTS_FOR_MODAL.find((l) => l.no === lotNo) : undefined;
                 if (lotNo) {
-                  if (meta?.status === "sold" && effectiveYmd) {
+                  if (effectiveYmd) {
                     setEffectiveDateByLot((prev) => ({ ...prev, [lotNo]: effectiveYmd }));
                   }
                   if (priceUsd?.trim()) {

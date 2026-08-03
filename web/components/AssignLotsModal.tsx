@@ -5,9 +5,122 @@ import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined";
 import KeyboardArrowLeftOutlined from "@mui/icons-material/KeyboardArrowLeftOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs, { type Dayjs } from "dayjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { LOTS_FOR_MODAL, OLD_FRANCHISE_MAP, type LotForModal } from "@/lib/data";
 import { oIcon } from "@/lib/muiIconSx";
+
+const pad2 = (n: number) => String(n).padStart(2, "0");
+
+function toYmd(d: Date): string {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
+}
+
+function endOfLocalDayFromYmd(ymd: string): Date {
+  const [y, m, d] = ymd.split("-").map(Number);
+  if (!y || !m || !d) return new Date(0);
+  return new Date(y, m - 1, d, 23, 59, 59, 999);
+}
+
+function addDaysYmd(ymd: string, days: number): string {
+  const [y, m, d] = ymd.split("-").map(Number);
+  const t = new Date(y, m - 1, d + days, 12, 0, 0, 0);
+  return toYmd(t);
+}
+
+function dayjsFromYmdLocal(ymd: string): Dayjs {
+  return dayjs(`${ymd}T12:00:00`);
+}
+
+function computeMinCutoffYmd(): string {
+  const minTime = Date.now() + 24 * 60 * 60 * 1000;
+  const s = new Date();
+  s.setHours(0, 0, 0, 0);
+  for (let i = 0; i < 400; i++) {
+    const d = new Date(s);
+    d.setDate(s.getDate() + i);
+    const ymd = toYmd(d);
+    if (endOfLocalDayFromYmd(ymd).getTime() >= minTime) {
+      return ymd;
+    }
+  }
+  return toYmd(new Date());
+}
+
+function formatMmDdYyyy(ymd: string): string {
+  const [y, m, d] = ymd.split("-").map(Number);
+  if (!y || !m || !d) return ymd;
+  return `${pad2(m)}/${pad2(d)}/${y}`;
+}
+
+function parseUsdInput(raw: string): number | null {
+  const t = raw.replace(/[$,\s]/g, "");
+  if (!t) return null;
+  const n = Number(t);
+  return Number.isFinite(n) && n >= 0 ? n : null;
+}
+
+function RequiredMark() {
+  return (
+    <span aria-hidden style={{ color: "#df372b", marginLeft: 2 }}>
+      *
+    </span>
+  );
+}
+
+const EFFECTIVE_DATE_TOOLTIP =
+  "On the Effective Date, the franchise becomes operational on this Lot.";
+const CUTOFF_DATE_TOOLTIP =
+  "Cut-off Date must be at least 1 day (24 hours) before the Effective Date.";
+
+const infoTooltipSlotProps = {
+  popper: { sx: { zIndex: 2100 } },
+  tooltip: {
+    sx: {
+      bgcolor: "#000",
+      color: "#fff",
+      fontSize: 12,
+      lineHeight: 1.4,
+      maxWidth: 320,
+      p: 1.25,
+    },
+  },
+} as const;
+
+const assignDatePickerSx = {
+  mt: "6px",
+  width: "100%",
+  "& .MuiOutlinedInput-root": {
+    height: 40,
+    fontFamily: "Inter, var(--fk), sans-serif",
+    fontSize: 14,
+    borderRadius: "2px",
+    backgroundColor: "#fff",
+    "& fieldset": {
+      border: "1px solid #d8dadc",
+      borderRadius: "2px",
+    },
+    "&:hover fieldset": {
+      border: "1px solid #d8dadc",
+    },
+    "&.Mui-focused fieldset": {
+      border: "1px solid #d8dadc",
+    },
+    "&.Mui-error fieldset": {
+      border: "1px solid #df372b",
+    },
+  },
+  "& .MuiOutlinedInput-input": {
+    padding: "0 12px",
+    height: 40,
+    boxSizing: "border-box" as const,
+  },
+};
 
 function StatusBadge({ lot }: { lot: LotForModal }) {
   const chev = <KeyboardArrowDownOutlined className="lot-badge-chevron" sx={oIcon(12)} aria-hidden />;
@@ -86,12 +199,82 @@ function Checkbox({ checked }: { checked: boolean }) {
   );
 }
 
+function PriceField({
+  id,
+  value,
+  onChange,
+}: {
+  id: string;
+  value: string;
+  onChange: (next: string) => void;
+}) {
+  return (
+    <div style={{ minWidth: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", minHeight: 28 }}>
+        <label htmlFor={id} style={{ fontSize: 14, color: "#272d37" }}>
+          Price
+          <RequiredMark />
+        </label>
+      </div>
+      <div style={{ display: "flex", alignItems: "stretch", marginTop: 6, width: "100%" }}>
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            padding: "0 12px",
+            border: "1px solid #d8dadc",
+            borderRight: "none",
+            borderRadius: "2px 0 0 2px",
+            background: "#f5f5f6",
+            color: "#444446",
+            fontFamily: "Inter, var(--fk), sans-serif",
+            fontSize: 14,
+            fontWeight: 500,
+            boxSizing: "border-box",
+            height: 40,
+          }}
+          aria-hidden
+        >
+          $
+        </span>
+        <input
+          id={id}
+          type="text"
+          inputMode="decimal"
+          autoComplete="off"
+          placeholder="0"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            height: 40,
+            border: "1px solid #d8dadc",
+            borderRadius: "0 2px 2px 0",
+            padding: "0 12px",
+            boxSizing: "border-box",
+            fontFamily: "Inter, var(--fk), sans-serif",
+            fontSize: 14,
+            color: "#262527",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 type Props = {
   onClose: () => void;
   newFranchiseName: string;
   newFranchiseId?: string;
-  onAssignLots: (lotIndices: number[]) => void;
-  onConfirmTransfer: (lotIndex: number, effectiveYmd: string, transferAllUsers: boolean, allSelectedIndices: number[]) => void;
+  onAssignLots: (assignments: { lotIndex: number; effectiveYmd: string; priceUsd: string }[]) => void;
+  onConfirmTransfer: (
+    lotIndex: number,
+    effectiveYmd: string,
+    transferAllUsers: boolean,
+    allSelectedIndices: number[],
+    priceUsd?: string,
+  ) => void;
 };
 
 type Step = "assign" | "transfer";
@@ -100,7 +283,14 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
   const [selected, setSelected] = useState<number[]>([]);
   const [step, setStep] = useState<Step>("assign");
   const [effectiveByLot, setEffectiveByLot] = useState<Record<number, string>>({});
+  const [cutoffByLot, setCutoffByLot] = useState<Record<number, string>>({});
+  const [priceByLot, setPriceByLot] = useState<Record<number, string>>({});
   const [transferAllUsersByLot, setTransferAllUsersByLot] = useState<Record<number, boolean>>({});
+  const [minCutYmd] = useState(computeMinCutoffYmd);
+
+  const minEffectiveYmd = useMemo(() => addDaysYmd(minCutYmd, 1), [minCutYmd]);
+  const minEffectiveDayjs = useMemo(() => dayjsFromYmdLocal(minEffectiveYmd), [minEffectiveYmd]);
+  const minCutoffDayjs = useMemo(() => dayjsFromYmdLocal(minCutYmd), [minCutYmd]);
 
   const assignModalRows = useMemo(
     () =>
@@ -119,6 +309,31 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
   const soldSelections = useMemo(() => selectedLots.filter(({ lot }) => lot.status === "sold"), [selectedLots]);
   const availableSelections = useMemo(() => selectedLots.filter(({ lot }) => lot.status === "available"), [selectedLots]);
 
+  const priceOkFor = (index: number) => {
+    const parsed = parseUsdInput(priceByLot[index] ?? "");
+    return parsed != null && parsed > 0;
+  };
+
+  const soldDatesValid = useMemo(
+    () =>
+      soldSelections.every(({ index }) => {
+        const effective = effectiveByLot[index];
+        const cutoff = cutoffByLot[index];
+        return Boolean(effective && cutoff && cutoff < effective && priceOkFor(index));
+      }),
+    [soldSelections, effectiveByLot, cutoffByLot, priceByLot],
+  );
+
+  const availableDatesValid = useMemo(
+    () => availableSelections.every(({ index }) => Boolean(effectiveByLot[index]) && priceOkFor(index)),
+    [availableSelections, effectiveByLot, priceByLot],
+  );
+
+  const confirmEnabled =
+    (soldSelections.length === 0 || soldDatesValid) &&
+    (availableSelections.length === 0 || availableDatesValid) &&
+    (soldSelections.length > 0 || availableSelections.length > 0);
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -132,29 +347,67 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
       onClose();
       return;
     }
-    const today = new Date();
-    const nextDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-    const nextDayYmd = `${nextDay.getFullYear()}-${String(nextDay.getMonth() + 1).padStart(2, "0")}-${String(nextDay.getDate()).padStart(2, "0")}`;
-    setEffectiveByLot((prev) => {
-      const next = { ...prev };
-      soldSelections.forEach(({ index }) => {
-        if (!next[index]) next[index] = nextDayYmd;
-      });
-      return next;
-    });
     setStep("transfer");
   };
 
   const onConfirmMixed = () => {
+    if (!confirmEnabled) return;
     if (availableSelections.length > 0) {
-      onAssignLots(availableSelections.map(({ index }) => index));
+      onAssignLots(
+        availableSelections
+          .map(({ index }) => ({
+            lotIndex: index,
+            effectiveYmd: effectiveByLot[index],
+            priceUsd: priceByLot[index] ?? "",
+          }))
+          .filter((a) => Boolean(a.effectiveYmd) && priceOkFor(a.lotIndex)),
+      );
     }
     soldSelections.forEach(({ index }) => {
       const effectiveYmd = effectiveByLot[index];
       if (!effectiveYmd) return;
-      onConfirmTransfer(index, effectiveYmd, Boolean(transferAllUsersByLot[index]), [index]);
+      onConfirmTransfer(
+        index,
+        effectiveYmd,
+        Boolean(transferAllUsersByLot[index]),
+        [index],
+        priceByLot[index],
+      );
     });
     onClose();
+  };
+
+  const applyEffectiveForLot = (index: number, v: Dayjs | null) => {
+    if (v == null || !v.isValid()) {
+      setEffectiveByLot((prev) => {
+        const next = { ...prev };
+        delete next[index];
+        return next;
+      });
+      setCutoffByLot((prev) => {
+        const next = { ...prev };
+        delete next[index];
+        return next;
+      });
+      return;
+    }
+    const ymd = `${v.year()}-${pad2(v.month() + 1)}-${pad2(v.date())}`;
+    setEffectiveByLot((prev) => ({ ...prev, [index]: ymd }));
+  };
+
+  const applyCutoffForLot = (index: number, v: Dayjs | null) => {
+    if (v == null || !v.isValid()) {
+      setCutoffByLot((prev) => {
+        const next = { ...prev };
+        delete next[index];
+        return next;
+      });
+      return;
+    }
+    setCutoffByLot((prev) => ({
+      ...prev,
+      [index]: `${v.year()}-${pad2(v.month() + 1)}-${pad2(v.date())}`,
+    }));
   };
 
   return (
@@ -269,6 +522,7 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                     <th style={{ padding: "14px 12px", textAlign: "left", fontSize: 12, fontWeight: 400, color: "#414c5c" }}>Lot No.</th>
                     <th style={{ padding: "14px 12px", textAlign: "left", fontSize: 12, fontWeight: 400, color: "#414c5c" }}>Lot Opportunity/year</th>
                     <th style={{ padding: "14px 12px", textAlign: "left", fontSize: 12, fontWeight: 400, color: "#414c5c" }}>Total Zipcodes</th>
+                    <th style={{ padding: "14px 12px", textAlign: "left", fontSize: 12, fontWeight: 400, color: "#414c5c" }}>Current Franchise</th>
                     <th style={{ padding: "14px 12px", textAlign: "left", fontSize: 12, fontWeight: 400, color: "#414c5c" }}>Status</th>
                     <th style={{ padding: "14px 12px", textAlign: "center", width: 64 }} aria-hidden />
                   </tr>
@@ -276,6 +530,13 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                 <tbody className="assign-lots-tbody" aria-label="Select lots">
                   {assignModalRows.map(({ lot, index }) => {
                     const isSelected = selected.includes(index);
+                    const currentFr = OLD_FRANCHISE_MAP[lot.no];
+                    const currentFranchiseLabel =
+                      lot.status === "sold"
+                        ? currentFr
+                          ? `${currentFr.id} - ${currentFr.name}`
+                          : "N/A"
+                        : "NA";
                     return (
                       <tr
                         key={lot.no}
@@ -287,6 +548,7 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                         <td style={{ color: "#86868b", fontVariantNumeric: "tabular-nums" }}>{lotNumericNo(lot.no)}</td>
                         <td style={{ color: "#86868b" }}>{lot.opp}</td>
                         <td style={{ color: "#86868b" }}>{lot.zips}</td>
+                        <td style={{ color: "#86868b" }}>{currentFranchiseLabel}</td>
                         <td>
                           <StatusBadge lot={lot} />
                         </td>
@@ -452,15 +714,11 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                   <div style={{ borderTop: "1px solid #e6e6e7" }} />
                   {soldSelections.map(({ index, lot }) => {
                     const effective = effectiveByLot[index] ?? "";
-                    const cutoff = effective
-                      ? (() => {
-                          const d = new Date(`${effective}T12:00:00`);
-                          const c = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1);
-                          return `${c.getFullYear()}-${String(c.getMonth() + 1).padStart(2, "0")}-${String(c.getDate()).padStart(2, "0")}`;
-                        })()
-                      : "";
+                    const cutoff = cutoffByLot[index] ?? "";
+                    const cutoffInvalid = Boolean(effective && cutoff && cutoff >= effective);
+                    const maxCutoffDayjs = effective ? dayjsFromYmdLocal(addDaysYmd(effective, -1)) : undefined;
                     const currentFr = OLD_FRANCHISE_MAP[lot.no];
-                    const currentFrLabel = currentFr ? `${currentFr.id ? `${currentFr.id} - ` : ""}${currentFr.name}` : "N/A";
+                    const currentFrLabel = currentFr ? `${currentFr.id} - ${currentFr.name}` : "N/A";
                     const newFrLabel = `${newFranchiseId ? `${newFranchiseId.replace("#", "")} - ` : ""}${newFranchiseName}`;
                     return (
                       <div key={lot.no} style={{ padding: "20px 0", borderBottom: "1px solid #e6e6e7" }}>
@@ -478,46 +736,131 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                             </div>
                           </div>
                           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
-                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 17 }}>
-                              <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#000" }}>
-                                  Effective Date of New Franchise
-                                  <InfoOutlined sx={oIcon(14, { color: "#146dff" })} aria-hidden />
-                                </span>
-                                <input
-                                  type="date"
-                                  value={effective}
-                                  onChange={(e) => setEffectiveByLot((prev) => ({ ...prev, [index]: e.target.value }))}
-                                  style={{ height: 34, border: "1px solid #ccd1d8", borderRadius: 4, padding: "0 14px", fontSize: 14 }}
-                                />
-                              </label>
-                              <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, color: "#000" }}>
-                                  Cut-off Date for Current Franchise
-                                  <InfoOutlined sx={oIcon(14, { color: "#146dff" })} aria-hidden />
-                                </span>
-                                <input
-                                  type="date"
-                                  value={cutoff}
-                                  disabled
-                                  readOnly
-                                  style={{
-                                    height: 34,
-                                    border: "1px solid #ccd1d8",
-                                    borderRadius: 4,
-                                    padding: "0 14px",
-                                    fontSize: 14,
-                                    color: "#aeaeb2",
-                                    background: "#f5f5f6",
-                                  }}
-                                />
-                              </label>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 17, alignItems: "start" }}>
+                              <div style={{ minWidth: 0 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", minHeight: 28 }}>
+                                  <label htmlFor={`assign-effective-${index}`} style={{ fontSize: 14, color: "#272d37" }}>
+                                    Effective Date of New Franchise
+                                    <RequiredMark />
+                                  </label>
+                                  <Tooltip
+                                    title={EFFECTIVE_DATE_TOOLTIP}
+                                    enterDelay={0}
+                                    enterTouchDelay={0}
+                                    slotProps={infoTooltipSlotProps}
+                                  >
+                                    <IconButton
+                                      type="button"
+                                      size="small"
+                                      aria-label="More about effective date"
+                                      sx={{ p: 0.25, color: "#146dff" }}
+                                    >
+                                      <InfoOutlined sx={{ fontSize: 16 }} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </div>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                  <DatePicker
+                                    format="MM/DD/YYYY"
+                                    formatDensity="dense"
+                                    value={effective ? dayjsFromYmdLocal(effective) : null}
+                                    minDate={minEffectiveDayjs}
+                                    onChange={(v) => applyEffectiveForLot(index, v)}
+                                    slotProps={{
+                                      popper: { sx: { zIndex: 2000 } },
+                                      textField: {
+                                        id: `assign-effective-${index}`,
+                                        size: "small",
+                                        slotProps: {
+                                          htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
+                                        },
+                                        className: "transfer-date-input",
+                                        sx: assignDatePickerSx,
+                                      },
+                                    }}
+                                  />
+                                </LocalizationProvider>
+                              </div>
+                              <div style={{ minWidth: 0 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", minHeight: 28 }}>
+                                  <label
+                                    htmlFor={`assign-cutoff-${index}`}
+                                    style={{ fontSize: 14, color: effective ? "#272d37" : "#86868b" }}
+                                  >
+                                    Cut-off Date for Current Franchise
+                                    <RequiredMark />
+                                  </label>
+                                  <Tooltip
+                                    title={CUTOFF_DATE_TOOLTIP}
+                                    enterDelay={0}
+                                    enterTouchDelay={0}
+                                    slotProps={infoTooltipSlotProps}
+                                  >
+                                    <IconButton
+                                      type="button"
+                                      size="small"
+                                      aria-label="More about cut-off date"
+                                      sx={{ p: 0.25, color: "#146dff" }}
+                                    >
+                                      <InfoOutlined sx={{ fontSize: 16 }} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </div>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                  <DatePicker
+                                    format="MM/DD/YYYY"
+                                    formatDensity="dense"
+                                    value={cutoff ? dayjsFromYmdLocal(cutoff) : null}
+                                    minDate={minCutoffDayjs}
+                                    maxDate={maxCutoffDayjs}
+                                    onChange={(v) => applyCutoffForLot(index, v)}
+                                    disabled={!effective}
+                                    slotProps={{
+                                      popper: { sx: { zIndex: 2000 } },
+                                      textField: {
+                                        id: `assign-cutoff-${index}`,
+                                        size: "small",
+                                        disabled: !effective,
+                                        error: cutoffInvalid,
+                                        slotProps: {
+                                          htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
+                                        },
+                                        className: "transfer-date-input",
+                                        sx: {
+                                          ...assignDatePickerSx,
+                                          "& .MuiOutlinedInput-root": {
+                                            ...assignDatePickerSx["& .MuiOutlinedInput-root"],
+                                            backgroundColor: effective ? "#fff" : "#f5f5f6",
+                                          },
+                                        },
+                                      },
+                                    }}
+                                  />
+                                </LocalizationProvider>
+                                {cutoffInvalid && (
+                                  <div style={{ fontSize: 12, color: "#df372b", marginTop: 4 }}>
+                                    Cut-off must be before the effective date.
+                                  </div>
+                                )}
+                                <div style={{ fontSize: 12, lineHeight: "18px", color: "#6a6a70", marginTop: 6 }}>
+                                  This Lot&apos;s Effective Date and resale can be changed any time before the Cut-off
+                                  Date. Once the Cut-off Date arrives, the transition begins and rollback can no longer
+                                  take place.
+                                </div>
+                              </div>
+                            </div>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 17, alignItems: "start" }}>
+                              <PriceField
+                                id={`assign-price-${index}`}
+                                value={priceByLot[index] ?? ""}
+                                onChange={(next) => setPriceByLot((prev) => ({ ...prev, [index]: next }))}
+                              />
                             </div>
                             {effective && (
                               <div style={{ fontSize: 12, lineHeight: "19.5px", color: "#6a6a70" }}>
                                 This lot will transition to <span style={{ color: "#262527" }}>{newFrLabel}</span> effective{" "}
-                                <span style={{ color: "#262527" }}>12:00 AM</span> on{" "}
-                                <span style={{ color: "#262527" }}>{new Date(`${effective}T12:00:00`).toLocaleDateString("en-US")}</span>.
+                                <span style={{ color: "#262527" }}>00:00</span> on{" "}
+                                <span style={{ color: "#262527" }}>{formatMmDdYyyy(effective)}</span>.
                               </div>
                             )}
                             <label style={{ display: "inline-flex", alignItems: "center", gap: 8, fontSize: 12, color: "#262527" }}>
@@ -536,29 +879,93 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                 </div>
               )}
               {availableSelections.length > 0 && (
-                <div style={{ paddingTop: 16 }}>
+                <div style={{ paddingTop: soldSelections.length > 0 ? 16 : 0 }}>
                   <div style={{ padding: "10px 0", fontSize: 16, color: "#000" }}>Available Lots</div>
-                  <div style={{ borderTop: "1px solid #e6e6e7", marginBottom: 10 }} />
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", paddingTop: 10 }}>
-                    {availableSelections.map(({ lot }) => (
-                      <div
-                        key={lot.no}
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: 8,
-                          border: "1px solid #e6e6e7",
-                          borderRadius: 2,
-                          padding: "5px 12px",
-                          background: "#fff",
-                        }}
-                      >
-                        <span style={{ fontSize: 14, color: "#101828", lineHeight: "20px" }}>{lot.no}</span>
-                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#146dff", display: "inline-block" }} />
+                  <div style={{ borderTop: "1px solid #e6e6e7" }} />
+                  {availableSelections.map(({ index, lot }) => {
+                    const effective = effectiveByLot[index] ?? "";
+                    return (
+                      <div key={lot.no} style={{ padding: "20px 0", borderBottom: "1px solid #e6e6e7" }}>
+                        <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
+                          <div style={{ width: 220, display: "flex", flexDirection: "column", gap: 8 }}>
+                            <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                              <span style={{ fontSize: 14, lineHeight: "20px", color: "#101828" }}>{lot.no}</span>
+                              <span
+                                style={{
+                                  background: "#e5f6ff",
+                                  borderRadius: 2,
+                                  padding: "2px 6px",
+                                  fontSize: 12,
+                                  color: "#146dff",
+                                }}
+                              >
+                                Available
+                              </span>
+                            </div>
+                            <div style={{ fontSize: 12, lineHeight: "16px", color: "#86868b" }}>
+                              State <span style={{ color: "#000" }}>{lot.state}</span>
+                            </div>
+                            <div style={{ fontSize: 12, lineHeight: "16px", color: "#86868b" }}>
+                              Current Franchise <span style={{ color: "#000" }}>NA</span>
+                            </div>
+                          </div>
+                          <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12 }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 17, alignItems: "start" }}>
+                              <div style={{ minWidth: 0 }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap", minHeight: 28 }}>
+                                  <label htmlFor={`assign-available-effective-${index}`} style={{ fontSize: 14, color: "#272d37" }}>
+                                    Effective Date
+                                    <RequiredMark />
+                                  </label>
+                                  <Tooltip
+                                    title={EFFECTIVE_DATE_TOOLTIP}
+                                    enterDelay={0}
+                                    enterTouchDelay={0}
+                                    slotProps={infoTooltipSlotProps}
+                                  >
+                                    <IconButton
+                                      type="button"
+                                      size="small"
+                                      aria-label="More about effective date"
+                                      sx={{ p: 0.25, color: "#146dff" }}
+                                    >
+                                      <InfoOutlined sx={{ fontSize: 16 }} />
+                                    </IconButton>
+                                  </Tooltip>
+                                </div>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                  <DatePicker
+                                    format="MM/DD/YYYY"
+                                    formatDensity="dense"
+                                    value={effective ? dayjsFromYmdLocal(effective) : null}
+                                    minDate={minEffectiveDayjs}
+                                    onChange={(v) => applyEffectiveForLot(index, v)}
+                                    slotProps={{
+                                      popper: { sx: { zIndex: 2000 } },
+                                      textField: {
+                                        id: `assign-available-effective-${index}`,
+                                        size: "small",
+                                        slotProps: {
+                                          htmlInput: { autoComplete: "off" as const, placeholder: "MM/DD/YYYY" },
+                                        },
+                                        className: "transfer-date-input",
+                                        sx: assignDatePickerSx,
+                                      },
+                                    }}
+                                  />
+                                </LocalizationProvider>
+                              </div>
+                              <PriceField
+                                id={`assign-available-price-${index}`}
+                                value={priceByLot[index] ?? ""}
+                                onChange={(next) => setPriceByLot((prev) => ({ ...prev, [index]: next }))}
+                              />
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    ))}
-                  </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -597,16 +1004,18 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
               <button
                 type="button"
                 onClick={onConfirmMixed}
+                disabled={!confirmEnabled}
                 style={{
                   background: "#0032a0",
                   border: "1px solid #0032a0",
                   borderRadius: 4,
                   padding: "8px 18px",
-                  cursor: "pointer",
+                  cursor: confirmEnabled ? "pointer" : "not-allowed",
                   fontFamily: "Inter, var(--fk), sans-serif",
                   fontWeight: 500,
                   fontSize: 14,
                   color: "#fff",
+                  opacity: confirmEnabled ? 1 : 0.5,
                 }}
               >
                 Confirm

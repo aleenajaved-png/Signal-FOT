@@ -269,10 +269,11 @@ export const EOI_LIST_ENTRIES: EoiListEntry[] = [
   { name: "Richard K.", market: "Market 27", state: "Nebraska", amount: "$190k" },
 ];
 
-export const OLD_FRANCHISE_MAP: Record<string, { id?: string; name: string; owner: string }> = {
+export const OLD_FRANCHISE_MAP: Record<string, { id: string; name: string; owner: string }> = {
   "NB-002": { id: "0026", name: "Nebraska", owner: "" },
-  "NB-004": { name: "Lincoln Metro, NE", owner: "Jodi Wimer" },
-  "NB-003": { name: "Fremont, NE", owner: "Darin Smith" },
+  "NB-004": { id: "5345", name: "Lincoln Metro, NE", owner: "Jodi Wimer" },
+  "NB-003": { id: "0230", name: "Fremont, NE", owner: "Darin Smith" },
+  "NB-012": { id: "5556", name: "Grand Island, NE", owner: "Derrick Dancy" },
 };
 
 export function getDetailIndexForRow(listRowIndex: number): number {

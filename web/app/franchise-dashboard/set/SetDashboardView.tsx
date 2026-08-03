@@ -2,55 +2,25 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
-const imgIcon = "https://www.figma.com/api/mcp/asset/ba5715cb-519e-40d9-8c91-51d4fd573d21";
-const imgIcon1 = "https://www.figma.com/api/mcp/asset/05e2b8c1-6f56-4680-830a-44b2353c902e";
-const imgIcon2 = "https://www.figma.com/api/mcp/asset/c40fffb6-4549-448c-bd20-75c8d89940b5";
-/** Donut graphic — Figma New Lots Linked expanded 539:15929 */
-const imgLotsLinkedDonut539 = "https://www.figma.com/api/mcp/asset/066cd330-76b3-40b2-9f15-569641e039a5";
-const imgIcon3 = "https://www.figma.com/api/mcp/asset/c82d7704-88f8-4910-ad97-86d155760fc4";
-const imgLine299 = "https://www.figma.com/api/mcp/asset/eb104204-a7c9-4693-beed-d35736c44d2e";
-const imgGroup1000002987 = "https://www.figma.com/api/mcp/asset/ac9a564c-f956-41dd-ab53-19bf5ed1f0c8";
-const imgIcon4 = "https://www.figma.com/api/mcp/asset/1ab5594b-c3d9-42f8-9b43-e2cbfb784446";
-const imgProperty1Ellipse = "https://www.figma.com/api/mcp/asset/b4977fc4-b307-4c2a-9089-e56f42bbad3d";
-const imgLine272 = "https://www.figma.com/api/mcp/asset/a5f5637c-0413-440d-9610-59f67df92deb";
-const imgMask = "https://www.figma.com/api/mcp/asset/2d56ee21-607c-4269-ae66-e63d4f263777";
-const imgIcon5 = "https://www.figma.com/api/mcp/asset/3a75be70-95a8-4e42-a23e-0e42c7929789";
-const imgIcon6 = "https://www.figma.com/api/mcp/asset/1f6c7d61-8e9e-44d6-8582-a486d3449991";
-const imgVectorStroke = "https://www.figma.com/api/mcp/asset/80128320-0e82-4853-b181-b200533233a8";
-const imgIcon7 = "https://www.figma.com/api/mcp/asset/93494411-ed03-4ff4-bb34-3e885e6c8f0c";
-const imgLine269 = "https://www.figma.com/api/mcp/asset/f85343ff-96a7-4b6b-9a3a-be3762b06964";
-const imgLine276 = "https://www.figma.com/api/mcp/asset/a7de5c12-35eb-49c5-86cc-39e0a7d650c2";
-const imgLine278 = "https://www.figma.com/api/mcp/asset/c3dfb3a3-1006-4b08-a879-99e154df3a18";
-const imgLine301 = "https://www.figma.com/api/mcp/asset/7dca65d4-e4f0-44f0-b4b5-2550c7df2da9";
-const imgGroup1000002984 = "https://www.figma.com/api/mcp/asset/c0d616b8-26ba-48d1-a548-329b32865d81";
-const imgGroup289284 = "https://www.figma.com/api/mcp/asset/e9859944-cbf1-429e-99b7-33369b9dba6c";
-const imgLine302 = "https://www.figma.com/api/mcp/asset/84d37c7b-9f06-4d4f-ae5f-4b475c6af85f";
-const imgLine300 = "https://www.figma.com/api/mcp/asset/38b9e194-50fb-40b0-8d65-bcf32720fd26";
-const imgFrame1000006923 = "https://www.figma.com/api/mcp/asset/3f5a9d62-e18b-49bb-b877-f50c1294ba9c";
-const imgFrame1000007470 = "https://www.figma.com/api/mcp/asset/97824301-8ba8-4b5f-9964-af2c58819094";
-const imgFrame1000007471 = "https://www.figma.com/api/mcp/asset/f0dab409-e795-45c9-b0e0-5b8a5f048912";
-const imgFrame1000007473 = "https://www.figma.com/api/mcp/asset/af74cf5d-7be1-49ce-bfae-b329bd6c53a2";
-const imgFrame1000007472 = "https://www.figma.com/api/mcp/asset/e85a3e3c-4e11-48ce-92fa-d9620d059f13";
-const imgRectangle286 = "https://www.figma.com/api/mcp/asset/5c5723b6-3f43-4c93-b50f-521d41ac6d3d";
-const imgRectangle287 = "https://www.figma.com/api/mcp/asset/a55303eb-1f30-4118-b35c-103e24db0d8f";
-const imgEllipse755 = "https://www.figma.com/api/mcp/asset/afc87cd1-8e15-4325-8598-354b80cb6a77";
-const imgIcon8 = "https://www.figma.com/api/mcp/asset/9c8625e3-dd7a-4512-a676-17a07bede232";
-const imgGroup289285 = "https://www.figma.com/api/mcp/asset/e97aff45-f8e9-4451-a034-5213f3f456c5";
-const imgFrame1000005452 = "https://www.figma.com/api/mcp/asset/16c3d0ed-da54-4917-92b0-d73c6ba12f25";
-const imgMask1 = "https://www.figma.com/api/mcp/asset/37d9c2bd-788c-49c8-a3ba-55153da734f5";
-const imgVector = "https://www.figma.com/api/mcp/asset/2bdb0188-2a86-4c27-bfda-83921b15c631";
-const imgIcon9 = "https://www.figma.com/api/mcp/asset/db587553-40a1-4e77-8bc1-9815a51ca9d7";
-const imgVector1 = "https://www.figma.com/api/mcp/asset/137903df-193e-4533-9cdf-be3a649a803c";
-const imgVector2 = "https://www.figma.com/api/mcp/asset/b8f88ea7-6c94-4d86-b0fd-29b9a3e1886d";
-const imgPublicFill0Wght400Grad0Opsz4811 = "https://www.figma.com/api/mcp/asset/88f39f39-4c79-43bf-bf8d-81c5a55aee3b";
-const imgGroup = "https://www.figma.com/api/mcp/asset/8a25130e-5d04-41b1-916f-62394cd83de7";
-const imgVector3 = "https://www.figma.com/api/mcp/asset/432e04c2-d6bc-4282-9cc2-fcf2abbddc98";
-const imgIcon10 = "https://www.figma.com/api/mcp/asset/7e8f4d46-f026-4983-92b5-3ee665060a47";
-const imgVector4 = "https://www.figma.com/api/mcp/asset/2c09242c-e9bd-4e0e-989f-5841e9a24472";
-const imgVector5 = "https://www.figma.com/api/mcp/asset/a405ed4a-149d-422d-841c-99a688cd5e04";
-const imgIcon11 = "https://www.figma.com/api/mcp/asset/f1013d8a-b815-4ba0-a3f0-295af88420ca";
-const imgLastPageFill0Wght400Grad0Opsz481 = "https://www.figma.com/api/mcp/asset/7473c03d-fbe0-4eda-baaa-f94b6caf8e9a";
+import { SetFranchiseHeader } from "./SetFranchiseHeader";
+import { SetFranchiseSidebar } from "./SetFranchiseSidebar";
+import {
+  CalendarIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  ContractDonutChart,
+  DonutChart,
+  ExpandIcon,
+  HLine,
+  KpiDonut,
+  LinkLotIcon,
+  MetricDot,
+  ProfileAvatar,
+  RoyaltyAreaChart,
+  SalesBarRow,
+  SalesChartGrid,
+  VisitsPieChart,
+} from "./set-dashboard-visuals";
 
 type ContainerProps = {
   className?: string;
@@ -75,12 +45,12 @@ function Container({ className }: ContainerProps) {
       data-name="New Lots Linked card"
     >
       <div
-        className="relative flex h-[56px] w-full shrink-0 items-center justify-between px-[32px] py-[16px]"
+        className="relative flex h-14 w-full shrink-0 items-center justify-between gap-3 px-4 py-4 sm:px-8"
         id={collapsed ? "node-442_25436" : "node-442_25395"}
         data-name="Button"
         data-node-id="539:15930"
       >
-        <div className="relative h-[40px] w-[325.516px] shrink-0" id={collapsed ? "node-442_25437" : "node-442_25396"} data-name="Container">
+        <div className="relative min-w-0 flex-1 max-w-xl" id={collapsed ? "node-442_25437" : "node-442_25396"} data-name="Container">
           <div className="relative flex size-full items-center gap-3">
             <div
               className="relative size-[35px] shrink-0 rounded-[8.75px]"
@@ -90,7 +60,7 @@ function Container({ className }: ContainerProps) {
             >
               <div className="relative flex size-full items-center justify-center px-[8.75px]">
                 <div className="relative size-[17.5px] shrink-0" id={collapsed ? "node-442_25439" : "node-442_25398"} data-name="Icon">
-                  <img alt="" className="absolute inset-0 block size-full max-w-none" src={imgIcon} />
+                  <LinkLotIcon />
                 </div>
               </div>
             </div>
@@ -98,7 +68,7 @@ function Container({ className }: ContainerProps) {
               <div className="relative flex size-full flex-col items-start">
                 <div className="relative h-6 w-full shrink-0" id={collapsed ? "node-442_25443" : "node-442_25402"} data-name="Heading 3">
                   <p
-                    className="absolute left-0 top-[-1px] whitespace-nowrap text-left font-['Inter',sans-serif] text-[14px] font-semibold leading-6 text-[#262527]"
+                    className="text-left font-['Inter',sans-serif] text-[14px] font-semibold leading-6 text-[#262527] sm:whitespace-nowrap"
                     id={collapsed ? "node-442_25444" : "node-442_25403"}
                   >
                     New Lots Linked
@@ -106,7 +76,7 @@ function Container({ className }: ContainerProps) {
                 </div>
                 <div className="relative h-4 w-full shrink-0" id={collapsed ? "node-442_25445" : "node-442_25404"} data-name="Paragraph">
                   <p
-                    className="absolute left-0 top-[0.5px] whitespace-nowrap text-left font-['Inter',sans-serif] text-[12px] font-medium leading-4 text-[#86868b]"
+                    className="text-left font-['Inter',sans-serif] text-[12px] font-medium leading-4 text-[#86868b] sm:whitespace-nowrap"
                     id={collapsed ? "node-442_25446" : "node-442_25405"}
                   >
                     1 of 7 contracts signed · Deadline: May 15, 2026
@@ -116,7 +86,7 @@ function Container({ className }: ContainerProps) {
             </div>
           </div>
         </div>
-        <div className="relative h-5 w-[199.883px] shrink-0" id={collapsed ? "node-442_25447" : "node-442_25406"} data-name="Container">
+        <div className="relative hidden h-5 shrink-0 sm:block sm:w-[200px]" id={collapsed ? "node-442_25447" : "node-442_25406"} data-name="Container">
           <div className="relative size-full">
             <div className="absolute left-0 top-0 flex h-5 w-[163.883px] items-center gap-2" id={collapsed ? "node-442_25448" : "node-442_25407"} data-name="Container">
               <div
@@ -146,14 +116,14 @@ function Container({ className }: ContainerProps) {
               <div className="absolute left-[179.88px] top-0 flex size-5 items-center justify-center">
                 <div className="flex-none rotate-180">
                   <div className="relative size-5" data-node-id="539:15947" data-name="Icon">
-                    <img alt="" className="absolute inset-0 block size-full max-w-none" src={imgIcon1} />
+                    <ChevronDownIcon size={20} color="#86868b" />
                   </div>
                 </div>
               </div>
             )}
             {collapsed && (
               <div className="absolute left-[179.88px] top-0 size-5" data-node-id="442:25453" data-name="Icon">
-                <img alt="" className="absolute inset-0 block size-full max-w-none" src={imgIcon3} />
+                <ChevronDownIcon size={20} color="#86868b" />
               </div>
             )}
           </div>
@@ -223,7 +193,7 @@ function Container({ className }: ContainerProps) {
               >
                 <div className="relative h-[19.5px] w-full shrink-0" data-node-id="539:15975" data-name="Container">
                   <div className="absolute left-0 top-0.5 size-4" data-node-id="539:15976" data-name="Icon">
-                    <img alt="" className="absolute inset-0 block size-full max-w-none" src={imgIcon2} />
+                    <ExpandIcon />
                   </div>
                   <div className="absolute left-6 top-0 h-[19.5px] w-[769.898px]" data-node-id="539:15979" data-name="Container">
                     <p className="absolute left-0 top-[0.5px] whitespace-nowrap font-['Inter',sans-serif] text-[12px] font-semibold leading-[19.5px] text-[#262527]" data-node-id="539:15980">
@@ -238,7 +208,7 @@ function Container({ className }: ContainerProps) {
           <div className="relative h-[120px] w-[228.781px] shrink-0" data-node-id="539:15981" data-name="Container">
             <div className="relative size-full">
               <div className="absolute left-0 top-0 size-[120px]" data-node-id="539:15984">
-                <img alt="" className="absolute inset-0 block size-full max-w-none" src={imgLotsLinkedDonut539} />
+                <DonutChart percent={28} size={120} />
               </div>
               <div className="absolute left-[33px] top-9 flex w-[54.75px] flex-col items-center" data-node-id="539:15987">
                 <p className="w-full text-left font-['Inter',sans-serif] text-[24px] font-bold leading-8 text-[#262527]" data-node-id="539:15989">
@@ -292,7 +262,7 @@ function Contracts({ className, property1 = "royalty" }: ContractsProps) {
         <div className="flex-none h-[1px] rotate-180 w-[100cqw]">
           <div className="relative size-full" data-node-id="429:19846">
             <div className="absolute inset-[-0.5px_0_0_0]">
-              <img alt="" className="block max-w-none size-full" src={imgLine299} />
+              <HLine className="h-full w-full" />
             </div>
           </div>
         </div>
@@ -301,7 +271,7 @@ function Contracts({ className, property1 = "royalty" }: ContractsProps) {
         <div className="flex-none h-[1px] rotate-180 w-[100cqw]">
           <div className="relative size-full" data-node-id="429:19847">
             <div className="absolute inset-[-0.5px_0_0_0]">
-              <img alt="" className="block max-w-none size-full" src={imgLine299} />
+              <HLine className="h-full w-full" />
             </div>
           </div>
         </div>
@@ -310,7 +280,7 @@ function Contracts({ className, property1 = "royalty" }: ContractsProps) {
         <div className="flex-none h-[1px] rotate-180 w-[100cqw]">
           <div className="relative size-full" data-node-id="429:19848">
             <div className="absolute inset-[-0.5px_0_0_0]">
-              <img alt="" className="block max-w-none size-full" src={imgLine299} />
+              <HLine className="h-full w-full" />
             </div>
           </div>
         </div>
@@ -319,7 +289,7 @@ function Contracts({ className, property1 = "royalty" }: ContractsProps) {
         <div className="flex-none h-[1px] rotate-180 w-[100cqw]">
           <div className="relative size-full" data-node-id="429:19849">
             <div className="absolute inset-[-0.5px_0_0_0]">
-              <img alt="" className="block max-w-none size-full" src={imgLine299} />
+              <HLine className="h-full w-full" />
             </div>
           </div>
         </div>
@@ -328,7 +298,7 @@ function Contracts({ className, property1 = "royalty" }: ContractsProps) {
         <div className="flex-none h-[1px] rotate-180 w-[100cqw]">
           <div className="relative size-full" data-node-id="429:19850">
             <div className="absolute inset-[-0.5px_0_0_0]">
-              <img alt="" className="block max-w-none size-full" src={imgLine299} />
+              <HLine className="h-full w-full" />
             </div>
           </div>
         </div>
@@ -390,7 +360,7 @@ function Contracts({ className, property1 = "royalty" }: ContractsProps) {
       </div>
       <div className="absolute h-[126px] left-[62.5px] top-[7px] w-[777.5px]" data-node-id="429:19870">
         <div className="absolute inset-[-0.79%_-0.13%]">
-          <img alt="" className="block max-w-none size-full" src={imgGroup1000002987} />
+          <RoyaltyAreaChart className="size-full" />
         </div>
       </div>
     </div>
@@ -411,7 +381,7 @@ function CostcoSecurityPlan({ className, property1 = "Default" }: CostcoSecurity
       <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="429:19830" data-name="calendar">
         <div className="absolute inset-[8.33%_12.5%]" data-node-id="I429:19830;495:87296" data-name="Icon">
           <div className="absolute inset-[-4.5%_-5%]">
-            <img alt="" className="block max-w-none size-full" src={imgIcon4} />
+            <CalendarIcon />
           </div>
         </div>
       </div>
@@ -427,87 +397,30 @@ type AvatarProps = {
 function Avatar({ className, property1 = "ellipse" }: AvatarProps) {
   return (
     <div className={className || "relative size-[32px]"} data-node-id="429:20494">
-      <img alt="" className="absolute block inset-0 max-w-none size-full" height="32" src={imgProperty1Ellipse} width="32" />
+      <ProfileAvatar className="absolute inset-0 size-full" />
     </div>
   );
 }
 
 export default function Dashboard() {
   return (
-    <div className="bg-white relative min-h-screen min-w-[1440px] overflow-auto" data-node-id="429:20710" data-name="Dashboard">
-      <div className="absolute flex h-[280px] items-center justify-center left-[76px] top-[144px] w-0">
+    <div className="flex min-h-screen w-full bg-white font-['Inter',sans-serif]" data-node-id="429:20710" data-name="Dashboard">
+      <SetFranchiseSidebar active="dashboard" />
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <div className="flex-1 overflow-x-auto overflow-y-auto">
+          <div className="relative min-h-[1700px] w-full min-w-[1100px] max-w-[1600px]">
+            <SetFranchiseHeader className="absolute left-0 right-0 top-0 z-20" />
+            <Container className="absolute left-0 right-0 top-[50px] z-10 flex cursor-pointer flex-col items-start" />
+      <div className="absolute flex h-[280px] items-center justify-center left-0 top-[144px] w-0">
         <div className="-rotate-90 flex-none">
           <div className="h-0 relative w-[280px]" data-node-id="429:20798">
             <div className="absolute inset-[-1px_0_0_0]">
-              <img alt="" className="block max-w-none size-full" src={imgLine272} />
+              <HLine className="h-full w-full" />
             </div>
           </div>
         </div>
       </div>
-      <div className="absolute bg-white border-[#e6e6e7] border-b border-solid content-stretch flex gap-[14px] h-[50px] items-center left-[76px] right-0 px-[32px] py-[13px] top-0" data-node-id="431:22474" data-name="header">
-        <div className="content-stretch flex flex-[1_0_0] gap-[16px] items-center min-w-px relative" data-node-id="431:22475">
-          <div className="h-[24px] relative shrink-0 w-[1075px]" data-node-id="431:22476" data-name=".breadcrumb">
-            <div className="absolute content-stretch flex gap-[8px] items-center left-0 top-0" data-node-id="I431:22476;3572:77630">
-              <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-node-id="I431:22476;999:148047" data-name="breadcrumb">
-                <div className="content-stretch flex items-center justify-center p-[10px] relative rounded-[4px] shrink-0 size-[24px]" data-node-id="I431:22476;999:147979" data-name="Icons">
-                  <div className="content-stretch flex items-start p-[3px] relative shrink-0" data-node-id="I431:22476;999:148042" data-name="Dashboard">
-                    <div className="relative shrink-0 size-[14px]" data-node-id="I431:22476;999:148042;999:147989" data-name="Mask">
-                      <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMask} />
-                    </div>
-                  </div>
-                </div>
-                <p className="font-['Inter:Bold',sans-serif] font-bold leading-[20px] not-italic relative shrink-0 text-[#262527] text-[14px] whitespace-nowrap" data-node-id="I431:22476;999:147982">
-                  Dashboard
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white border border-[#e6e6e7] border-solid content-stretch flex gap-[8px] h-[36px] items-center justify-center overflow-clip px-[14px] py-[8px] relative rounded-[8px] shrink-0" data-node-id="431:22478" data-name="switcher">
-          <p className="font-['Inter:Medium',sans-serif] font-medium leading-[20px] not-italic relative shrink-0 text-[#444446] text-[14px] whitespace-nowrap" data-node-id="431:22479">
-            United States
-          </p>
-          <div className="overflow-clip relative shrink-0 size-[20px]" data-node-id="431:22480" data-name="chevron-down">
-            <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-node-id="I431:22480;495:87128" data-name="Icon">
-              <div className="absolute inset-[-16.7%_-8.35%]">
-                <img alt="" className="block max-w-none size-full" src={imgIcon5} />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="content-stretch flex gap-[16px] items-center relative shrink-0" data-node-id="431:22481" data-name="profile-notifications">
-          <div className="content-stretch flex items-start relative shrink-0" data-node-id="431:22482" data-name="notifications">
-            <div className="overflow-clip relative shrink-0 size-[20px]" data-node-id="431:22483" data-name="bell">
-              <div className="absolute inset-[8.33%_12.5%_8.35%_12.5%]" data-node-id="I431:22483;495:86834" data-name="Icon">
-                <div className="absolute inset-[-4.5%_-5%]">
-                  <img alt="" className="block max-w-none size-full" src={imgIcon6} />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="content-stretch flex gap-[8px] items-center relative shrink-0" data-node-id="431:22484" data-name="Profile">
-            <Avatar className="relative shrink-0 size-[32px]" />
-            <div className="content-stretch flex flex-row gap-[8px] items-center relative shrink-0" data-node-id="431:22486" data-name="Profile Name">
-              <div className="content-stretch flex flex-col gap-[2px] items-start justify-center leading-[0] not-italic relative shrink-0 whitespace-nowrap" data-node-id="431:22487" data-name="client">
-                <p className="font-['Inter:Medium',sans-serif] font-medium leading-[20px] relative shrink-0 text-[#444446] text-[14px]" data-node-id="431:22488">
-                  Jeff Zolos
-                </p>
-                <p className="font-['Inter:Regular',sans-serif] font-normal leading-[18px] relative shrink-0 text-[#86868b] text-[12px]" data-node-id="431:22489">
-                  BD Executive
-                </p>
-              </div>
-              <div className="content-stretch flex items-center self-center relative shrink-0" data-node-id="431:22490">
-                <div className="overflow-clip relative shrink-0 size-[14px]" data-node-id="431:22491" data-name="icon / chevron-down">
-                  <div className="absolute inset-[33.75%_21.25%]" data-node-id="I431:22491;1983:10589" data-name="Vector (Stroke)">
-                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVectorStroke} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="absolute contents left-[66px] top-[117px]" data-node-id="431:22523">
+      <div className="absolute contents left-[31px] top-[117px]" data-node-id="431:22523">
         <div className="absolute content-stretch flex gap-[8px] items-start right-[33px] top-[117px]" data-node-id="429:20711">
           <div className="content-stretch flex items-start relative rounded-[8px] shrink-0" data-node-id="429:20712" data-name="Button">
             <div className="content-stretch flex gap-[4px] items-center justify-center overflow-clip px-[14px] py-[8px] relative rounded-[8px] shrink-0" data-node-id="I429:20712;1385:6770" data-name="_Button base">
@@ -521,7 +434,7 @@ export default function Dashboard() {
               <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:20712;1385:6772" data-name="chevron-down">
                 <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-node-id="I429:20712;1385:6772;495:87128" data-name="Icon">
                   <div className="absolute inset-[-18.75%_-9.38%]">
-                    <img alt="" className="block max-w-none size-full" src={imgIcon7} />
+                    <ChevronDownIcon />
                   </div>
                 </div>
               </div>
@@ -535,7 +448,7 @@ export default function Dashboard() {
               <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:20713;1385:6772" data-name="chevron-down">
                 <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-node-id="I429:20713;1385:6772;495:87128" data-name="Icon">
                   <div className="absolute inset-[-18.75%_-9.38%]">
-                    <img alt="" className="block max-w-none size-full" src={imgIcon7} />
+                    <ChevronDownIcon />
                   </div>
                 </div>
               </div>
@@ -552,7 +465,7 @@ export default function Dashboard() {
               <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:20716;1385:6772" data-name="chevron-down">
                 <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-node-id="I429:20716;1385:6772;495:87128" data-name="Icon">
                   <div className="absolute inset-[-18.75%_-9.38%]">
-                    <img alt="" className="block max-w-none size-full" src={imgIcon7} />
+                    <ChevronDownIcon />
                   </div>
                 </div>
               </div>
@@ -566,7 +479,7 @@ export default function Dashboard() {
               <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:20717;1385:6772" data-name="chevron-down">
                 <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-node-id="I429:20717;1385:6772;495:87128" data-name="Icon">
                   <div className="absolute inset-[-18.75%_-9.38%]">
-                    <img alt="" className="block max-w-none size-full" src={imgIcon7} />
+                    <ChevronDownIcon />
                   </div>
                 </div>
               </div>
@@ -580,7 +493,7 @@ export default function Dashboard() {
               <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:20718;1385:6772" data-name="chevron-down">
                 <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-node-id="I429:20718;1385:6772;495:87128" data-name="Icon">
                   <div className="absolute inset-[-18.75%_-9.38%]">
-                    <img alt="" className="block max-w-none size-full" src={imgIcon7} />
+                    <ChevronDownIcon />
                   </div>
                 </div>
               </div>
@@ -594,7 +507,7 @@ export default function Dashboard() {
               <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:20719;1385:6772" data-name="chevron-down">
                 <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-node-id="I429:20719;1385:6772;495:87128" data-name="Icon">
                   <div className="absolute inset-[-18.75%_-9.38%]">
-                    <img alt="" className="block max-w-none size-full" src={imgIcon7} />
+                    <ChevronDownIcon />
                   </div>
                 </div>
               </div>
@@ -608,7 +521,7 @@ export default function Dashboard() {
               <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:20720;1385:6772" data-name="chevron-down">
                 <div className="absolute bottom-[37.5%] left-1/4 right-1/4 top-[37.5%]" data-node-id="I429:20720;1385:6772;495:87128" data-name="Icon">
                   <div className="absolute inset-[-18.75%_-9.38%]">
-                    <img alt="" className="block max-w-none size-full" src={imgIcon7} />
+                    <ChevronDownIcon />
                   </div>
                 </div>
               </div>
@@ -618,27 +531,27 @@ export default function Dashboard() {
         </div>
         <div className="absolute h-0 right-px top-[172px] w-[1364px]" data-node-id="429:20722">
           <div className="absolute inset-[-1px_0_0_0]">
-            <img alt="" className="block max-w-none size-full" src={imgLine269} />
+            <HLine className="h-full w-full" />
           </div>
         </div>
         <div className="absolute h-0 right-[455px] top-[453px] w-[910px]" data-node-id="429:20723">
           <div className="absolute inset-[-1px_0_0_0]">
-            <img alt="" className="block max-w-none size-full" src={imgLine276} />
+            <HLine className="h-full w-full" />
           </div>
         </div>
         <div className="absolute h-0 right-0 top-[733px] w-[1374px]" data-node-id="429:20724">
           <div className="absolute inset-[-1px_0_0_0]">
-            <img alt="" className="block max-w-none size-full" src={imgLine278} />
+            <HLine className="h-full w-full" />
           </div>
         </div>
         <div className="absolute h-0 right-0 top-[1253px] w-[1365px]" data-node-id="429:20725">
           <div className="absolute inset-[-1px_0_0_0]">
-            <img alt="" className="block max-w-none size-full" src={imgLine301} />
+            <HLine className="h-full w-full" />
           </div>
         </div>
         <div className="absolute h-0 right-0 top-[1631px] w-[1365px]" data-node-id="429:20726">
           <div className="absolute inset-[-1px_0_0_0]">
-            <img alt="" className="block max-w-none size-full" src={imgLine301} />
+            <HLine className="h-full w-full" />
           </div>
         </div>
         <div className="-translate-y-1/2 absolute flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] left-[107px] not-italic text-[#262527] text-[22px] top-[134px] whitespace-nowrap" data-node-id="429:20727">
@@ -657,7 +570,7 @@ export default function Dashboard() {
           <p className="leading-[normal]">🥉</p>
         </div>
         <div className="absolute left-[828.13px] size-[110.227px] top-[288.12px]" data-node-id="429:20732">
-          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup1000002984} />
+          <KpiDonut className="size-full" />
         </div>
         <div className="absolute content-stretch flex flex-col gap-[12px] items-start left-[107px] top-[316px]" data-node-id="429:20734">
           <div className="content-stretch flex gap-[4px] items-center relative shrink-0" data-node-id="429:20735">
@@ -833,14 +746,14 @@ export default function Dashboard() {
             aria-label="Open franchise dashboard"
             data-node-id="429:20793"
           >
-            <img alt="" className="absolute block inset-0 max-w-none size-full pointer-events-none" src={imgGroup289284} />
+            <VisitsPieChart className="pointer-events-none size-full" />
           </Link>
         </div>
         <div className="absolute flex h-[280px] items-center justify-center left-[530px] top-[172px] w-0">
           <div className="-rotate-90 flex-none">
             <div className="h-0 relative w-[280px]" data-node-id="429:20799">
               <div className="absolute inset-[-1px_0_0_0]">
-                <img alt="" className="block max-w-none size-full" src={imgLine272} />
+                <HLine className="h-full w-full" />
               </div>
             </div>
           </div>
@@ -849,7 +762,7 @@ export default function Dashboard() {
           <div className="-rotate-90 flex-none">
             <div className="h-0 relative w-[280px]" data-node-id="429:20800">
               <div className="absolute inset-[-1px_0_0_0]">
-                <img alt="" className="block max-w-none size-full" src={imgLine272} />
+                <HLine className="h-full w-full" />
               </div>
             </div>
           </div>
@@ -858,7 +771,7 @@ export default function Dashboard() {
           <div className="-rotate-90 flex-none">
             <div className="h-0 relative w-[378px]" data-node-id="429:20801">
               <div className="absolute inset-[-1px_0_0_0]">
-                <img alt="" className="block max-w-none size-full" src={imgLine302} />
+                <HLine className="h-full w-full" />
               </div>
             </div>
           </div>
@@ -867,7 +780,7 @@ export default function Dashboard() {
           <div className="-rotate-90 flex-none">
             <div className="h-0 relative w-[280px]" data-node-id="429:20802">
               <div className="absolute inset-[-1px_0_0_0]">
-                <img alt="" className="block max-w-none size-full" src={imgLine272} />
+                <HLine className="h-full w-full" />
               </div>
             </div>
           </div>
@@ -969,40 +882,40 @@ export default function Dashboard() {
         </p>
         <div className="absolute h-0 left-[257px] top-[1157px] w-[1150px]" data-node-id="429:20836">
           <div className="absolute inset-[-1px_0_0_0]">
-            <img alt="" className="block max-w-none size-full" src={imgLine300} />
+            <HLine className="h-full w-full" />
           </div>
         </div>
         <div className="absolute h-[327px] left-[257px] top-[830px] w-[1182px]" data-node-id="429:20837">
           <div className="absolute inset-[0_-2.07%_0_0]">
-            <img alt="" className="block max-w-none size-full" src={imgFrame1000006923} />
+            <SalesChartGrid className="size-full" />
           </div>
         </div>
         <div className="absolute content-stretch flex flex-col h-[288px] items-start justify-between left-[257px] top-[849px] w-[1124px]" data-node-id="429:20851">
           <div className="h-[28px] relative shrink-0 w-[1026px]" data-node-id="429:20852">
-            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFrame1000007470} />
+            <SalesBarRow widthPct={95} />
           </div>
           <div className="h-[28px] relative shrink-0 w-[951px]" data-node-id="429:20857">
-            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFrame1000007471} />
+            <SalesBarRow widthPct={88} />
           </div>
           <div className="h-[28px] relative shrink-0 w-[1086px]" data-node-id="429:20862">
-            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFrame1000007473} />
+            <SalesBarRow widthPct={100} />
           </div>
           <div className="h-[28px] relative shrink-0 w-[951px]" data-node-id="429:20867">
-            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFrame1000007472} />
+            <SalesBarRow widthPct={88} />
           </div>
           <div className="content-stretch flex h-[28px] items-start relative rounded-[10px] shrink-0 w-full" data-node-id="429:20872">
             <div className="bg-[#e43f32] flex-[1_0_0] h-full min-w-px" data-node-id="429:20873" />
             <div className="flex flex-[1_0_0] h-full items-center justify-center min-w-px relative" style={{ containerType: "size" }}>
               <div className="-scale-y-100 flex-none h-[100cqw] rotate-90 w-[100cqh]">
                 <div className="relative size-full" data-node-id="429:20874">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle286} />
+                  <div className="size-full bg-[#ff9332]" aria-hidden />
                 </div>
               </div>
             </div>
             <div className="flex flex-[1_0_0] h-full items-center justify-center min-w-px relative" style={{ containerType: "size" }}>
               <div className="-scale-y-100 flex-none h-[100cqw] rotate-90 w-[100cqh]">
                 <div className="relative size-full" data-node-id="429:20875">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgRectangle287} />
+                  <div className="size-full bg-[#31a150]" aria-hidden />
                 </div>
               </div>
             </div>
@@ -1064,7 +977,7 @@ export default function Dashboard() {
                 <p className="leading-[24px]">1000</p>
               </div>
               <div className="relative shrink-0 size-[3px]" data-node-id="429:20898">
-                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse755} />
+                <MetricDot className="absolute inset-0 size-full" />
               </div>
               <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#262527] text-[14px] whitespace-nowrap" data-node-id="429:20899">
                 <p className="leading-[24px]">25%</p>
@@ -1076,7 +989,7 @@ export default function Dashboard() {
                   <p className="leading-[24px]">2568</p>
                 </div>
                 <div className="relative shrink-0 size-[3px]" data-node-id="429:20903">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse755} />
+                  <MetricDot className="absolute inset-0 size-full" />
                 </div>
                 <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#262527] text-[14px] whitespace-nowrap" data-node-id="429:20904">
                   <p className="leading-[24px]">20%</p>
@@ -1089,7 +1002,7 @@ export default function Dashboard() {
                   <p className="leading-[24px]">12,568</p>
                 </div>
                 <div className="relative shrink-0 size-[3px]" data-node-id="429:20908">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse755} />
+                  <MetricDot className="absolute inset-0 size-full" />
                 </div>
                 <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#262527] text-[14px] whitespace-nowrap" data-node-id="429:20909">
                   <p className="leading-[24px]">20%</p>
@@ -1102,7 +1015,7 @@ export default function Dashboard() {
                   <p className="leading-[24px]">37,568</p>
                 </div>
                 <div className="relative shrink-0 size-[3px]" data-node-id="429:20913">
-                  <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse755} />
+                  <MetricDot className="absolute inset-0 size-full" />
                 </div>
                 <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#262527] text-[14px] whitespace-nowrap" data-node-id="429:20914">
                   <p className="leading-[24px]">80%</p>
@@ -1117,7 +1030,7 @@ export default function Dashboard() {
                 <p className="leading-[24px]">$365</p>
               </div>
               <div className="relative shrink-0 size-[3px]" data-node-id="429:20918">
-                <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEllipse755} />
+                <MetricDot className="absolute inset-0 size-full" />
               </div>
               <div className="flex flex-col font-['Inter:Bold',sans-serif] font-bold justify-center leading-[0] not-italic relative shrink-0 text-[#262527] text-[14px] whitespace-nowrap" data-node-id="429:20919">
                 <p className="leading-[24px]">8%</p>
@@ -1477,7 +1390,7 @@ export default function Dashboard() {
             <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:21034;1385:6793" data-name="chevron-right">
               <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-node-id="I429:21034;1385:6793;495:87242" data-name="Icon">
                 <div className="absolute inset-[-9.38%_-18.75%]">
-                  <img alt="" className="block max-w-none size-full" src={imgIcon8} />
+                  <ChevronRightIcon />
                 </div>
               </div>
             </div>
@@ -1489,7 +1402,7 @@ export default function Dashboard() {
             <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:21035;1385:6793" data-name="chevron-right">
               <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-node-id="I429:21035;1385:6793;495:87242" data-name="Icon">
                 <div className="absolute inset-[-9.38%_-18.75%]">
-                  <img alt="" className="block max-w-none size-full" src={imgIcon8} />
+                  <ChevronRightIcon />
                 </div>
               </div>
             </div>
@@ -1501,14 +1414,14 @@ export default function Dashboard() {
             <div className="overflow-clip relative shrink-0 size-[16px]" data-node-id="I429:21036;1385:6793" data-name="chevron-right">
               <div className="absolute bottom-1/4 left-[37.5%] right-[37.5%] top-1/4" data-node-id="I429:21036;1385:6793;495:87242" data-name="Icon">
                 <div className="absolute inset-[-9.38%_-18.75%]">
-                  <img alt="" className="block max-w-none size-full" src={imgIcon8} />
+                  <ChevronRightIcon />
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className="absolute left-[825px] size-[130px] top-[293px]" data-node-id="429:21037">
-          <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgGroup289285} />
+          <ContractDonutChart className="size-full" />
         </div>
         <div className="absolute content-stretch flex flex-col gap-[31px] items-start left-[562px] top-[204px]" data-node-id="429:21041">
           <div className="content-stretch flex flex-col font-['Inter:Bold',sans-serif] font-bold gap-[3px] items-start leading-[0] not-italic relative shrink-0 text-[#262527] whitespace-nowrap" data-node-id="429:21042">
@@ -1571,116 +1484,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <Container className="absolute left-[76px] right-0 top-[50px] flex cursor-pointer flex-col items-start" />
-      <div className="absolute content-stretch flex h-[1619px] items-start left-0 top-0 w-[76px]" data-node-id="429:21065" data-name="HO - Navigation-update">
-        <div className="bg-[#262527] content-stretch flex flex-[1_0_0] h-full items-start justify-center min-w-px overflow-clip px-[8px] py-[16px] relative" data-node-id="I429:21065;22223:97437">
-          <div className="content-stretch flex flex-col gap-[16px] items-center relative shrink-0" data-node-id="I429:21065;22223:97438">
-            <div className="h-[54px] relative shrink-0 w-[72px]" data-node-id="I429:21065;22223:97439">
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFrame1000005452} />
-            </div>
-            <div className="content-stretch flex flex-col items-center justify-center relative shrink-0" data-node-id="I429:21065;22223:97446">
-              <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0" data-node-id="I429:21065;22223:97447">
-                <div className="col-1 content-stretch flex flex-col items-start ml-0 mt-0 relative row-1" data-node-id="I429:21065;22223:97448">
-                  <div className="bg-[#146dff] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97449" data-name="dashboard_item">
-                    <div className="content-stretch flex items-start p-[3px] relative shrink-0" data-node-id="I429:21065;22223:97449;1004:156616" data-name="Dashboard">
-                      <div className="relative shrink-0 size-[14px]" data-node-id="I429:21065;22223:97449;1004:156616;999:147989" data-name="Mask">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgMask1} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97450" data-name="dashboard_item">
-                    <div className="relative shrink-0 size-[20px]" data-node-id="I429:21065;22223:97450;1004:156621" data-name="company">
-                      <div className="absolute inset-[8.33%_8.33%_12.5%_8.33%]" data-node-id="I429:21065;22223:97450;1004:156621;4670:79714" data-name="Vector">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97451" data-name="dashboard_item">
-                    <div className="overflow-clip relative shrink-0 size-[20px]" data-node-id="I429:21065;22223:97451;1004:156621" data-name="map-pin">
-                      <div className="absolute inset-[4.17%_12.5%]" data-node-id="I429:21065;22223:97451;1004:156621;495:86858" data-name="Icon">
-                        <div className="absolute inset-[-4.09%_-5%]">
-                          <img alt="" className="block max-w-none size-full" src={imgIcon9} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97452" data-name="dashboard_item">
-                    <div className="relative shrink-0 size-[20px]" data-node-id="I429:21065;22223:97452;1004:156621" data-name="deal">
-                      <div className="absolute inset-[6.46%]" data-node-id="I429:21065;22223:97452;1004:156621;4670:82038" data-name="Vector">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector1} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97453" data-name="dashboard_item">
-                    <div className="relative shrink-0 size-[20px]" data-node-id="I429:21065;22223:97453;1004:156621" data-name="contact">
-                      <div className="absolute inset-[10%]" data-node-id="I429:21065;22223:97453;1004:156621;4670:89534" data-name="Vector">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector2} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97454" data-name="dashboard_item">
-                    <div className="content-stretch flex items-center relative shrink-0" data-node-id="I429:21065;22223:97454;1004:156621" data-name="Signal map">
-                      <div className="relative shrink-0 size-[20px]" data-node-id="I429:21065;22223:97454;1004:156621;999:147994" data-name="public_FILL0_wght400_GRAD0_opsz48 (1) 1">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPublicFill0Wght400Grad0Opsz4811} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97455" data-name="dashboard_item">
-                    <div className="overflow-clip relative shrink-0 size-[20px]" data-node-id="I429:21065;22223:97455;1004:156621" data-name="Users">
-                      <div className="-translate-x-1/2 -translate-y-1/2 absolute left-1/2 overflow-clip size-[20px] top-1/2" data-node-id="I429:21065;22223:97455;1004:156621;999:148009" data-name="lucide:user">
-                        <div className="absolute inset-[12.5%_26.67%_17.5%_20.83%]" data-node-id="I429:21065;22223:97455;1004:156621;999:148010" data-name="Group">
-                          <div className="absolute inset-[-5.36%_-7.14%]">
-                            <img alt="" className="block max-w-none size-full" src={imgGroup} />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;46336:170850" data-name="dashboard_item">
-                    <div className="overflow-clip relative shrink-0 size-[20px]" data-node-id="I429:21065;46336:170850;1004:156621" data-name="ChecklistRounded">
-                      <div className="absolute inset-[18.1%_8.33%_22.53%_10.03%]" data-node-id="I429:21065;46336:170850;1004:156621;5013:90857" data-name="Vector">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector3} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97458" data-name="dashboard_item">
-                    <div className="overflow-clip relative shrink-0 size-[20px]" data-node-id="I429:21065;22223:97458;1004:156621" data-name="trello">
-                      <div className="absolute inset-[12.5%]" data-node-id="I429:21065;22223:97458;1004:156621;495:87170" data-name="Icon">
-                        <div className="absolute inset-[-4%]">
-                          <img alt="" className="block max-w-none size-full" src={imgIcon10} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97456" data-name="dashboard_item">
-                    <div className="overflow-clip relative shrink-0 size-[20px]" data-node-id="I429:21065;22223:97456;1004:156621" data-name="Scouting">
-                      <div className="absolute inset-[14.7%_5.22%_18.88%_5.21%]" data-node-id="I429:21065;22223:97456;1004:156621;1663:182570" data-name="Vector">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector4} />
-                      </div>
-                      <div className="absolute inset-[51.42%_93.24%_40.51%_5.21%]" data-node-id="I429:21065;22223:97456;1004:156621;1663:182571" data-name="Vector">
-                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVector5} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-[#262527] content-stretch flex items-center justify-center p-[12px] relative rounded-[8px] shrink-0" data-node-id="I429:21065;22223:97459" data-name="dashboard_item">
-                    <div className="overflow-clip relative shrink-0 size-[20px]" data-node-id="I429:21065;22223:97459;1004:156621" data-name="settings">
-                      <div className="absolute inset-[4.17%]" data-node-id="I429:21065;22223:97459;1004:156621;495:86870" data-name="Icon">
-                        <div className="absolute inset-[-3.55%]">
-                          <img alt="" className="block max-w-none size-full" src={imgIcon11} />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="absolute flex items-center justify-center left-[62px] size-[28px] top-[436px]">
-          <div className="flex-none rotate-180">
-            <button className="block cursor-pointer relative size-[28px]" data-node-id="I429:21065;22223:97460" data-name="last_page_FILL0_wght400_GRAD0_opsz48 1">
-              <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgLastPageFill0Wght400Grad0Opsz481} />
-            </button>
           </div>
         </div>
       </div>

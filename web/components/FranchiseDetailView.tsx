@@ -730,19 +730,23 @@ export function FranchiseDetailView({ listRowId }: Props) {
           onClose={() => setAssignOpen(false)}
           newFranchiseName={f.name}
           newFranchiseId={f.id}
-          onAssignLots={(lotIndices) => {
-            const newLots = lotIndices
-              .map((i) => LOTS_FOR_MODAL[i])
-              .filter(Boolean)
-              .filter((lot) => !assigned.some((a) => a.no === lot.no))
-              .map((lot) => ({
-                no: lot.no,
-                state: lot.state,
-                effectiveDate: formatFranchiseEffectiveDateLabel(new Date()),
-              }));
+          onAssignLots={(assignments) => {
+            const newLots = assignments
+              .map(({ lotIndex, effectiveYmd }) => {
+                const lot = LOTS_FOR_MODAL[lotIndex];
+                if (!lot || !effectiveYmd) return null;
+                if (assigned.some((a) => a.no === lot.no)) return null;
+                const d = new Date(`${effectiveYmd}T12:00:00`);
+                return {
+                  no: lot.no,
+                  state: lot.state,
+                  effectiveDate: formatFranchiseEffectiveDateLabel(d),
+                };
+              })
+              .filter((lot): lot is { no: string; state: string; effectiveDate: string } => lot != null);
             if (newLots.length > 0) setAssigned((prev) => [...prev, ...newLots]);
           }}
-          onConfirmTransfer={(lotIndex, effectiveValue, _transferAllUsers, allSelectedIndices) => {
+          onConfirmTransfer={(lotIndex, effectiveValue, _transferAllUsers, allSelectedIndices, _priceUsd) => {
             const d = new Date(`${effectiveValue}T12:00:00`);
             const formatted = formatFranchiseEffectiveDateLabel(d);
             const indicesToAdd = allSelectedIndices.length > 0 ? allSelectedIndices : [lotIndex];
