@@ -2,7 +2,6 @@
 
 import React, { useState, useRef } from "react";
 import SaveOutlined from "@mui/icons-material/SaveOutlined";
-import ShieldOutlined from "@mui/icons-material/ShieldOutlined";
 import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined";
 import CalendarTodayOutlined from "@mui/icons-material/CalendarTodayOutlined";
 import { Badge } from "./Badge";
@@ -79,8 +78,7 @@ function FInput({ label, required, type = "text", value, onChange, disabled, err
             value={value}
             onChange={onChange}
             disabled={disabled}
-            className={`absolute inset-0 w-full h-full pl-4 pr-11 text-sm bg-transparent outline-none appearance-none disabled:opacity-60 disabled:cursor-not-allowed [&::-webkit-calendar-picker-indicator]:hidden [&::-moz-calendar-picker-indicator]:hidden ${value ? "text-gray-700" : "text-transparent"}`}
-          />
+            className={`absolute inset-0 w-full h-full pl-4 pr-11 text-sm bg-transparent outline-none appearance-none disabled:opacity-60 disabled:cursor-not-allowed [&::-webkit-calendar-picker-indicator]:hidden [&::-moz-calendar-picker-indicator]:hidden ${value ? "text-gray-700" : "text-transparent"}`} />
           {!value && (
             <span className="absolute left-4 right-11 text-sm text-gray-400 pointer-events-none select-none truncate">
               {ph}
@@ -113,8 +111,7 @@ function FInput({ label, required, type = "text", value, onChange, disabled, err
           error
             ? "border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100"
             : "border-gray-200 focus:border-[#6B2D8B]/40 focus:ring-2 focus:ring-[#6B2D8B]/10 hover:border-gray-300"
-        }`}
-      />
+        }`} />
       {error && <p className="text-xs text-red-500 pl-1">{error}</p>}
     </div>
   );
@@ -219,16 +216,6 @@ const TIMEZONES = [
   { label: "Hawaii Time (HT)", value: "Pacific/Honolulu" },
 ];
 
-const MANDATORY_FIELDS = [
-  "franchiseName", "franchiseAgreementStatus", "dbaName",
-  "agreementSignedDate", "agreementTerminationDate", "agreementExpirationDate",
-  "launchDate", "businessEmail", "territoryType", "region", "zips",
-  "allPreferredOwners", "businessPhone",
-  "officeStreet", "officeCity", "officeState", "officePostal", "officeCountry",
-  "legalNoticeStreet", "legalNoticeCity", "legalNoticeState", "legalNoticePostal", "legalNoticeCountry",
-  "legalEntityName", "ein",
-  "primaryLegalOwnerName", "primaryPreferredOwnerName", "primaryOwnerPct",
-];
 
 type FieldKey = string;
 const MAX_OWNERS = 5;
@@ -330,36 +317,14 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
     { id: "owner-4", legal: "", preferred: "", pct: "" },
     { id: "owner-5", legal: "", preferred: "", pct: "" },
   ]);
-  const [errors, setErrors] = useState<Record<FieldKey, string>>({});
-  const [submitted, setSubmitted] = useState(false);
 
   const set = (key: FieldKey) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFields((prev) => ({ ...prev, [key]: e.target.value }));
-    if (errors[key]) setErrors((prev) => ({ ...prev, [key]: "" }));
-  };
-
-  const validate = () => {
-    const newErrors: Record<FieldKey, string> = {};
-    MANDATORY_FIELDS.forEach((key) => {
-      if (!fields[key]?.trim()) newErrors[key] = "Required";
-    });
-    return newErrors;
   };
 
   const handleSubmit = () => {
-    const newErrors = validate();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setSubmitted(true);
-      const el = document.querySelector("[data-has-error='true']");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-      return;
-    }
     onSubmit({ ...fields });
   };
-
-  const errAttr = (key: FieldKey): React.HTMLAttributes<HTMLDivElement> =>
-    ({ "data-has-error": errors[key] ? "true" : undefined } as React.HTMLAttributes<HTMLDivElement>);
 
   return (
     <div className="flex flex-col h-full bg-gray-50">
@@ -384,79 +349,61 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
         </div>
       </div>
 
-      {/* Validation banner */}
-      {submitted && Object.keys(errors).length > 0 && (
-        <div className="mx-6 mt-4 shrink-0 flex items-center gap-2 px-4 py-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
-          <ShieldOutlined sx={{ fontSize: 15 }} className="text-red-400 shrink-0" />
-          Please fill in all required fields before submitting.
-        </div>
-      )}
-
       {/* Scrollable Form Body */}
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4">
 
         {/* 1 — Franchise Information */}
         <AccordionSection title="Franchise Information" subtitle="Core details about the franchise">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <div {...errAttr("franchiseName")}>
+            <div>
               <FInput label="Franchise Name" required value={fields.franchiseName}
-                onChange={set("franchiseName") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.franchiseName} />
+                onChange={set("franchiseName") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("dbaName")}>
+            <div>
               <FInput label="DBA Name" required value={fields.dbaName}
-                onChange={set("dbaName") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.dbaName} />
+                onChange={set("dbaName") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("legalEntityName")}>
+            <div>
               <FInput label="Legal Entity Name" required value={fields.legalEntityName}
-                onChange={set("legalEntityName") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.legalEntityName} />
+                onChange={set("legalEntityName") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("businessEmail")}>
+            <div>
               <FInput label="Business Email Address" required type="email" value={fields.businessEmail}
-                onChange={set("businessEmail") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.businessEmail} />
+                onChange={set("businessEmail") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("businessPhone")}>
+            <div>
               <FInput label="Business Phone Number" required type="tel" value={fields.businessPhone}
-                onChange={set("businessPhone") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.businessPhone} />
+                onChange={set("businessPhone") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("ein")}>
+            <div>
               <FInput label="EIN" required placeholder="EIN *" value={fields.ein}
-                onChange={set("ein") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.ein} />
+                onChange={set("ein") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("launchDate")}>
+            <div>
               <FInput label="Launch Date" required type="date" value={fields.launchDate}
-                onChange={set("launchDate") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.launchDate} />
+                onChange={set("launchDate") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("territoryType")}>
+            <div>
               <FSelect label="Territory Type" required value={fields.territoryType}
                 onChange={set("territoryType") as React.ChangeEventHandler<HTMLSelectElement>}
-                options={TERRITORY_TYPES} error={errors.territoryType} />
+                options={TERRITORY_TYPES} />
             </div>
             <div>
               <FSelect label="Time Zone" value={fields.timezone}
                 onChange={set("timezone") as React.ChangeEventHandler<HTMLSelectElement>}
                 options={TIMEZONES} />
             </div>
-            <div {...errAttr("region")}>
+            <div>
               <FInput label="Region" required value={fields.region}
-                onChange={set("region") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.region} />
+                onChange={set("region") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("zips")}>
+            <div>
               <FInput label="Zip Codes" required placeholder="Zip Codes * (e.g. 60601, 60602)" value={fields.zips}
-                onChange={set("zips") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.zips} />
+                onChange={set("zips") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("allPreferredOwners")}>
+            <div>
               <FInput label="All Preferred Owners" required value={fields.allPreferredOwners}
-                onChange={set("allPreferredOwners") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.allPreferredOwners} />
+                onChange={set("allPreferredOwners") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
           </div>
         </AccordionSection>
@@ -468,25 +415,22 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
               <FInput label="Franchise Number" placeholder="Franchise Number" value={fields.franchiseNumber}
                 onChange={set("franchiseNumber") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("franchiseAgreementStatus")}>
+            <div>
               <FSelect label="Agreement Status" required value={fields.franchiseAgreementStatus}
                 onChange={set("franchiseAgreementStatus") as React.ChangeEventHandler<HTMLSelectElement>}
-                options={AGREEMENT_STATUSES} error={errors.franchiseAgreementStatus} />
+                options={AGREEMENT_STATUSES} />
             </div>
-            <div {...errAttr("agreementSignedDate")}>
+            <div>
               <FInput label="Agreement Signed Date" required type="date" value={fields.agreementSignedDate}
-                onChange={set("agreementSignedDate") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.agreementSignedDate} />
+                onChange={set("agreementSignedDate") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("agreementTerminationDate")}>
+            <div>
               <FInput label="Termination Date" required type="date" value={fields.agreementTerminationDate}
-                onChange={set("agreementTerminationDate") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.agreementTerminationDate} />
+                onChange={set("agreementTerminationDate") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("agreementExpirationDate")}>
+            <div>
               <FInput label="Expiration Date" required type="date" value={fields.agreementExpirationDate}
-                onChange={set("agreementExpirationDate") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.agreementExpirationDate} />
+                onChange={set("agreementExpirationDate") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
           </div>
         </AccordionSection>
@@ -494,30 +438,27 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
         {/* 3 — Office Address */}
         <AccordionSection title="Office Address" subtitle="Primary business location">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <div className="sm:col-span-2 lg:col-span-3" {...errAttr("officeStreet")}>
+            <div className="sm:col-span-2 lg:col-span-3">
               <FInput label="Full Street Address" required value={fields.officeStreet}
-                onChange={set("officeStreet") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.officeStreet} />
+                onChange={set("officeStreet") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("officeCity")}>
+            <div>
               <FInput label="City" required value={fields.officeCity}
-                onChange={set("officeCity") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.officeCity} />
+                onChange={set("officeCity") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("officeState")}>
+            <div>
               <FSelect label="State" required value={fields.officeState}
                 onChange={set("officeState") as React.ChangeEventHandler<HTMLSelectElement>}
-                options={US_STATES} error={errors.officeState} />
+                options={US_STATES} />
             </div>
-            <div {...errAttr("officePostal")}>
+            <div>
               <FInput label="Postal Code" required value={fields.officePostal}
-                onChange={set("officePostal") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.officePostal} />
+                onChange={set("officePostal") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("officeCountry")}>
+            <div>
               <FSelect label="Country" required value={fields.officeCountry}
                 onChange={set("officeCountry") as React.ChangeEventHandler<HTMLSelectElement>}
-                options={COUNTRIES} error={errors.officeCountry} />
+                options={COUNTRIES} />
             </div>
           </div>
         </AccordionSection>
@@ -545,30 +486,27 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
         {/* 5 — Legal Notice Address */}
         <AccordionSection title="Legal Notice Address" subtitle="Address for official legal correspondence">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <div className="sm:col-span-2 lg:col-span-3" {...errAttr("legalNoticeStreet")}>
+            <div className="sm:col-span-2 lg:col-span-3">
               <FInput label="Full Street Address" required value={fields.legalNoticeStreet}
-                onChange={set("legalNoticeStreet") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.legalNoticeStreet} />
+                onChange={set("legalNoticeStreet") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("legalNoticeCity")}>
+            <div>
               <FInput label="City" required value={fields.legalNoticeCity}
-                onChange={set("legalNoticeCity") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.legalNoticeCity} />
+                onChange={set("legalNoticeCity") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("legalNoticeState")}>
+            <div>
               <FSelect label="State" required value={fields.legalNoticeState}
                 onChange={set("legalNoticeState") as React.ChangeEventHandler<HTMLSelectElement>}
-                options={US_STATES} error={errors.legalNoticeState} />
+                options={US_STATES} />
             </div>
-            <div {...errAttr("legalNoticePostal")}>
+            <div>
               <FInput label="Postal Code" required value={fields.legalNoticePostal}
-                onChange={set("legalNoticePostal") as React.ChangeEventHandler<HTMLInputElement>}
-                error={errors.legalNoticePostal} />
+                onChange={set("legalNoticePostal") as React.ChangeEventHandler<HTMLInputElement>} />
             </div>
-            <div {...errAttr("legalNoticeCountry")}>
+            <div>
               <FSelect label="Country" required value={fields.legalNoticeCountry}
                 onChange={set("legalNoticeCountry") as React.ChangeEventHandler<HTMLSelectElement>}
-                options={COUNTRIES} error={errors.legalNoticeCountry} />
+                options={COUNTRIES} />
             </div>
           </div>
         </AccordionSection>
@@ -631,21 +569,18 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
           <div className="rounded-xl border border-gray-200 bg-gray-50/60 p-4">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Primary Owner</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div {...errAttr("primaryLegalOwnerName")}>
+              <div>
                 <FInput label="Legal Owner Name" required value={fields.primaryLegalOwnerName}
-                  onChange={set("primaryLegalOwnerName") as React.ChangeEventHandler<HTMLInputElement>}
-                  error={errors.primaryLegalOwnerName} />
+                  onChange={set("primaryLegalOwnerName") as React.ChangeEventHandler<HTMLInputElement>} />
               </div>
-              <div {...errAttr("primaryPreferredOwnerName")}>
+              <div>
                 <FInput label="Preferred Owner Name" required value={fields.primaryPreferredOwnerName}
-                  onChange={set("primaryPreferredOwnerName") as React.ChangeEventHandler<HTMLInputElement>}
-                  error={errors.primaryPreferredOwnerName} />
+                  onChange={set("primaryPreferredOwnerName") as React.ChangeEventHandler<HTMLInputElement>} />
               </div>
-              <div {...errAttr("primaryOwnerPct")}>
+              <div>
                 <FInput label="% of Ownership" required type="number" placeholder="% of Ownership *"
                   value={fields.primaryOwnerPct}
-                  onChange={set("primaryOwnerPct") as React.ChangeEventHandler<HTMLInputElement>}
-                  error={errors.primaryOwnerPct} />
+                  onChange={set("primaryOwnerPct") as React.ChangeEventHandler<HTMLInputElement>} />
               </div>
             </div>
           </div>
@@ -679,8 +614,7 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
               label="Master Preferred Owner"
               placeholder="Master Preferred Owner (optional)"
               value={fields.masterPreferredOwner}
-              onChange={set("masterPreferredOwner") as React.ChangeEventHandler<HTMLInputElement>}
-            />
+              onChange={set("masterPreferredOwner") as React.ChangeEventHandler<HTMLInputElement>} />
           </div>
         </AccordionSection>
 
