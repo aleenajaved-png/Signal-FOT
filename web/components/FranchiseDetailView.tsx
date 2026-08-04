@@ -912,7 +912,7 @@ export function FranchiseDetailView({ listRowId }: Props) {
                 forceFormMode
                 compactLayout
                 initialEffectiveYmd={editEffectiveYmd}
-                headerTitle={`Edit Lot ${LOTS_FOR_MODAL[editLotIndex]?.no ?? ""}`}
+                headerTitle={`Lot ${LOTS_FOR_MODAL[editLotIndex]?.no ?? ""}`}
                 headerSubtitle=""
                 confirmLabel="Confirm"
                 onConfirm={(effectiveYmd, _transferAllUsers) => {
