@@ -6,7 +6,6 @@ import AppsOutlined from "@mui/icons-material/AppsOutlined";
 import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
 import EditOutlined from "@mui/icons-material/EditOutlined";
 import ErrorOutlineOutlined from "@mui/icons-material/ErrorOutlineOutlined";
-import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import LinkOffOutlined from "@mui/icons-material/LinkOffOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import StarBorderOutlined from "@mui/icons-material/StarBorderOutlined";
@@ -16,7 +15,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { oIcon } from "@/lib/muiIconSx";
 import { FRANCHISES_DETAIL, getDetailIndexForRow, LOTS_FOR_MODAL, type FranchiseStatus } from "@/lib/data";
-import { FRANCHISE_MAP_BASE_SRC, FRANCHISE_MAP_LOT_CALLOUT_POS, FRANCHISE_MAP_POLYGON_LAYERS } from "@/lib/lotMapData";
+import { FRANCHISE_MAP_BASE_SRC, FRANCHISE_MAP_LOT_CALLOUT_POS } from "@/lib/lotMapData";
 import { AssignLotsModal } from "./AssignLotsModal";
 import { LotInsightsAppNav } from "./LotInsightsAppNav";
 import { DetailStatusPill } from "./DetailStatusPill";
@@ -228,9 +227,10 @@ export function FranchiseDetailView({ listRowId }: Props) {
   const [assigned, setAssigned] = useState<Assigned[]>([
     { no: "NB-009", state: "Nebraska", effectiveDate: "Apr 1, 26", mapHighlightFromTransfer: false },
   ]);
-  const [previousAssigned, setPreviousAssigned] = useState<PreviousAssigned[]>([{ no: "NB-012", state: "Nebraska", transitionedAt: "May 1, 26" }]);
+  const [previousAssigned, setPreviousAssigned] = useState<PreviousAssigned[]>([
+    { no: "NB-012", state: "Nebraska", transitionedAt: "May 1, 26" },
+  ]);
   const f = FRANCHISES_DETAIL[selected];
-  const showMakeFunctionalCta = f.name !== "Lincoln, NE";
   const franchiseDisplayName = getFranchiseDisplayName(f.name);
   const franchiseDisplayId = getFranchiseDisplayId(f);
   const isKearney = f.name === KEARNEY_NAME;
@@ -283,34 +283,18 @@ export function FranchiseDetailView({ listRowId }: Props) {
     };
   }, [assignOpen, transferOpen, editLotIndex]);
 
-  /** Active + previous lots, deduped (active wins) — same set drives Associated Lots and the map. */
-  const mapLots = useMemo(() => {
-    const m = new Map<string, { no: string; state: string; kind: "active" | "previous"; isNew?: boolean }>();
-    for (const a of assigned) {
-      m.set(a.no, {
+  /** Current lots only — transitioned/previous lots stay off the map. */
+  const mapLots = useMemo(
+    () =>
+      assigned.map((a) => ({
         no: a.no,
         state: a.state,
-        kind: "active",
         isNew: a.isNewFromTransfer === true && a.mapHighlightFromTransfer !== false,
-      });
-    }
-    for (const p of previousAssigned) {
-      if (!m.has(p.no)) m.set(p.no, { no: p.no, state: p.state, kind: "previous" });
-    }
-    return Array.from(m.values());
-  }, [assigned, previousAssigned]);
-
-  const lotNosOnMap = useMemo(() => new Set(mapLots.map((l) => l.no)), [mapLots]);
-
-  const newlyAddedLotNos = useMemo(
-    () =>
-      new Set(
-        assigned.filter((a) => a.isNewFromTransfer === true && a.mapHighlightFromTransfer !== false).map((a) => a.no),
-      ),
+      })),
     [assigned],
   );
 
-  /** Kearney, NE detail only: omit NB-002 from the Associated Lots "Current" row (map still reflects full assignment). */
+  /** Kearney, NE detail only: omit NB-002 from the Associated Lots "Current" row. */
   const associatedCurrentLotsForList = useMemo(
     () => (isKearney ? assigned.filter((a) => a.no !== "NB-002") : assigned),
     [assigned, isKearney],
@@ -406,14 +390,6 @@ export function FranchiseDetailView({ listRowId }: Props) {
           <button type="button" className="d-tab">
             Settings
           </button>
-          <div className="d-tabs-action">
-            {showMakeFunctionalCta && (
-              <button type="button" className="d-make-btn">
-                <InfoOutlined sx={oIcon(16, { color: "currentColor" })} aria-hidden />
-                Make it Functional
-              </button>
-            )}
-          </div>
         </div>
 
         <div className="d-content">
@@ -646,9 +622,6 @@ export function FranchiseDetailView({ listRowId }: Props) {
                     </div>
                   )}
                 </div>
-                {associatedCurrentLotsForList.length === 0 && associatedPreviousLotsForList.length === 0 ? (
-                  <div style={{ fontSize: 13, color: "#86868b" }}>No associated lots.</div>
-                ) : null}
               </div>
             </div>
           </div>
@@ -680,40 +653,15 @@ export function FranchiseDetailView({ listRowId }: Props) {
                   onError={() => setMapBaseLoadFailed(true)}
                 />
 
-                <div className="d-map-overlay" aria-hidden>
-                  {FRANCHISE_MAP_POLYGON_LAYERS.filter((layer) => lotNosOnMap.has(layer.lotNo)).map((layer) => {
-                    const isNb007 = layer.lotNo === "NB-007";
-                    const isNewOnMap = newlyAddedLotNos.has(layer.lotNo);
-                    const polyClass = [
-                      "d-map-polygon",
-                      isNb007 && "d-map-polygon--nb007",
-                      isNewOnMap && "d-map-polygon--new",
-                    ]
-                      .filter(Boolean)
-                      .join(" ");
-                    return (
-                      <img
-                        key={layer.lotNo}
-                        src={layer.src}
-                        alt=""
-                        className={polyClass}
-                        style={{ top: layer.top, left: layer.left, width: layer.width, height: layer.height }}
-                      />
-                    );
-                  })}
-                </div>
                 <div className="d-map-overlay" aria-label="Associated lots on map">
                   {mapLots.map((lot) => {
                     const pos = FRANCHISE_MAP_LOT_CALLOUT_POS[lot.no];
                     if (!pos) return null;
-                    const calloutClass =
-                      lot.kind === "previous"
-                        ? "d-map-lot-callout d-map-lot-callout--previous"
-                        : lot.isNew
-                          ? "d-map-lot-callout d-map-lot-callout--new"
-                          : "d-map-lot-callout";
+                    const calloutClass = lot.isNew
+                      ? "d-map-lot-callout d-map-lot-callout--new"
+                      : "d-map-lot-callout";
                     return (
-                      <div key={`${lot.kind}-${lot.no}`} className={calloutClass} style={{ top: pos.top, left: pos.left }}>
+                      <div key={lot.no} className={calloutClass} style={{ top: pos.top, left: pos.left }}>
                         {lot.no}
                       </div>
                     );
