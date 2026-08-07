@@ -335,8 +335,8 @@ export function TransferLotOwnershipPanel({
   const revertDecisionEffectiveYmd = initialEffectiveYmd || effective;
 
   /** Same Y-M-D as cut-off MM/DD/YYYY input + effective DatePicker → timeline + status (or presets in revert summary). */
-  const cutoffTimelineLine = cutoffForTimeline ? `${formatDateLong(cutoffForTimeline)} (11:59 PM)` : "";
-  const effectiveTimelineLine = effectiveForTimeline ? `Effective ${formatDateLong(effectiveForTimeline)} (12:00 AM)` : "";
+  const cutoffTimelineLine = cutoffForTimeline ? formatDateLong(cutoffForTimeline) : "";
+  const effectiveTimelineLine = effectiveForTimeline ? `Effective ${formatDateLong(effectiveForTimeline)} (00:00)` : "";
 
   return (
     <div style={{ minHeight: 0, display: "flex", flexDirection: "column", flex: 1, fontFamily: "Inter, var(--fk), sans-serif" }}>
