@@ -418,42 +418,7 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
           </div>
         </AccordionSection>
 
-        {/* 2 — Payroll System */}
-        <AccordionSection title="Franchise Payroll System" subtitle="Payroll information for the franchise">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            <div>
-              <FSelect label="Payroll System" required value={fields.payrollSystem}
-                onChange={set("payrollSystem") as React.ChangeEventHandler<HTMLSelectElement>}
-                options={PAYROLL_SYSTEMS} />
-            </div>
-            {fields.payrollSystem === "adp" ? (
-              <>
-                <div>
-                  <FInput label="W2 Payroll Group Code" required value={fields.adpW2Code}
-                    onChange={set("adpW2Code") as React.ChangeEventHandler<HTMLInputElement>} />
-                </div>
-                <div>
-                  <FInput label="1099 Payroll Group Code" required value={fields.adp1099Code}
-                    onChange={set("adp1099Code") as React.ChangeEventHandler<HTMLInputElement>} />
-                </div>
-              </>
-            ) : null}
-            {fields.payrollSystem === "paycor" ? (
-              <>
-                <div>
-                  <FInput label="Legal Entity ID" required value={fields.paycorLegalEntityId}
-                    onChange={set("paycorLegalEntityId") as React.ChangeEventHandler<HTMLInputElement>} />
-                </div>
-                <div>
-                  <FInput label="Paycor Refresh Token" required value={fields.paycorRefreshToken}
-                    onChange={set("paycorRefreshToken") as React.ChangeEventHandler<HTMLInputElement>} />
-                </div>
-              </>
-            ) : null}
-          </div>
-        </AccordionSection>
-
-        {/* 3 — Franchise Agreement */}
+        {/* 2 — Franchise Agreement */}
         <AccordionSection title="Franchise Agreement" subtitle="Agreement status and key dates">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div>
@@ -508,7 +473,42 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
           </div>
         </AccordionSection>
 
-        {/* 4 — Mailing Address */}
+        {/* 4 — Payroll System */}
+        <AccordionSection title="Franchise Payroll System" subtitle="Payroll information for the franchise">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <FSelect label="Payroll System" required value={fields.payrollSystem}
+                onChange={set("payrollSystem") as React.ChangeEventHandler<HTMLSelectElement>}
+                options={PAYROLL_SYSTEMS} />
+            </div>
+            {fields.payrollSystem === "adp" ? (
+              <>
+                <div>
+                  <FInput label="W2 Payroll Group Code" required value={fields.adpW2Code}
+                    onChange={set("adpW2Code") as React.ChangeEventHandler<HTMLInputElement>} />
+                </div>
+                <div>
+                  <FInput label="1099 Payroll Group Code" required value={fields.adp1099Code}
+                    onChange={set("adp1099Code") as React.ChangeEventHandler<HTMLInputElement>} />
+                </div>
+              </>
+            ) : null}
+            {fields.payrollSystem === "paycor" ? (
+              <>
+                <div>
+                  <FInput label="Legal Entity ID" required value={fields.paycorLegalEntityId}
+                    onChange={set("paycorLegalEntityId") as React.ChangeEventHandler<HTMLInputElement>} />
+                </div>
+                <div>
+                  <FInput label="Paycor Refresh Token" required value={fields.paycorRefreshToken}
+                    onChange={set("paycorRefreshToken") as React.ChangeEventHandler<HTMLInputElement>} />
+                </div>
+              </>
+            ) : null}
+          </div>
+        </AccordionSection>
+
+        {/* 5 — Mailing Address */}
         <AccordionSection title="Mailing Address" subtitle="Mailing address (if different from office)">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             <div className="sm:col-span-2 lg:col-span-3">
