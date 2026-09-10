@@ -429,7 +429,7 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
             {fields.payrollSystem === "adp" ? (
               <>
                 <div>
-                  <FInput label="Payroll Group Code" required value={fields.adpW2Code}
+                  <FInput label="W2 Payroll Group Code" required value={fields.adpW2Code}
                     onChange={set("adpW2Code") as React.ChangeEventHandler<HTMLInputElement>} />
                 </div>
                 <div>

@@ -9,6 +9,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { type Dayjs } from "dayjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { MigrateUsersControl, UserMigrationDrawer } from "@/components/UserMigration";
 import { LOTS_FOR_MODAL, OLD_FRANCHISE_MAP, type LotForModal } from "@/lib/data";
 import { oIcon } from "@/lib/muiIconSx";
 
@@ -373,6 +374,10 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
   const [cutoffByLot, setCutoffByLot] = useState<Record<number, string>>({});
   const [priceByLot, setPriceByLot] = useState<Record<number, string>>({});
   const [transferAllUsersByLot, setTransferAllUsersByLot] = useState<Record<number, boolean>>({});
+  const [confirmedMigrateUserIdsByLot, setConfirmedMigrateUserIdsByLot] = useState<Record<number, string[]>>({});
+  const [migrationDrawerLotIndex, setMigrationDrawerLotIndex] = useState<number | null>(null);
+  const [selectedMigrateUserIds, setSelectedMigrateUserIds] = useState<Set<string>>(new Set());
+  const [migrationSearch, setMigrationSearch] = useState("");
   const [minCutYmd] = useState(computeMinCutoffYmd);
   const [soldAccordionOpen, setSoldAccordionOpen] = useState(true);
   const [availableAccordionOpen, setAvailableAccordionOpen] = useState(true);
@@ -423,13 +428,68 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
     (availableSelections.length === 0 || availableDatesValid) &&
     (soldSelections.length > 0 || availableSelections.length > 0);
 
+  const openMigrationDrawer = (lotIndex: number) => {
+    setMigrationDrawerLotIndex(lotIndex);
+    setSelectedMigrateUserIds(new Set(confirmedMigrateUserIdsByLot[lotIndex] ?? []));
+    setMigrationSearch("");
+  };
+
+  const closeMigrationDrawer = () => {
+    if (migrationDrawerLotIndex != null) {
+      setSelectedMigrateUserIds(new Set(confirmedMigrateUserIdsByLot[migrationDrawerLotIndex] ?? []));
+    }
+    setMigrationDrawerLotIndex(null);
+    setMigrationSearch("");
+  };
+
+  const toggleMigrateUser = (id: string) => {
+    setSelectedMigrateUserIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const selectAllMigrateUsers = (ids: string[]) => {
+    setSelectedMigrateUserIds((prev) => {
+      const next = new Set(prev);
+      for (const id of ids) next.add(id);
+      return next;
+    });
+  };
+
+  const deselectAllMigrateUsers = (ids: string[]) => {
+    setSelectedMigrateUserIds((prev) => {
+      const next = new Set(prev);
+      for (const id of ids) next.delete(id);
+      return next;
+    });
+  };
+
+  const confirmMigrationSelection = () => {
+    if (migrationDrawerLotIndex == null) return;
+    const lotIndex = migrationDrawerLotIndex;
+    const next = Array.from(selectedMigrateUserIds);
+    setConfirmedMigrateUserIdsByLot((prev) => ({ ...prev, [lotIndex]: next }));
+    setTransferAllUsersByLot((prev) => ({ ...prev, [lotIndex]: next.length > 0 }));
+    setMigrationDrawerLotIndex(null);
+    setMigrationSearch("");
+  };
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        if (migrationDrawerLotIndex != null) {
+          closeMigrationDrawer();
+          return;
+        }
+        onClose();
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, migrationDrawerLotIndex, confirmedMigrateUserIdsByLot]);
 
   const onContinue = () => {
     if (selected.length === 0) {
@@ -1019,38 +1079,15 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
                               <div style={{ minWidth: 0 }}>
                                 <span style={{ fontSize: 14, color: "#272d37", fontWeight: 500 }}>Migrate Users</span>
                                 <div style={{ fontSize: 12, lineHeight: "18px", color: "#6a6a70", marginTop: 6 }}>
-                                  Migrate all the users from previous franchise to the new franchise
+                                  Migrate the users from previous franchise to the new franchise
                                 </div>
                               </div>
-                              <label
-                                style={{
-                                  display: "inline-flex",
-                                  alignItems: "center",
-                                  gap: 8,
-                                  margin: 0,
-                                  minHeight: 40,
-                                  cursor: "pointer",
-                                  fontSize: 14,
-                                  color: "#272d37",
-                                }}
-                              >
-                                <input
-                                  type="checkbox"
-                                  checked={Boolean(transferAllUsersByLot[index])}
-                                  onChange={(e) =>
-                                    setTransferAllUsersByLot((prev) => ({ ...prev, [index]: e.target.checked }))
-                                  }
-                                  style={{
-                                    width: 18,
-                                    height: 18,
-                                    margin: 0,
-                                    cursor: "pointer",
-                                    accentColor: "#0032a0",
-                                    flexShrink: 0,
-                                  }}
+                              <div style={{ display: "flex", alignItems: "center", minHeight: 40 }}>
+                                <MigrateUsersControl
+                                  confirmedIds={new Set(confirmedMigrateUserIdsByLot[index] ?? [])}
+                                  onOpen={() => openMigrationDrawer(index)}
                                 />
-                                <span>Migrate all the users to the New Franchise</span>
-                              </label>
+                              </div>
                             </div>
 
                           </div>
@@ -1253,6 +1290,18 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
           </section>
         )}
       </div>
+
+      <UserMigrationDrawer
+        open={migrationDrawerLotIndex != null}
+        selectedIds={selectedMigrateUserIds}
+        search={migrationSearch}
+        onSearchChange={setMigrationSearch}
+        onToggleUser={toggleMigrateUser}
+        onSelectAll={selectAllMigrateUsers}
+        onDeselectAll={deselectAllMigrateUsers}
+        onCancel={closeMigrationDrawer}
+        onConfirm={confirmMigrationSelection}
+      />
     </div>
   );
 }
