@@ -207,6 +207,11 @@ const AGREEMENT_STATUSES = [
   { label: "Renewal Pending", value: "renewal_pending" },
 ];
 
+const PAYROLL_SYSTEMS = [
+  { label: "ADP", value: "adp" },
+  { label: "Paycor", value: "paycor" },
+];
+
 const TIMEZONES = [
   { label: "Eastern Time (ET)", value: "America/New_York" },
   { label: "Central Time (CT)", value: "America/Chicago" },
@@ -271,6 +276,11 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
     agreementSignedDate: "",
     agreementTerminationDate: "",
     agreementExpirationDate: "",
+    payrollSystem: "",
+    adpW2Code: "",
+    adp1099Code: "",
+    paycorLegalEntityId: "",
+    paycorRefreshToken: "",
     launchDate: "",
     businessEmail: initialData.businessEmail ?? "",
     territoryType: initialData.territoryType ?? "",
@@ -408,7 +418,42 @@ export function CreateFranchiseForm({ onCancel, onSubmit, initialData = {} }: Cr
           </div>
         </AccordionSection>
 
-        {/* 2 — Franchise Agreement */}
+        {/* 2 — Payroll System */}
+        <AccordionSection title="Franchise Payroll System" subtitle="Payroll information for the franchise">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div>
+              <FSelect label="Payroll System" required value={fields.payrollSystem}
+                onChange={set("payrollSystem") as React.ChangeEventHandler<HTMLSelectElement>}
+                options={PAYROLL_SYSTEMS} />
+            </div>
+            {fields.payrollSystem === "adp" ? (
+              <>
+                <div>
+                  <FInput label="Payroll Group Code" required value={fields.adpW2Code}
+                    onChange={set("adpW2Code") as React.ChangeEventHandler<HTMLInputElement>} />
+                </div>
+                <div>
+                  <FInput label="1099 Payroll Group Code" required value={fields.adp1099Code}
+                    onChange={set("adp1099Code") as React.ChangeEventHandler<HTMLInputElement>} />
+                </div>
+              </>
+            ) : null}
+            {fields.payrollSystem === "paycor" ? (
+              <>
+                <div>
+                  <FInput label="Legal Entity ID" required value={fields.paycorLegalEntityId}
+                    onChange={set("paycorLegalEntityId") as React.ChangeEventHandler<HTMLInputElement>} />
+                </div>
+                <div>
+                  <FInput label="Paycor Refresh Token" required value={fields.paycorRefreshToken}
+                    onChange={set("paycorRefreshToken") as React.ChangeEventHandler<HTMLInputElement>} />
+                </div>
+              </>
+            ) : null}
+          </div>
+        </AccordionSection>
+
+        {/* 3 — Franchise Agreement */}
         <AccordionSection title="Franchise Agreement" subtitle="Agreement status and key dates">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div>
