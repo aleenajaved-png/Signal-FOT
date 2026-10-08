@@ -1,16 +1,18 @@
 "use client";
 
 import ArrowDownwardOutlined from "@mui/icons-material/ArrowDownwardOutlined";
+import ArrowForwardOutlined from "@mui/icons-material/ArrowForwardOutlined";
 import ChevronLeftOutlined from "@mui/icons-material/ChevronLeftOutlined";
 import ChevronRightOutlined from "@mui/icons-material/ChevronRightOutlined";
+import CloseOutlined from "@mui/icons-material/CloseOutlined";
 import FileDownloadOutlined from "@mui/icons-material/FileDownloadOutlined";
 import KeyboardArrowDownOutlined from "@mui/icons-material/KeyboardArrowDownOutlined";
 import RefreshOutlined from "@mui/icons-material/RefreshOutlined";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
-import { FRANCHISE_LIST } from "@/lib/data";
+import { useCallback, useMemo, useState } from "react";
+import { FRANCHISE_LIST, INACTIVE_THIS_WEEK_FRANCHISE_NO_SET } from "@/lib/data";
 import { oIcon } from "@/lib/muiIconSx";
 import { LotInsightsAppNav } from "./LotInsightsAppNav";
 import { TableStatusBadge } from "./TableStatusBadge";
@@ -22,6 +24,26 @@ function ThSortIcon() {
 export function FranchiseListMain() {
   const router = useRouter();
   const [rowHover, setRowHover] = useState<number | null>(null);
+  const [showTransitionBanner, setShowTransitionBanner] = useState(true);
+  const [showInactiveFranchisesOnly, setShowInactiveFranchisesOnly] = useState(false);
+
+  const franchiseRows = useMemo(
+    () => FRANCHISE_LIST.map((row, index) => ({ row, index })),
+    [],
+  );
+
+  const visibleFranchiseRows = useMemo(
+    () =>
+      showInactiveFranchisesOnly
+        ? franchiseRows.filter(({ row }) => INACTIVE_THIS_WEEK_FRANCHISE_NO_SET.has(row.franchiseNo))
+        : franchiseRows,
+    [franchiseRows, showInactiveFranchisesOnly],
+  );
+
+  const showInactiveFranchiseFilter = useCallback(() => {
+    setShowInactiveFranchisesOnly(true);
+  }, []);
+
   const go = useCallback(
     (i: number) => {
       router.push(`/franchises/${i}`);
@@ -32,6 +54,29 @@ export function FranchiseListMain() {
   return (
     <div>
       <LotInsightsAppNav active="franchises" brandLabel="Franchise" />
+
+      {showTransitionBanner ? (
+        <div className="franchise-transition-banner" role="status">
+          <div className="franchise-transition-banner__lead">
+            <p className="franchise-transition-banner__text">
+              <strong className="franchise-transition-banner__emphasis">4 franchises</strong> are scheduled to be
+              inactive this week.
+            </p>
+            <button type="button" className="franchise-transition-banner__view-all" onClick={showInactiveFranchiseFilter}>
+              View all
+              <ArrowForwardOutlined sx={oIcon(14, { color: "#0032a0" })} aria-hidden />
+            </button>
+          </div>
+          <button
+            type="button"
+            className="franchise-transition-banner__close"
+            aria-label="Dismiss banner"
+            onClick={() => setShowTransitionBanner(false)}
+          >
+            <CloseOutlined sx={oIcon(18, { color: "#6b7280" })} aria-hidden />
+          </button>
+        </div>
+      ) : null}
 
       <div className="main">
         <div className="toolbar">
@@ -68,7 +113,7 @@ export function FranchiseListMain() {
                   <span className="th-text">Franchise No.</span>
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={row.franchiseNo + i}>
                     <div
                       className="td"
@@ -91,7 +136,7 @@ export function FranchiseListMain() {
                   <span className="th-text">Franchise</span>
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={row.name + i}>
                     <div
                       className="td"
@@ -122,7 +167,7 @@ export function FranchiseListMain() {
                   <span className="th-text">Owner</span>
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={"o" + i}>
                     <div
                       className="td td-owner"
@@ -161,7 +206,7 @@ export function FranchiseListMain() {
                   <span className="th-text">Monthly Revenue</span>
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={"r" + i}>
                     <div
                       className="td"
@@ -185,7 +230,7 @@ export function FranchiseListMain() {
                   <span className="th-text">No. of Customers</span>
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={"c" + i}>
                     <div
                       className="td"
@@ -209,7 +254,7 @@ export function FranchiseListMain() {
                   <span className="th-text">Status</span>
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={"s" + i}>
                     <div
                       className="td"
@@ -233,7 +278,7 @@ export function FranchiseListMain() {
                   <span className="th-text">State</span>
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={"st" + i}>
                     <div
                       className="td"
@@ -258,7 +303,7 @@ export function FranchiseListMain() {
                   <ThSortIcon />
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={"ci" + i}>
                     <div
                       className="td"
@@ -282,7 +327,7 @@ export function FranchiseListMain() {
                   <span className="th-text">No. of Employees</span>
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={"e" + i}>
                     <div
                       className="td"
@@ -306,7 +351,7 @@ export function FranchiseListMain() {
                   <span className="th-text">Address</span>
                 </div>
                 <div className="div" />
-                {FRANCHISE_LIST.map((row, i) => (
+                {visibleFranchiseRows.map(({ row, index: i }) => (
                   <div key={"a" + i}>
                     <div
                       className="td"
@@ -328,7 +373,11 @@ export function FranchiseListMain() {
           </div>
 
           <div className="pagination">
-            <span className="page-count">1-15 of 12,345</span>
+            <span className="page-count">
+              {showInactiveFranchisesOnly
+                ? `1-${visibleFranchiseRows.length} of ${visibleFranchiseRows.length}`
+                : "1-15 of 12,345"}
+            </span>
             <div className="page-actions">
               <button type="button" className="page-btn" aria-label="Previous page">
                 <ChevronLeftOutlined sx={oIcon(20, { color: "currentColor" })} aria-hidden />

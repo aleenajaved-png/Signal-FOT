@@ -6,6 +6,8 @@
 export const FIGMA_APP_NAV = {
   /** Male portrait for nav profile (RandomUser stock photo). */
   profileAvatar: "https://randomuser.me/api/portraits/men/32.jpg",
+  /** Notifications header profile (RandomUser stock photo). */
+  notificationsProfileAvatar: "https://randomuser.me/api/portraits/women/44.jpg",
   // Use a local asset so it never expires / fails to load.
   signalLogo: "/signal-logo.svg",
 } as const;

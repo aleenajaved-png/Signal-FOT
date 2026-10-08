@@ -195,6 +195,11 @@ const FRANCHISE_LIST_RAW: ListRow[] = [
 
 export const FRANCHISE_LIST: ListRow[] = FRANCHISE_LIST_RAW;
 
+/** Franchises scheduled to go inactive this week (franchise list banner filter). */
+export const INACTIVE_THIS_WEEK_FRANCHISE_NOS = ["#0230", "#8765", "#8766", "#8767"] as const;
+
+export const INACTIVE_THIS_WEEK_FRANCHISE_NO_SET = new Set<string>(INACTIVE_THIS_WEEK_FRANCHISE_NOS);
+
 /** Used for the franchise detail sidebar — derived from the same rows as the list table so it stays synced. */
 export const FRANCHISES_DETAIL: FranchiseInSidebar[] = FRANCHISE_LIST.map((row) => ({
   id: row.franchiseNo,

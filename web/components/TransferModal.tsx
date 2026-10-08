@@ -2,6 +2,7 @@
 
 import ArrowBackOutlined from "@mui/icons-material/ArrowBackOutlined";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
+import InfoOutlined from "@mui/icons-material/InfoOutlined";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -462,7 +463,51 @@ export function TransferLotOwnershipPanel({
       </div>
 
       {!revertSummaryUi && !compactLayout ? (
-      <div style={{ margin: "20px 24px 0", background: "#f5f5f6", borderRadius: 4, padding: "12px 16px", display: "flex", alignItems: "center", gap: 16 }}>
+      <>
+      {lot.status === "sold" && !onboardingAvailablePricingOnly ? (
+        <div
+          role="note"
+          style={{
+            margin: "20px 24px 0",
+            padding: "10px 12px",
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 10,
+            background: "#e5f6ff",
+            borderRadius: 4,
+          }}
+        >
+          <InfoOutlined
+            sx={oIcon(18, { color: "#146dff" })}
+            aria-hidden
+            style={{ flexShrink: 0, marginTop: 1 }}
+          />
+          <p
+            style={{
+              margin: 0,
+              fontSize: 13,
+              lineHeight: "20px",
+              fontWeight: 400,
+              color: "#444446",
+            }}
+          >
+            The current franchise of this lot has only one lot. Once ownership is transferred, the lot will move to
+            the new franchise, leaving the current franchise inactive.
+          </p>
+        </div>
+      ) : null}
+      <div
+        style={{
+          margin:
+            lot.status === "sold" && !onboardingAvailablePricingOnly ? "12px 24px 0" : "20px 24px 0",
+          background: "#f5f5f6",
+          borderRadius: 4,
+          padding: "12px 16px",
+          display: "flex",
+          alignItems: "center",
+          gap: 16,
+        }}
+      >
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 12, color: "#86868b" }}>Lot</div>
           <div style={{ fontSize: 14, color: "#262527", fontWeight: 500 }}>{lot.no}</div>
@@ -509,6 +554,7 @@ export function TransferLotOwnershipPanel({
           </>
         ) : null}
       </div>
+      </>
       ) : null}
 
       {showRevertConfirmModal ? (

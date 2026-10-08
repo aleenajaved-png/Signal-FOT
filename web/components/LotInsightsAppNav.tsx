@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { oIcon } from "@/lib/muiIconSx";
 import { FIGMA_APP_NAV } from "@/lib/figma-app-nav-assets";
+import { NotificationsDropdown } from "@/components/NotificationsDropdown";
 
 export type AppNavActive = "lots" | "franchises";
 
@@ -67,23 +68,26 @@ export function LotInsightsAppNav({ active, brandLabel, brandHref = "/franchises
       </div>
 
       <div className="app-top-nav__profile" data-name="profile-notifications">
-        <div className="app-top-nav__avatar" data-name="Profile">
-          <Image
-            src={FIGMA_APP_NAV.profileAvatar}
-            alt="Paul Smith"
-            width={32}
-            height={32}
-            className="app-top-nav__avatar-img"
-            unoptimized
-          />
-        </div>
-        <div className="app-top-nav__profile-row">
-          <div className="app-top-nav__name-block">
-            <p className="app-top-nav__name">Paul Smith</p>
-            <p className="app-top-nav__role">Admin</p>
+        <NotificationsDropdown />
+        <div className="app-top-nav__profile-user">
+          <div className="app-top-nav__avatar" data-name="Profile">
+            <Image
+              src={FIGMA_APP_NAV.profileAvatar}
+              alt="Paul Smith"
+              width={32}
+              height={32}
+              className="app-top-nav__avatar-img"
+              unoptimized
+            />
           </div>
-          <div className="app-top-nav__chevron" aria-hidden>
-            <KeyboardArrowDownOutlined sx={oIcon(chev)} className="app-top-nav__chevron-svg" />
+          <div className="app-top-nav__profile-row">
+            <div className="app-top-nav__name-block">
+              <p className="app-top-nav__name">Paul Smith</p>
+              <p className="app-top-nav__role">Admin</p>
+            </div>
+            <div className="app-top-nav__chevron" aria-hidden>
+              <KeyboardArrowDownOutlined sx={oIcon(chev)} className="app-top-nav__chevron-svg" />
+            </div>
           </div>
         </div>
       </div>
