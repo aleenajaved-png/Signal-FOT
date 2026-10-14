@@ -281,6 +281,19 @@ export const OLD_FRANCHISE_MAP: Record<string, { id: string; name: string; owner
   "NB-012": { id: "5556", name: "Grand Island, NE", owner: "Derrick Dancy" },
 };
 
+/** Lot market time zones that differ from the new franchise time zone (assign-lots Continue validation). */
+export const LOT_MARKET_TIMEZONE_LABEL: Record<string, string> = {
+  "NB-002": "(UTC-05:00) America/Lima",
+  "NB-003": "(UTC-08:00) Pacific Time (US & Canada)",
+  "NB-012": "(UTC-07:00) Mountain Time (US & Canada)",
+};
+
+export const DEFAULT_NEW_FRANCHISE_TIMEZONE_LABEL = "(UTC-09:00) America/Sitka";
+
+export function lotNosWithTimezoneMismatch(lotNos: string[]): string[] {
+  return lotNos.filter((no) => no in LOT_MARKET_TIMEZONE_LABEL);
+}
+
 export function getDetailIndexForRow(listRowIndex: number): number {
   return listRowIndex % FRANCHISES_DETAIL.length;
 }

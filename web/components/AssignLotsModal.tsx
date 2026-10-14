@@ -10,7 +10,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { type Dayjs } from "dayjs";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MigrateUsersControl, UserMigrationDrawer } from "@/components/UserMigration";
-import { LOTS_FOR_MODAL, OLD_FRANCHISE_MAP, type LotForModal } from "@/lib/data";
+import { TimeZoneMismatchModal } from "@/components/TimeZoneMismatchModal";
+import { lotNosWithTimezoneMismatch, LOTS_FOR_MODAL, OLD_FRANCHISE_MAP, type LotForModal } from "@/lib/data";
 import { oIcon } from "@/lib/muiIconSx";
 
 const pad2 = (n: number) => String(n).padStart(2, "0");
@@ -381,6 +382,7 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
   const [minCutYmd] = useState(computeMinCutoffYmd);
   const [soldAccordionOpen, setSoldAccordionOpen] = useState(true);
   const [availableAccordionOpen, setAvailableAccordionOpen] = useState(true);
+  const [timezoneMismatchLotNos, setTimezoneMismatchLotNos] = useState<string[] | null>(null);
 
   const minEffectiveYmd = useMemo(() => addDaysYmd(minCutYmd, 1), [minCutYmd]);
   const minEffectiveDayjs = useMemo(() => dayjsFromYmdLocal(minEffectiveYmd), [minEffectiveYmd]);
@@ -496,6 +498,11 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
       onClose();
       return;
     }
+    const mismatched = lotNosWithTimezoneMismatch(selectedLots.map(({ lot }) => lot.no));
+    if (mismatched.length > 0) {
+      setTimezoneMismatchLotNos(mismatched);
+      return;
+    }
     setStep("transfer");
   };
 
@@ -559,7 +566,20 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
     }));
   };
 
+  const franchiseNameLabel =
+    newFranchiseId && newFranchiseName
+      ? `${newFranchiseId.replace(/^#/, "")} - ${newFranchiseName}`
+      : newFranchiseName || "Franchise";
+
   return (
+    <>
+    {timezoneMismatchLotNos ? (
+      <TimeZoneMismatchModal
+        mismatchedLotNos={timezoneMismatchLotNos}
+        franchiseNameLabel={franchiseNameLabel}
+        onClose={() => setTimezoneMismatchLotNos(null)}
+      />
+    ) : null}
     <div
       style={{
         position: "fixed",
@@ -1303,5 +1323,6 @@ export function AssignLotsModal({ onClose, newFranchiseName, newFranchiseId, onA
         onConfirm={confirmMigrationSelection}
       />
     </div>
+    </>
   );
 }

@@ -9,6 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs, { type Dayjs } from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { oIcon } from "@/lib/muiIconSx";
+import { LotTransferTimeline } from "@/components/LotTransferTimeline";
 import { LOTS_FOR_MODAL, OLD_FRANCHISE_MAP, type LotForModal } from "@/lib/data";
 import { MigrateUsersControl, UserMigrationDrawer } from "@/components/UserMigration";
 
@@ -387,8 +388,6 @@ export function TransferLotOwnershipPanel({
   const revertDecisionEffectiveYmd = initialEffectiveYmd || effective;
 
   /** Same Y-M-D as cut-off MM/DD/YYYY input + effective DatePicker → timeline + status (or presets in revert summary). */
-  const cutoffTimelineLine = cutoffForTimeline ? formatDateLong(cutoffForTimeline) : "";
-  const effectiveTimelineLine = effectiveForTimeline ? `Effective ${formatDateLong(effectiveForTimeline)} (00:00)` : "";
 
   return (
     <div style={{ minHeight: 0, display: "flex", flexDirection: "column", flex: 1, fontFamily: "Inter, var(--fk), sans-serif" }}>
@@ -1017,81 +1016,14 @@ export function TransferLotOwnershipPanel({
         )
         ) : null}
 
-        {showTimelineSection && !compactLayout && !onboardingAvailablePricingOnly ? (
-          <div
-            aria-label="Transfer timeline"
-            style={{
-              background: "#f5f5f6",
-              border: "1px solid #e6e6e7",
-              borderRadius: 8,
-              padding: 16,
-              display: "flex",
-              flexDirection: "column",
-              gap: 16,
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "stretch", justifyContent: "flex-start", gap: 8 }}>
-              <div style={{ minWidth: 0, flex: 1, display: "flex", flexDirection: "column", gap: 8, minHeight: "100%" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, minHeight: 20 }}>
-                  <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#7d899b", flexShrink: 0 }} aria-hidden />
-                  <div style={{ color: "#86868b", textTransform: "uppercase", fontSize: 10, letterSpacing: 0.4, lineHeight: "14px" }}>Current franchise</div>
-                </div>
-                <div style={{ color: "#444446", fontSize: 13, fontWeight: 600, lineHeight: "18px" }}>{oldFrLabel}</div>
-              </div>
-
-              <div style={{ width: 64, display: "flex", alignItems: "center", justifyContent: "center", paddingTop: 9 }} aria-hidden>
-                <div style={{ width: "100%", height: 0, borderTop: "2px solid #d8dadc" }} />
-              </div>
-
-              <div style={{ minWidth: 0, flex: 1, display: "flex", flexDirection: "column", gap: 8, paddingLeft: 20, minHeight: "100%" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, minHeight: 20 }}>
-                  <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#f4780b", flexShrink: 0 }} aria-hidden />
-                  <div style={{ color: "#86868b", textTransform: "uppercase", fontSize: 10, letterSpacing: 0.4, lineHeight: "14px" }}>Cut-off</div>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 2 }}>
-                  <div style={{ color: "#444446", fontSize: 13, fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {oldFrLabel}
-                  </div>
-                  <div style={{ color: "#546176", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {cutoffTimelineLine}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ width: 64, display: "flex", alignItems: "center", justifyContent: "center", paddingTop: 9 }} aria-hidden>
-                <div style={{ width: "100%", height: 0, borderTop: "2px dotted #d8dadc" }} />
-              </div>
-
-              <div style={{ minWidth: 0, flex: 1, display: "flex", flexDirection: "column", gap: 8, paddingLeft: 20, minHeight: "100%" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, minHeight: 20 }}>
-                  <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#146dff", flexShrink: 0 }} aria-hidden />
-                  <div style={{ color: "#86868b", textTransform: "uppercase", fontSize: 10, letterSpacing: 0.4, lineHeight: "14px" }}>New franchise</div>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 4, paddingTop: 2 }}>
-                  <div style={{ color: "#0032a0", fontWeight: 700, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {newFrLabel}
-                  </div>
-                  <div style={{ color: "#546176", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{effectiveTimelineLine}</div>
-                </div>
-              </div>
-            </div>
-            <div
-              role="status"
-              style={{
-                background: "unset",
-                border: "none",
-                borderTop: "1px solid #e6e6e7",
-                borderRadius: 4,
-                padding: "12px 0 0 0",
-                fontSize: 13,
-                color: "#444446",
-                lineHeight: 1.5,
-              }}
-            >
-              After <strong>11:59 PM</strong> on {formatDateLong(cutoffForTimeline)} this lot will transition to <strong>{newFrLabel}</strong>. The new franchise is effective at <strong>12:00 AM</strong> on{" "}
-              {formatDateLong(effectiveForTimeline)}.
-            </div>
-          </div>
+        {showTimelineSection && !compactLayout && !onboardingAvailablePricingOnly && cutoffForTimeline && effectiveForTimeline ? (
+          <LotTransferTimeline
+            currentFranchiseLabel={oldFrLabel}
+            newFranchiseLabel={newFrLabel}
+            cutoffYmd={cutoffForTimeline}
+            effectiveYmd={effectiveForTimeline}
+            style={{ marginTop: 0 }}
+          />
         ) : null}
       </div>
       )}
