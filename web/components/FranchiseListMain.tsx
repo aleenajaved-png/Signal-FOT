@@ -48,7 +48,7 @@ export function FranchiseListMain({ view = "default" }: FranchiseListMainProps) 
     [franchiseRows, view],
   );
 
-  const inactiveThisWeekCount = INACTIVE_THIS_WEEK_FRANCHISE_NOS.length;
+  const inactiveThisWeekCount = INACTIVE_THIS_WEEK_FRANCHISE_NO_SET.size;
   const isScheduledDeactivationView = view === "scheduled-deactivation";
 
   const go = useCallback(
