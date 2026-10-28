@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import AddOutlined from "@mui/icons-material/AddOutlined";
+import ArrowForwardOutlined from "@mui/icons-material/ArrowForwardOutlined";
 import AppsOutlined from "@mui/icons-material/AppsOutlined";
 import CheckCircleOutlineOutlined from "@mui/icons-material/CheckCircleOutlineOutlined";
 import EditOutlined from "@mui/icons-material/EditOutlined";
@@ -672,6 +673,11 @@ export function FranchiseDetailView({ listRowId }: Props) {
           </div>
         </div>
       </div>
+
+      <Link href="/edge" className="d-edge-view-btn">
+        Lets see Edge view
+        <ArrowForwardOutlined sx={oIcon(16)} aria-hidden />
+      </Link>
 
       {assignOpen && (
         <AssignLotsModal
