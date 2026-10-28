@@ -208,7 +208,10 @@ export function EdgeDashboard() {
 
             <section className="edge-dash__map-view" aria-label="Map view">
               <div className="edge-dash__map-head">
-                <h2>Map View</h2>
+                <h2>
+                  Map View
+                  <Image src="/edge/ic-info.svg" alt="" width={16} height={16} />
+                </h2>
                 <button type="button" className="edge-dash__more-info" onClick={() => setBillingOpen(true)}>
                   More info
                   <Image src="/edge/ic-info.svg" alt="" width={16} height={16} />
