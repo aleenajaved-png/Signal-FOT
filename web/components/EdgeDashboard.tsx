@@ -34,10 +34,10 @@ const LIVE_OPS = [
 ];
 
 const MAP_SECTIONS: { id: string; tone: "blue" | "orange"; points: string; left: string; top: string }[] = [
-  { id: "NY-006", tone: "blue", points: "38.6,48.6 41.8,46.6 45.4,47.4 46.6,50.6 45,55 41.8,56.2 39,54.6 37.8,51.4", left: "42%", top: "51%" },
-  { id: "NY-010", tone: "blue", points: "47.4,44.2 53.4,43 57,45.4 56.2,50.2 52.6,53 48.6,51.4 47,47.4", left: "52%", top: "47%" },
-  { id: "NY-002", tone: "blue", points: "37.4,56.6 45.8,55.8 47.4,59.4 45,63.4 39.8,64.2 35.8,61 36.2,57.8", left: "41%", top: "60%" },
-  { id: "NY-001", tone: "orange", points: "31.4,62.6 48.6,61.4 50.2,67.4 35.8,69.4 29.8,66.6 30.6,63.4", left: "40%", top: "65%" },
+  { id: "NY-006", tone: "blue", points: "35.9,41.9 40.5,40.1 44.9,45.5 42.4,57 38.7,59.9 37.5,53.3 35.6,47.3", left: "39.3%", top: "49.6%" },
+  { id: "NY-010", tone: "blue", points: "49.7,40.7 57.1,41.2 58,49.7 54.6,53.9 49.7,51.8 48.6,45.8", left: "52.9%", top: "46.8%" },
+  { id: "NY-002", tone: "blue", points: "31.3,61.8 42.4,59.3 48.6,63.8 47.3,73.8 38.7,75.9 31.3,71.4 30.1,66", left: "38.7%", top: "67.4%" },
+  { id: "NY-001", tone: "orange", points: "26.4,72 47.3,69.8 51,79 47.3,87.1 30.1,86.5 25.9,79", left: "38%", top: "78.7%" },
 ];
 
 const JOBS = [
@@ -206,16 +206,15 @@ export function EdgeDashboard() {
               </article>
             </section>
 
+            <div className="edge-dash__split">
             <section className="edge-dash__map-view" aria-label="Map view">
               <div className="edge-dash__map-head">
                 <h2>
                   Map View
-                  <Image src="/edge/ic-info.svg" alt="" width={16} height={16} />
+                  <button type="button" className="edge-dash__more-info" aria-label="More info" onClick={() => setBillingOpen(true)}>
+                    <Image src="/edge/ic-info.svg" alt="" width={16} height={16} />
+                  </button>
                 </h2>
-                <button type="button" className="edge-dash__more-info" onClick={() => setBillingOpen(true)}>
-                  More info
-                  <Image src="/edge/ic-info.svg" alt="" width={16} height={16} />
-                </button>
               </div>
               <div className="edge-dash__map">
                 <div className="edge-dash__map-stage">
@@ -230,7 +229,7 @@ export function EdgeDashboard() {
                       {section.id}
                     </span>
                   ))}
-                  <span className="edge-dash__map-pin" style={{ left: "51%", top: "46%" }} aria-hidden>
+                  <span className="edge-dash__map-pin" style={{ left: "51%", top: "43.7%" }} aria-hidden>
                     <svg width="28" height="36" viewBox="0 0 28 36" fill="none">
                       <path d="M14 35s11-11.2 11-19.2C25 8.4 20.1 3 14 3S3 8.4 3 15.8C3 23.8 14 35 14 35z" fill="#f4780b" />
                       <circle cx="14" cy="15" r="6.5" fill="#fff" />
@@ -257,29 +256,32 @@ export function EdgeDashboard() {
                   </button>
                 </div>
               </div>
-              <svg className="edge-dash__line" viewBox="0 0 1000 200" preserveAspectRatio="none" role="img" aria-label="Completed and missed hours">
-                {[28, 62, 96, 130, 164].map((y) => (
-                  <line key={y} x1="36" x2="1000" y1={y} y2={y} stroke="#e6e6e7" vectorEffect="non-scaling-stroke" />
-                ))}
-                {["160", "120", "80", "40", "0"].map((label, i) => (
-                  <text key={label} x="0" y={32 + i * 34} fill="#444446" fontSize="11" fontFamily="Inter, sans-serif">
-                    {label}
-                  </text>
-                ))}
-                <polyline fill="none" stroke="#f4780b" strokeWidth="2" vectorEffect="non-scaling-stroke" points="72,78 220,78 368,58 516,58 664,108 812,116 960,96" opacity={series === "dedicated" ? 1 : 0.3} />
-                <polyline fill="none" stroke="#146dff" strokeWidth="2" vectorEffect="non-scaling-stroke" points="72,128 220,128 368,102 516,68 664,60 812,86 960,74" opacity={series === "patrol" ? 1 : 0.3} />
-                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, i) => (
-                  <text key={day} x={52 + i * 148} y="190" fill="#6a6a70" fontSize="12" fontFamily="Inter, sans-serif">
-                    {day}
-                  </text>
-                ))}
-              </svg>
+              <div className="edge-dash__line-wrap">
+                <div className="edge-dash__yaxis" aria-hidden>
+                  <span>160</span><span>120</span><span>80</span><span>40</span><span>0</span>
+                </div>
+                <div className="edge-dash__line-plot">
+                  <svg className="edge-dash__line" viewBox="36 20 964 152" preserveAspectRatio="none" role="img" aria-label="Completed and missed hours">
+                    {[28, 62, 96, 130, 164].map((y) => (
+                      <line key={y} x1="36" x2="1000" y1={y} y2={y} stroke="#e6e6e7" vectorEffect="non-scaling-stroke" />
+                    ))}
+                    <polyline fill="none" stroke="#f4780b" strokeWidth="2" vectorEffect="non-scaling-stroke" points="72,78 220,78 368,58 516,58 664,108 812,116 960,96" opacity={series === "dedicated" ? 1 : 0.3} />
+                    <polyline fill="none" stroke="#146dff" strokeWidth="2" vectorEffect="non-scaling-stroke" points="72,128 220,128 368,102 516,68 664,60 812,86 960,74" opacity={series === "patrol" ? 1 : 0.3} />
+                  </svg>
+                  <div className="edge-dash__days">
+                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+                      <span key={day}>{day}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
               <div className="edge-dash__legend">
                 <span><i style={{ background: "#146dff" }} /> Completed Hours</span>
                 <span><i style={{ background: "#f4780b" }} /> Missed Hours</span>
                 <button type="button" className="edge-dash__schedule">Schedule →</button>
               </div>
             </section>
+            </div>
           </div>
 
           <aside className="edge-dash__live">
